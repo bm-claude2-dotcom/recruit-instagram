@@ -1,6 +1,6 @@
-.env
-__pycache__/
-*.pyc
-flask_server.log
-flask_server.log.err
-.claude/
+<ul id="angles-list">
+  <li class="angle-item" data-angle="〇〇">〇〇</li>
+  
+  <li class="angle-item" data-angle="社員紹介">社員紹介</li>
+  <li class="angle-item" data-angle="社内イベント">社内イベント</li>
+</ul>
