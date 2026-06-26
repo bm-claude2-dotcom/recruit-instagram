@@ -524,7 +524,8 @@ async function fetchMemberData() {
     selectElement.innerHTML = '<option value="">-- メンバーを選択 --</option>';
     memberList.forEach((member, index) => {
         const option = document.createElement("option"); option.value = index;
-        option.textContent = member["名前"] || `メンバー ${index + 1}`; selectElement.appendChild(option);
+        option.textContent = member["お名前（漢字）"] || member["名前"] || `メンバー ${index + 1}`; 
+        selectElement.appendChild(option);
     });
   } catch (error) { document.getElementById("member-select").innerHTML = '<option value="">データの取得に失敗しました</option>'; }
 }
@@ -543,12 +544,22 @@ document.getElementById('btn-generate-insta').addEventListener('click', function
   const index = document.getElementById('member-select').value;
   if (index === "") { alert("紹介するメンバーを選択してください。"); return; }
   const member = memberList[index];
-  const name = member["名前"] || ""; const nickname = member["ニックネーム"] || "";
-  const hometown = member["出身（都道府県）"] || member["出身"] || ""; const mbti = member["MBTI"] || "";
-  const hobby = member["趣味"] || ""; const axis = member["就活軸"] || ""; const photoCaption = member["写真のキャプション"] || "歓迎会でのひとコマ✨";
+  
+  // ⚠️ スプシの列名マッピング（後で正確な列名に合わせます）
+  const name = member["お名前（漢字）"] || member["名前"] || ""; 
+  const nickname = member["ニックネーム"] || "";
+  const hometown = member["出身地（都道府県など）"] || member["出身"] || ""; 
+  const mbti = member["MBTI"] || "";
+  const hobby = member["趣味"] || ""; 
+  const axis = member["私の就活軸"] || member["就活軸"] || ""; 
+  const photoCaption = member["写真のキャプション"] || "歓迎会でのひとコマ✨";
 
-  document.getElementById('member-caption-area').value = `【Instagram用 キャプション文】\n＼ ✨ 新卒メンバー紹介コーナー ✨ ／\n\n本日は、私たちのチームに新しく加わった素敵なメンバーをご紹介します！\n今回登場してくれるのは【 ${name} 】さんです！👏\n\n---------------------------------------\nニックネーム：${nickname}\n出身：${hometown}\nMBTI：${mbti}\n趣味：${hobby}\n就活軸：${axis}\n---------------------------------------\n\n私たちの会社の「人」や「カルチャー」の魅力が少しでも伝わったら嬉しいです！\n「このメンバーと一緒に働いてみたい！」と思った方は、ぜひプロフィールのリンクから採用特設サイトをご覧ください！🚀\n\n#社員紹介 #メンバー紹介 #新卒採用 #採用マーケティング #ベンチャー企業 #転職活動 #一緒に働く仲間募集中`;
-  document.getElementById('member-prompt-area').value = `【ChatGPT用 画像合成プロンプト】\n【3枚目を生成してください】\n\n■ サイズ：1080×1350px（縦長）、1枚単独で出力\n■ レイアウト：\n・背景：これまでと同じミントグリーン〜ライトターコイズのグラデーション\n・左上：「新卒インタビュー」（小テキスト・ティール色）\n・その下：「プロフィール」（大見出し・ティール色・太字）\n・右上：グレーのドット装飾\n・中央上：白い角丸カードを3列で横並び\n  [ニックネーム]  [出身]    [MBTI]\n  ${nickname}         ${hometown}    ${mbti}\n・中央左：白い角丸カード（縦長）\n  [趣味]\n  ${hobby}\n・中央左下：白い角丸カード（縦長）\n  [就活軸]\n  ${axis}\n・中央右：[添付した本人の写真]（白いポラロイド風フレームに収め、フレームの下部に小さく「${photoCaption}」というテキストを配置する）\n\n上記のレイアウト通りに、文字の配置やバランス、色合いをこれまでのトンマナと完全に一致させて、美しくクオリティの高いInstagram投稿用画像を生成してください。`;
+  // ① 共通化されたキャプション文
+  document.getElementById('member-caption-area').value = `【Instagram用 キャプション文】\n\\ \\ プリンシプルの新卒メンバー紹介 / /\n4月に入社したメンバーにお話を聞いてみました！\nその人の人柄や就活時代の悩みなどを紹介していただきました🎶\n\nプリンシプルに興味がある方も、就活に悩んでいる方も必見✨\nお役立ち情報を覗いてみましょう📝\n\n株式会社プリンシプルでは、新卒・中途採用を強化中！\nプロフィールのリンクからチェック＆ご応募お待ちしています\n\n#会社紹介 #社員インタビュー #27卒 #28卒 #新卒採用`;
+  
+  // ② 画像合成プロンプト（データ埋め込み）
+  document.getElementById('member-prompt-area').value = `【ChatGPT用 画像合成プロンプト】\n【3枚目を生成してください】\n\n■ サイズ：1080×1350px（縦長）、1枚単独で出力\n■ レイアウト：\n・背景：これまでと同じミントグリーン〜ライトターコイズのグラデーション\n・左上：「新卒インタビュー」（小テキスト・ティール色）\n・その下：「プロフィール」（大見出し・ティール色・太字）\n・右上：グレーのドット装飾\n・中央上：白い角丸カードを3列で横並び\n  [ニックネーム]  [出身]    [MBTI]\n  ${nickname}         ${hometown}    ${mbti}\n・中央左：白い角丸カード（縦長）\n  [趣味]\n  ${hobby}\n・中央左下：白い角丸カード（縦長）\n  [私の就活軸]\n  ${axis}\n・中央右：[添付した本人の写真]（白いポラロイド風フレームに収め、フレームの下部に小さく「${photoCaption}」というテキストを配置する）\n\n上記のレイアウト通りに、文字の配置やバランス、色合いをこれまでのトンマナと完全に一致させて、美しくクオリティの高いInstagram投稿用画像を生成してください。`;
+  
   document.getElementById('member-output-container').style.display = 'block';
 });
 
