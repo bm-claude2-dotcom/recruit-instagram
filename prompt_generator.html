@@ -591,5 +591,188 @@ document.getElementById('member-select').addEventListener('change', function() {
   const container = document.getElementById('member-photo-container');
   const img = document.getElementById('member-photo-preview');
   if (index !== "" && memberList[index]) {
-      const photoUrl = memberList[index]["自分の写真"] ||
+　  const photoUrl = memberList[index]["自分の写真"] || memberList[index]["写真"];
+      if (photoUrl) {
+          img.src = photoUrl;
+          container.style.display = 'block';
+          return;
+      }
+  }
+  container.style.display = 'none';
+});
+
+// プロンプト生成機能
+document.getElementById('btn-generate-insta').addEventListener('click', function() {
+  const index = document.getElementById('member-select').value;
+  if (index === "") {
+      alert("紹介するメンバーを選択してください。");
+      return;
+  }
+  const member = memberList[index];
+  const name = member["名前"] || "";
+  const nickname = member["ニックネーム"] || "";
+  const hometown = member["出身（都道府県）"] || member["出身"] || "";
+  const mbti = member["MBTI"] || "";
+  const hobby = member["趣味"] || "";
+  const axis = member["就活軸"] || "";
+  const photoCaption = member["写真のキャプション"] || "歓迎会でのひとコマ✨";
+
+  const captionText = `【Instagram用 キャプション文】\n＼ ✨ 新卒メンバー紹介コーナー ✨ ／\n\n本日は、私たちのチームに新しく加わった素敵なメンバーをご紹介します！\n今回登場してくれるのは【 ${name} 】さんです！👏\n\n---------------------------------------\nニックネーム：${nickname}\n出身：${hometown}\nMBTI：${mbti}\n趣味：${hobby}\n就活軸：${axis}\n---------------------------------------\n\n私たちの会社の「人」や「カルチャー」の魅力が少しでも伝わったら嬉しいです！\n「このメンバーと一緒に働いてみたい！」と思った方は、ぜひプロフィールのリンクから採用特設サイトをご覧ください！🚀\n\n#社員紹介 #メンバー紹介 #新卒採用 #採用マーケティング #ベンチャー企業 #転職活動 #一緒に働く仲間募集中`;
+
+  const imagePromptText = `【ChatGPT用 画像合成プロンプト】\n【3枚目を生成してください】\n\n■ サイズ：1080×1350px（縦長）、1枚単独で出力\n\n■ レイアウト：\n・背景：これまでと同じミントグリーン〜ライトターコイズのグラデーション\n・左上：「新卒インタビュー」（小テキスト・ティール色）\n・その下：「プロフィール」（大見出し・ティール色・太字）\n・右上：グレーのドット装飾\n\n・中央上：白い角丸カードを3列で横並び\n  [ニックネーム]  [出身]    [MBTI]\n  ${nickname}         ${hometown}    ${mbti}\n\n・中央左：白い角丸カード（縦長）\n  [趣味]\n  ${hobby}\n\n・中央左下：白い角丸カード（縦長）\n  [就活軸]\n  ${axis}\n\n・中央右：[添付した本人の写真]（白いポラロイド風フレームに収め、フレームの下部に小さく「${photoCaption}」というテキストを配置する）\n\n上記のレイアウト通りに、文字の配置やバランス、色合いをこれまでのトンマナと完全に一致させて、美しくクオリティの高いInstagram投稿用画像を生成してください。`;
+
+  const outputArea = document.getElementById('insta-output-area');
+  outputArea.value = captionText + "\n\n============================================\n\n" + imagePromptText;
+  outputArea.style.display = 'block';
+});
+
+// ── Credentials / Settings ────────────────────────────────────────
+var credsOk = false;
+
+async function checkCreds() {
+  try {
+    var res  = await fetch('http://127.0.0.1:5000/api/credentials-status');
+    var data = await res.json();
+    credsOk = data.slack_token_set && data.gemini_key_set;
+    var btn = document.getElementById('settings-btn');
+    if (credsOk) {
+      btn.classList.remove('unconfigured');
+      btn.title = '認証情報 設定済み';
+    } else {
+      btn.classList.add('unconfigured');
+      btn.title = '認証情報 未設定 — クリックして設定';
+    }
+    document.getElementById('dot-slack').className  = 'dot ' + (data.slack_token_set ? 'set' : 'unset');
+    document.getElementById('dot-gemini').className = 'dot ' + (data.gemini_key_set  ? 'set' : 'unset');
+  } catch(e) { /* Flask未起動でも握り潰す */ }
+}
+
+function openSettings() {
+  document.getElementById('modal-msg').textContent = '';
+  document.getElementById('modal-msg').className   = 'modal-msg';
+  document.getElementById('modal-overlay').classList.add('open');
+  checkCreds();
+}
+
+function closeSettings() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+
+function overlayClick(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeSettings();
+}
+
+async function saveCredentials() {
+  var slack  = document.getElementById('inp-slack').value.trim();
+  var gemini = document.getElementById('inp-gemini').value.trim();
+  var msgEl  = document.getElementById('modal-msg');
+  var saveBtn = document.getElementById('btn-save');
+
+  if (!slack)  { msgEl.textContent = 'SLACK_BOT_TOKEN を入力してください'; msgEl.className = 'modal-msg err'; return; }
+  if (!gemini) { msgEl.textContent = 'GEMINI_API_KEY を入力してください';  msgEl.className = 'modal-msg err'; return; }
+
+  saveBtn.disabled = true;
+  saveBtn.textContent = '保存中...';
+  msgEl.textContent = '';
+
+  try {
+    var res  = await fetch('http://127.0.0.1:5000/api/set-credentials', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ slack_token: slack, gemini_key: gemini })
+    });
+    var data = await res.json();
+    if (!res.ok) throw new Error(data.error || '保存に失敗しました');
+
+    msgEl.textContent = '✅ 保存しました！ボタンで更新できます';
+    msgEl.className   = 'modal-msg ok';
+    document.getElementById('inp-slack').classList.add('ok');
+    document.getElementById('inp-gemini').classList.add('ok');
+    await checkCreds();
+    setTimeout(closeSettings, 1400);
+  } catch(err) {
+    msgEl.textContent = '❌ ' + err.message;
+    msgEl.className   = 'modal-msg err';
+  } finally {
+    saveBtn.disabled = false;
+    saveBtn.textContent = '保存して接続';
+  }
+}
+
+// ── Update button ─────────────────────────────────────────────────
+function setBtn(state, text) {
+  var btn = document.getElementById('update-btn');
+  btn.className = 'update-btn' + (state ? ' ' + state : '');
+  btn.disabled  = (state === 'loading');
+  if (state === 'loading') {
+    btn.innerHTML = '<span class="spinner"></span>' + text;
+  } else {
+    btn.innerHTML = text;
+  }
+}
+
+async function doUpdate() {
+  if (isLoading) return;
+  if (!credsOk) { openSettings(); return; }
+  isLoading = true;
+  sel = null;
+  tab = 'short';
+
+  var cardsEl = document.getElementById('cards');
+  var pvEl    = document.getElementById('pv');
+  var instaUi = document.getElementById('insta-member-ui');
+
+  setBtn('loading', ' Slackから取得・分析中（約20秒）...');
+  cardsEl.classList.add('loading');
+  instaUi.style.display = 'none';
+  pvEl.style.display = 'flex';
+  pvEl.innerHTML =
+    '<div class="empty">' +
+      '<div class="empty-icon">⏳</div>' +
+      '<div>Slack データ取得中...</div>' +
+      '<div style="font-size:12px;margin-top:6px;color:#64748b">Gemini で切り口を生成しています</div>' +
+    '</div>';
+
+  try {
+    var res  = await fetch('http://127.0.0.1:5000/api/update');
+    var data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'サーバーエラー');
+
+    DATA = data;
+    renderStatus();
+    cardsEl.classList.remove('loading');
+    renderCards();
+    renderPreview();
+
+    setBtn('success', '✅ 更新完了!');
+    setTimeout(function() {
+      setBtn('', '🔄 最新データに更新');
+      isLoading = false;
+    }, 2500);
+
+  } catch(err) {
+    cardsEl.classList.remove('loading');
+    pvEl.innerHTML =
+      '<div class="empty">' +
+        '<div class="empty-icon">❌</div>' +
+        '<div>エラーが発生しました</div>' +
+        '<div style="font-size:12px;color:#ef4444;margin-top:6px;max-width:300px;line-height:1.6">' + err.message + '</div>' +
+      '</div>';
+    setBtn('err', '❌ 再試行する');
+    setTimeout(function() {
+      setBtn('', '🔄 最新データに更新');
+      isLoading = false;
+    }, 5000);
+  }
+}
+
+// ── Init ──────────────────────────────────────────────────────────
+fetchMemberData(); // GAS連携データの取得
+renderStatus();
+renderCards();
+renderPreview();
+checkCreds();
+</script>
+</body>
+</html>
 
