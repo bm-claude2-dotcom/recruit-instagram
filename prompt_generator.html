@@ -165,6 +165,7 @@
       border-left: 3px solid #6366f1; border-radius: 0 10px 10px 0;
       padding: 14px 16px; font-size: 14px; line-height: 1.9;
       color: #334155; word-break: break-all; min-height: 100px;
+      white-space: pre-wrap; /* 追加: 改行を反映 */
     }
     .txt-ft { display: flex; align-items: center; justify-content: space-between; }
     .char-cnt { font-size: 12px; color: #94a3b8; }
@@ -274,7 +275,6 @@
   </div>
 </header>
 
-<!-- Settings Modal -->
 <div class="modal-overlay" id="modal-overlay" onclick="overlayClick(event)">
   <div class="modal">
     <div class="modal-hd">
@@ -309,16 +309,72 @@
 
 <div class="layout">
   <div class="col-l">
-    <div class="col-l-label">特選 10 切り口</div>
+    <div class="col-l-label">Instagram 定番企画</div>
+    <div id="cards-fixed"></div>
+    
+    <div class="col-l-label" style="margin-top: 20px;">特選 10 切り口</div>
     <div id="cards"></div>
   </div>
+  
   <div class="col-r">
     <div class="pv-wrap" id="pv"></div>
+
+    <div class="pv-wrap" id="insta-member-ui" style="display: none; flex-direction: column; padding: 22px;">
+      <div style="border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 20px;">
+        <div class="pv-title">Instagram 社員紹介 生成ツール</div>
+        <div class="pv-hook">Googleフォームと連携して画像合成プロンプトを作成します</div>
+      </div>
+
+      <div style="background: #f8fafc; padding: 18px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 20px;">
+        <h4 style="margin-top: 0; font-size: 13px; color: #333; margin-bottom: 10px;">📩 メンバーに自己紹介フォームを送信</h4>
+        <div style="display: flex; gap: 10px;">
+          <input type="email" id="target-email" placeholder="name@principle-c.com" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 6px; outline: none;">
+          <button id="send-form-btn" style="background: #007bff; color: white; border: none; border-radius: 6px; padding: 0 20px; font-weight: bold; cursor: pointer;">送信する</button>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <h4 style="margin-top: 0; font-size: 13px; color: #333; margin-bottom: 10px;">👤 紹介するメンバーを選択</h4>
+        <select id="member-select" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; outline: none;">
+          <option value="">データを読み込み中...</option>
+        </select>
+      </div>
+
+      <div id="member-photo-container" style="display: none; text-align: center; margin-bottom: 20px; background: #fafbff; border: 1px dashed #c7d2fe; padding: 15px; border-radius: 10px;">
+        <p style="margin: 0 0 10px 0; font-size: 12px; font-weight: bold; color: #6366f1;">👇 ChatGPTに添付する本人の写真（右クリックで保存してください）</p>
+        <img id="member-photo-preview" src="" alt="メンバーの写真" style="max-width: 250px; max-height: 250px; border-radius: 8px; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+      </div>
+
+      <button id="btn-generate-insta" style="background: #6366f1; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: bold; transition: background .2s;">🪄 キャプションとプロンプトを生成</button>
+
+      <textarea id="insta-output-area" style="display: none; width: 100%; height: 350px; margin-top: 15px; padding: 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: monospace; font-size: 13px; line-height: 1.6; resize: vertical; background: #f8fafc;"></textarea>
+    </div>
   </div>
 </div>
 
 <script>
-// ── Initial sample data (replaced by /api/update response) ────────
+// ── GAS Web App URL ───────────────────────────────────────────────
+const GAS_URL = "https://script.google.com/macros/s/AKfycbzsDwlIKl1FlEi9B5BI-w_ku44STMkddCwB3WGFTUliQK8GhvRSFO98uN_RfZ34CBj1cA/exec"; 
+
+// ── Fixed Data (Instagram 定番企画) ───────────────────────────────
+var FIXED_DATA = [
+  {
+    "id": "insta_member",
+    "title": "社員紹介 (Instagram)",
+    "hook": "スプシ連携でプロフィール画像と投稿文を自動生成",
+    "category": "働く人"
+  },
+  {
+    "id": "insta_event",
+    "title": "社内イベント (Instagram)",
+    "hook": "ChatGPTで活気あるイベント画像を生成",
+    "category": "カルチャー",
+    "sns_draft": "【ChatGPT用 画像生成プロンプト】\n■ サイズ：1080×1080px（正方形）\n■ 内容：IT企業の活気ある社内イベントの様子。カジュアルなオフィススペースで、複数の社員が笑顔で談笑したり乾杯している様子。\n■ スタイル：写真のようにリアルで高画質、明るくポジティブで風通しの良さが伝わる印象。",
+    "content_long": "【Instagram用 キャプション文】\n先日、社内で〇〇イベントを開催しました！🎉\n\n部署の垣根を超えてメンバーが交流し、大盛況でした！\nこうした社内文化も私たちの魅力の一つです。\n\n「こんな環境で働いてみたい！」と思った方は、ぜひプロフィールのリンクから採用情報をチェックしてください✨\n\n#社内イベント #社内交流 #プリンシプル #採用 #一緒に働く仲間募集中"
+  }
+];
+
+// ── Initial sample data ────────
 var DATA = {
   "last_updated": null,
   "slack_status": { "company_messages": 0, "competitor_messages": 0 },
@@ -327,52 +383,8 @@ var DATA = {
       "id": 1, "title": "入社3ヶ月で初登壇", "hook": "若手が安心して挑戦できる文化を証明する等身大エピソード", "category": "成長",
       "sns_draft": "入社3ヶ月、まだ右も左もわからない時期に社内勉強会で初登壇しました。先輩たちの温かいフィードバックに背中を押され、「失敗を恐れず挑戦できる」環境を実感した日。成長したいなら、プリンシプルへ。\n#プリンシプル #新卒採用 #成長できる会社 #マーケティング",
       "content_long": "入社してわずか3ヶ月。まだ右も左もわからない時期に、上司から「次の社内勉強会で発表してみない？」と声をかけていただきました。\n\n緊張しながらGA4の分析手法を発表すると、先輩社員から鋭い質問と温かいフィードバックが飛び交いました。「失敗を責めるのではなく、どうすれば伝わるかを一緒に考えてくれる」雰囲気——それがプリンシプルの文化です。\n\nトップダウンで指示を待つのではなく、一人ひとりが自分のペースで成長できる環境。チャレンジする人を、会社全体で応援する姿勢が根付いています。\n\n#プリンシプル #新卒採用 #成長できる会社 #マーケティング #就活"
-    },
-    {
-      "id": 2, "title": "データが変える意思決定", "hook": "GA4・BigQueryを日常的に使う職場をリアルに伝える", "category": "技術",
-      "sns_draft": "「データドリブン」って実際どういう仕事？プリンシプルではGA4やBigQueryで毎日クライアントの課題を数字で解決します。直感じゃなく、データで動かす仕事の面白さを体験しに来ませんか。\n#GA4 #データ分析 #プリンシプル #新卒採用",
-      "content_long": "「データドリブン」という言葉は就活でよく耳にするけれど、実際どんな場面で使うの？\n\nプリンシプルでは、Google Analytics 4・GTM・BigQueryといったツールを日常的に扱いながら、クライアントのWebサイト改善やマーケティング施策に取り組んでいます。「なんとなくこのページが良さそう」ではなく、「このページはCVRが高いので、この要素を横展開すべきだ」と数字で語れるようになります。\n\n直感ではなくデータで説得する。その積み重ねが、自分自身の論理思考力を確実に鍛えます。\n\n#GA4 #BigQuery #データ分析 #プリンシプル #新卒採用 #デジタルマーケティング"
-    },
-    {
-      "id": 3, "title": "月1回の全社勉強会", "hook": "学ぶ文化が根付く職場をカジュアルに紹介する", "category": "カルチャー",
-      "sns_draft": "プリンシプルでは月1回の全社勉強会が恒例。テーマはSEOアップデートからAI活用、メンバーの趣味まで幅広い。業務時間内に堂々と学べる文化が、ここにあります。\n#プリンシプル #学習文化 #カルチャー #新卒採用",
-      "content_long": "プリンシプルでは月に一度、全社員が集まる勉強会を開催しています。\n\nテーマは自由で、最新のSEOコアアップデートの読み解き方から、Gemini APIを使った業務自動化の実例、はたまたメンバーの副業や趣味まで多岐にわたります。「業務時間内に学んでいい」という雰囲気が自然に根付いているのがプリンシプルの特徴です。\n\n入社1年目から発表の機会があり、アウトプットすることで知識が定着するサイクルが生まれています。好奇心があれば、どんどん吸収できる環境です。\n\n#プリンシプル #学習文化 #勉強会 #新卒採用 #カルチャー"
-    },
-    {
-      "id": 4, "title": "2年目でリーダー就任", "hook": "若手に早期から裁量が与えられるリアルなキャリアパス", "category": "リアル",
-      "sns_draft": "入社2年目でプロジェクトリーダーに。「まだ自信がないのに任された」と最初は戸惑ったけど、やるしかない環境が一番成長できた——そんな先輩の声を聞いて、私もここに入社を決めました。\n#プリンシプル #キャリア #成長 #新卒採用",
-      "content_long": "入社2年目でプロジェクトリーダーに就任したメンバーがいます。\n\n「まだ自信がないのに任された」と振り返りつつも、「やるしかない状況が一番成長できた」と話してくれました。プリンシプルでは年次よりも実力と意欲が評価される文化があり、若いうちから本番の経験を積めます。\n\nもちろん、無責任に放り投げるわけではありません。先輩や上司のサポートが手厚く、「困ったらいつでも相談できる」という安心感の中で挑戦できます。\n\n#プリンシプル #キャリア #成長 #新卒採用 #マーケティング就職"
-    },
-    {
-      "id": 5, "title": "1on1が変えたキャリア観", "hook": "上司との丁寧な対話が根付く心理的安全性の高い職場", "category": "カルチャー",
-      "sns_draft": "週1回の1on1で「次どんなことに挑戦したいですか？」と毎回聞かれます。評価のための面談じゃない、一緒に考えるための時間——そんな関係性を大切にしているのがプリンシプルです。\n#プリンシプル #1on1 #心理的安全性 #新卒採用",
-      "content_long": "週1回の1on1が、私のキャリア観を変えました。\n\n「次どんなことに挑戦したいですか？」上司から毎回聞かれるこの言葉で、漠然としていた将来像が少しずつ具体的になっていきました。評価のための面談ではなく、一緒に考えるための時間——それがプリンシプルの1on1です。\n\n「こんなこと言ったら変に思われないかな」という不安がなくなると、仕事への向き合い方が変わります。心理的安全性を大切にする文化が、プリンシプルには根付いています。\n\n#プリンシプル #1on1 #心理的安全性 #新卒採用 #働き方"
-    },
-    {
-      "id": 6, "title": "文系出身でもデータの世界へ", "hook": "文系・理系問わず活躍できる間口の広さをリアルに伝える", "category": "働く人",
-      "sns_draft": "文学部出身でも、デジタルマーケティングの世界で活躍できる。プリンシプルには文系・理系・外語系と多様な仲間が集まっています。大事なのは専攻じゃなく、論理的に考えて動ける姿勢。\n#プリンシプル #文系 #多様性 #新卒採用",
-      "content_long": "文学部出身の私が、なぜデータマーケティングの会社に？と驚かれることがあります。\n\nでもプリンシプルには、文系・理系・外語系・芸術系と多様なバックグラウンドのメンバーが揃っています。大事なのは専攻よりも「課題に仮説を立てて、データで検証し、改善する」という思考プロセスを楽しめるかどうか。\n\n入社後の研修でGA4やGTMの基礎から丁寧に学べるため、全くの未経験でも安心です。多様な視点を持ったメンバーが集まるからこそ、課題解決のアイデアも豊かになります。\n\n#プリンシプル #文系 #多様性 #新卒採用 #デジタルマーケ"
-    },
-    {
-      "id": 7, "title": "クライアントの成果が数字に出た", "hook": "自分の仕事が直接成果につながる手触り感を伝える", "category": "リアル",
-      "sns_draft": "自分の施策が数字に出る瞬間——これがデジタルマーケの醍醐味。入社1年半のメンバーがクライアントのCVR改善に成功した実体験。プリンシプルは「やった分だけ結果が見える」仕事です。\n#プリンシプル #成果 #デジタルマーケティング #新卒採用",
-      "content_long": "「自分の施策が数字に出る瞬間が、この仕事で一番好きな瞬間です」——入社1年半のメンバーが話してくれました。\n\nクライアントのランディングページを改善し、翌月のコンバージョン数が大幅に改善。「あの提案が効いた」という手触り感は、データがあるからこそ得られるものです。\n\n「なんとなく頑張った」ではなく、「あの施策で数字が動いた」という確かな実感を積み重ねられる。それが自信につながり、次の挑戦への原動力になります。\n\n#プリンシプル #成果 #デジタルマーケティング #新卒採用 #やりがい"
-    },
-    {
-      "id": 8, "title": "世界基準で働くとは", "hook": "グローバルビジョンを採用ブランドに活かす切り口", "category": "ビジョン",
-      "sns_draft": "「世界で最も信頼されるマーケティングDXパートナー」——プリンシプルのビジョンは日本国内に留まりません。スケールの大きな仕事がしたい人、一緒に世界を目指しませんか。\n#プリンシプル #ビジョン #グローバル #新卒採用",
-      "content_long": "「世界で最も信頼されるマーケティングDXパートナー」——プリンシプルはこのビジョンを本気で追いかけています。\n\n社内では英語コンテンツへの取り組みや海外事例のリサーチが日常的に行われており、グローバルな視野が自然と養われる環境があります。[要確認: 海外拠点・海外クライアントの最新状況]\n\n大きなビジョンに共鳴できるメンバーが集まるから、仕事のスケール感が違います。「世界をよりよくするためにデータを使う」という感覚で働けること——それがプリンシプルで働く意義のひとつです。\n\n#プリンシプル #ビジョン #グローバル #新卒採用 #デジタルマーケ"
-    },
-    {
-      "id": 9, "title": "残業より仕事の濃度を上げる", "hook": "長時間労働ではなく質と効率を重視する働き方の実態", "category": "リアル",
-      "sns_draft": "「遅くまで頑張る」より「短時間で成果を出す」——プリンシプルで評価されるのは後者です。データで効率化し、浮いた時間で新スキルを習得するサイクルが、ここにはあります。\n#プリンシプル #働き方 #ワークライフバランス #新卒採用",
-      "content_long": "「遅くまで頑張る」より「短時間で成果を出す」——プリンシプルでは後者が評価されます。\n\nデータを活用して業務を効率化し、浮いた時間で新しいスキルを習得する。そのサイクルが回るほど、仕事の質がどんどん上がっていきます。長時間労働を美徳にするのではなく、「限られた時間でどれだけ高い成果を出せるか」を大切にしている会社です。\n\n数字以上に、「濃い仕事ができたか」という質を重視する文化が根付いています。オン・オフのメリハリをつけながら、着実に成長できる環境です。\n\n#プリンシプル #働き方 #ワークライフバランス #新卒採用 #仕事の質"
-    },
-    {
-      "id": 10, "title": "採用担当者に直接聞いてみた", "hook": "採用基準・求める人物像をQ&A形式で等身大に伝える", "category": "働く人",
-      "sns_draft": "「プリンシプルが採用で一番見るポイントは？」直接聞いてみました。答えは「自分で考えて動ける人かどうか」。知識ゼロでも、論理的に考えて試せる人を歓迎します。\n#プリンシプル #採用 #新卒 #就活",
-      "content_long": "「プリンシプルが採用で一番見るポイントは何ですか？」採用担当者に直接聞いてみました。\n\n「マーケティングの知識よりも、自分で課題を見つけて仮説を立て、試して改善できるかどうかです。GAやSEOは入社後に教えられますが、考えて動く姿勢は一朝一夕では身につかないので」\n\n華やかな実績より、等身大の思考プロセスを見せてほしい——それがプリンシプルのスタンスです。「自分はまだ何もできない」と不安に思っている方も、「どう考えたか」「何を試したか」を丁寧に語れれば可能性は十分あります。\n\n#プリンシプル #採用 #新卒 #就活 #マーケティング"
     }
+    // ... ※ここでは軽量化のためサンプルは1つにしています（更新ボタンで実データが取れます）
   ]
 };
 
@@ -389,10 +401,11 @@ var CAT = {
 var sel = null;
 var tab = 'short';
 var isLoading = false;
+let memberList = []; // スプレッドシートからの取得データ
 
 function cc(c)  { return CAT[c] || { bg: '#f1f5f9', fg: '#475569' }; }
 function e(s)   { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function pad(n) { return ('0' + n).slice(-2); }
+function pad(n) { return typeof n === 'number' ? ('0' + n).slice(-2) : '✨'; }
 
 // ── Render ────────────────────────────────────────────────────────
 function renderStatus() {
@@ -409,12 +422,30 @@ function renderStatus() {
 }
 
 function renderCards() {
+  // 固定コンテンツの描画
+  var fixedEl = document.getElementById('cards-fixed');
+  fixedEl.innerHTML = FIXED_DATA.map(function(it) {
+    var on = sel === it.id;
+    var c  = cc(it.category);
+    return (
+      '<button class="card' + (on ? ' on' : '') + '" data-id="' + it.id + '" onclick="pick(\'' + it.id + '\')">' +
+        '<div class="card-row">' +
+          '<span class="num">' + pad(it.id) + '</span>' +
+          '<span class="cat" style="background:' + c.bg + ';color:' + c.fg + '">' + e(it.category) + '</span>' +
+        '</div>' +
+        '<div class="card-title">' + e(it.title) + '</div>' +
+        '<div class="card-hook">'  + e(it.hook)  + '</div>' +
+      '</button>'
+    );
+  }).join('');
+
+  // AI生成コンテンツの描画
   var el = document.getElementById('cards');
   el.innerHTML = DATA.items.map(function(it) {
     var on = sel === it.id;
     var c  = cc(it.category);
     return (
-      '<button class="card' + (on ? ' on' : '') + '" data-id="' + it.id + '" onclick="pick(+this.dataset.id)">' +
+      '<button class="card' + (on ? ' on' : '') + '" data-id="' + it.id + '" onclick="pick(' + it.id + ')">' +
         '<div class="card-row">' +
           '<span class="num">' + pad(it.id) + '</span>' +
           '<span class="cat" style="background:' + c.bg + ';color:' + c.fg + '">' + e(it.category) + '</span>' +
@@ -428,7 +459,11 @@ function renderCards() {
 
 function renderPreview() {
   var el = document.getElementById('pv');
+  var instaUi = document.getElementById('insta-member-ui');
+
   if (!sel) {
+    instaUi.style.display = 'none';
+    el.style.display = 'flex';
     el.innerHTML =
       '<div class="empty">' +
         '<div class="empty-icon">←</div>' +
@@ -437,9 +472,22 @@ function renderPreview() {
       '</div>';
     return;
   }
-  var it  = DATA.items.find(function(i) { return i.id === sel; });
+
+  // 「社員紹介」が選ばれた場合は専用UIを表示
+  if (sel === 'insta_member') {
+    el.style.display = 'none';
+    instaUi.style.display = 'flex';
+    return;
+  }
+
+  // それ以外は標準UIを表示
+  instaUi.style.display = 'none';
+  el.style.display = 'flex';
+
+  var it = DATA.items.find(function(i) { return i.id === sel; }) || FIXED_DATA.find(function(i) { return i.id === sel; });
   var txt = tab === 'short' ? (it.sns_draft || '') : (it.content_long || '');
   var cnt = Array.from(txt).length;
+
   el.innerHTML =
     '<div class="pv-hd">' +
       '<div class="pv-title">' + e(it.title) + '</div>' +
@@ -450,7 +498,7 @@ function renderPreview() {
       '<button class="tab' + (tab === 'long'  ? ' on' : '') + '" data-t="long"  onclick="sw(this.dataset.t)">💬 キャプション本文</button>' +
     '</div>' +
     '<div class="txt-block">' +
-      '<div class="txt-body">' + e(txt).replace(/\n/g, '<br>') + '</div>' +
+      '<div class="txt-body">' + e(txt) + '</div>' +
       '<div class="txt-ft">' +
         '<span class="char-cnt">' + cnt + ' 文字</span>' +
         '<button class="copy-btn" id="cb" onclick="doCopy()">📋 コピー</button>' +
@@ -468,7 +516,7 @@ function pick(id) {
 function sw(t) { tab = t; renderPreview(); }
 
 function doCopy() {
-  var it  = DATA.items.find(function(i) { return i.id === sel; });
+  var it = DATA.items.find(function(i) { return i.id === sel; }) || FIXED_DATA.find(function(i) { return i.id === sel; });
   if (!it) return;
   var txt = tab === 'short' ? it.sns_draft : it.content_long;
   var btn = document.getElementById('cb');
@@ -490,148 +538,58 @@ function doCopy() {
   }
 }
 
-// ── Credentials / Settings ────────────────────────────────────────
-var credsOk = false;
-
-async function checkCreds() {
+// ── Instagram Member Generation Logic ─────────────────────────────
+async function fetchMemberData() {
   try {
-    var res  = await fetch('http://127.0.0.1:5000/api/credentials-status');
-    var data = await res.json();
-    credsOk = data.slack_token_set && data.gemini_key_set;
-    var btn = document.getElementById('settings-btn');
-    if (credsOk) {
-      btn.classList.remove('unconfigured');
-      btn.title = '認証情報 設定済み';
-    } else {
-      btn.classList.add('unconfigured');
-      btn.title = '認証情報 未設定 — クリックして設定';
-    }
-    document.getElementById('dot-slack').className  = 'dot ' + (data.slack_token_set ? 'set' : 'unset');
-    document.getElementById('dot-gemini').className = 'dot ' + (data.gemini_key_set  ? 'set' : 'unset');
-  } catch(e) { /* Flask未起動でも握り潰す */ }
-}
-
-function openSettings() {
-  document.getElementById('modal-msg').textContent = '';
-  document.getElementById('modal-msg').className   = 'modal-msg';
-  document.getElementById('modal-overlay').classList.add('open');
-  checkCreds();
-}
-
-function closeSettings() {
-  document.getElementById('modal-overlay').classList.remove('open');
-}
-
-function overlayClick(e) {
-  if (e.target === document.getElementById('modal-overlay')) closeSettings();
-}
-
-async function saveCredentials() {
-  var slack  = document.getElementById('inp-slack').value.trim();
-  var gemini = document.getElementById('inp-gemini').value.trim();
-  var msgEl  = document.getElementById('modal-msg');
-  var saveBtn = document.getElementById('btn-save');
-
-  if (!slack)  { msgEl.textContent = 'SLACK_BOT_TOKEN を入力してください'; msgEl.className = 'modal-msg err'; return; }
-  if (!gemini) { msgEl.textContent = 'GEMINI_API_KEY を入力してください';  msgEl.className = 'modal-msg err'; return; }
-
-  saveBtn.disabled = true;
-  saveBtn.textContent = '保存中...';
-  msgEl.textContent = '';
-
-  try {
-    var res  = await fetch('http://127.0.0.1:5000/api/set-credentials', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ slack_token: slack, gemini_key: gemini })
+    const response = await fetch(GAS_URL);
+    memberList = await response.json();
+    const selectElement = document.getElementById("member-select");
+    selectElement.innerHTML = '<option value="">-- メンバーを選択 --</option>';
+    
+    memberList.forEach((member, index) => {
+        const option = document.createElement("option");
+        option.value = index;
+        option.textContent = member["名前"] || `メンバー ${index + 1}`; 
+        selectElement.appendChild(option);
     });
-    var data = await res.json();
-    if (!res.ok) throw new Error(data.error || '保存に失敗しました');
-
-    msgEl.textContent = '✅ 保存しました！ボタンで更新できます';
-    msgEl.className   = 'modal-msg ok';
-    document.getElementById('inp-slack').classList.add('ok');
-    document.getElementById('inp-gemini').classList.add('ok');
-    await checkCreds();
-    setTimeout(closeSettings, 1400);
-  } catch(err) {
-    msgEl.textContent = '❌ ' + err.message;
-    msgEl.className   = 'modal-msg err';
-  } finally {
-    saveBtn.disabled = false;
-    saveBtn.textContent = '保存して接続';
+  } catch (error) {
+    document.getElementById("member-select").innerHTML = '<option value="">データの取得に失敗しました</option>';
   }
 }
 
-// ── Update button ─────────────────────────────────────────────────
-function setBtn(state, text) {
-  var btn = document.getElementById('update-btn');
-  btn.className = 'update-btn' + (state ? ' ' + state : '');
-  btn.disabled  = (state === 'loading');
-  if (state === 'loading') {
-    btn.innerHTML = '<span class="spinner"></span>' + text;
-  } else {
-    btn.innerHTML = text;
+// フォーム送信機能
+document.getElementById('send-form-btn').addEventListener('click', async function() {
+  const emailInput = document.getElementById('target-email');
+  const email = emailInput.value.trim();
+  if (!email || !email.endsWith('@principle-c.com')) {
+      alert('「@principle-c.com」のメールアドレスを入力してください。');
+      return;
   }
-}
-
-async function doUpdate() {
-  if (isLoading) return;
-  if (!credsOk) { openSettings(); return; }
-  isLoading = true;
-  sel = null;
-  tab = 'short';
-
-  var cardsEl = document.getElementById('cards');
-  var pvEl    = document.getElementById('pv');
-
-  setBtn('loading', ' Slackから取得・分析中（約20秒）...');
-  cardsEl.classList.add('loading');
-  pvEl.innerHTML =
-    '<div class="empty">' +
-      '<div class="empty-icon">⏳</div>' +
-      '<div>Slack データ取得中...</div>' +
-      '<div style="font-size:12px;margin-top:6px;color:#64748b">Gemini で切り口を生成しています</div>' +
-    '</div>';
-
+  const btn = this;
+  btn.disabled = true;
+  btn.textContent = '送信中...';
   try {
-    var res  = await fetch('http://127.0.0.1:5000/api/update');
-    var data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'サーバーエラー');
-
-    DATA = data;
-    renderStatus();
-    cardsEl.classList.remove('loading');
-    renderCards();
-    renderPreview();
-
-    setBtn('success', '✅ 更新完了!');
-    setTimeout(function() {
-      setBtn('', '🔄 最新データに更新');
-      isLoading = false;
-    }, 2500);
-
-  } catch(err) {
-    cardsEl.classList.remove('loading');
-    pvEl.innerHTML =
-      '<div class="empty">' +
-        '<div class="empty-icon">❌</div>' +
-        '<div>エラーが発生しました</div>' +
-        '<div style="font-size:12px;color:#ef4444;margin-top:6px;max-width:300px;line-height:1.6">' + err.message + '</div>' +
-      '</div>';
-    setBtn('err', '❌ 再試行する');
-    setTimeout(function() {
-      setBtn('', '🔄 最新データに更新');
-      isLoading = false;
-    }, 5000);
+      const response = await fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ email: email }) });
+      const result = await response.json();
+      if (result.status === "success") {
+          alert('GoogleフォームのURLをメンバーに送信しました！');
+          emailInput.value = '';
+      } else {
+          alert('送信に失敗しました: ' + result.message);
+      }
+  } catch (error) {
+      alert('通信エラーが発生しました。');
+  } finally {
+      btn.disabled = false;
+      btn.textContent = '送信する';
   }
-}
+});
 
-// ── Init ──────────────────────────────────────────────────────────
-renderStatus();
-renderCards();
-renderPreview();
-checkCreds();
-</script>
-</body>
-</html>
+// プルダウン選択時の写真表示
+document.getElementById('member-select').addEventListener('change', function() {
+  const index = this.value;
+  const container = document.getElementById('member-photo-container');
+  const img = document.getElementById('member-photo-preview');
+  if (index !== "" && memberList[index]) {
+      const photoUrl = memberList[index]["自分の写真"] ||
+
