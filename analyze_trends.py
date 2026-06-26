@@ -295,4 +295,4 @@ if __name__ == "__main__":
 
     threading.Timer(1.5, _open).start()
     print("🚀  http://127.0.0.1:5000  (Ctrl+C で停止)")
-    app.run(host="127.0.0.1", port=5000, debug=False, use_reloader=False)
+    app.run(host="127.0.0.1", port=5000, debug=False, use_reloader=False)    python analyze_trends.py
