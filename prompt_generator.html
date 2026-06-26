@@ -23,12 +23,7 @@
       color: #fff;
       padding: 18px 24px 14px;
     }
-    .hd-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-    }
+    .hd-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
     .hd-left { flex: 1; min-width: 0; }
     .hd-brand { font-size: 10px; font-weight: 700; letter-spacing: 0.3em; color: #475569; margin-bottom: 4px; }
     .hd-title { font-size: 21px; font-weight: 700; margin-bottom: 8px; }
@@ -46,217 +41,144 @@
     }
     .hd-meta { font-size: 12px; color: #64748b; }
 
-    /* ── Update button ────────────────────────────────── */
+    /* ── Update button ── */
     .update-btn {
       flex-shrink: 0;
-      background: rgba(255,255,255,0.1);
-      color: #fff;
+      background: rgba(255,255,255,0.1); color: #fff;
       border: 1.5px solid rgba(255,255,255,0.2);
-      border-radius: 10px;
-      padding: 10px 18px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      white-space: nowrap;
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
+      border-radius: 10px; padding: 10px 18px;
+      font-size: 13px; font-weight: 600; cursor: pointer;
+      white-space: nowrap; display: inline-flex; align-items: center; gap: 7px;
       transition: background .2s, border-color .2s, transform .1s;
     }
-    .update-btn:hover:not(:disabled) {
-      background: rgba(255,255,255,0.18);
-      border-color: rgba(255,255,255,0.35);
-      transform: translateY(-1px);
-    }
+    .update-btn:hover:not(:disabled) { background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.35); transform: translateY(-1px); }
     .update-btn:disabled { cursor: not-allowed; opacity: 0.85; }
     .update-btn.loading { background: rgba(99,102,241,0.3);  border-color: rgba(99,102,241,0.55); }
     .update-btn.success { background: rgba(22,163,74,0.3);   border-color: rgba(22,163,74,0.6);   }
     .update-btn.err     { background: rgba(220,38,38,0.25);  border-color: rgba(220,38,38,0.5);   }
 
-    /* Spinner */
     @keyframes spin { to { transform: rotate(360deg); } }
-    .spinner {
-      width: 13px; height: 13px; flex-shrink: 0;
-      border: 2px solid rgba(255,255,255,0.3);
-      border-top-color: rgba(255,255,255,0.9);
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-    }
+    .spinner { width: 13px; height: 13px; flex-shrink: 0; border: 2px solid rgba(255,255,255,0.3); border-top-color: rgba(255,255,255,0.9); border-radius: 50%; animation: spin 0.7s linear infinite; }
 
-    /* ── 2-column layout ──────────────────────────────── */
+    /* ── Layout ── */
     .layout { flex: 1; display: flex; overflow: hidden; min-height: 0; }
 
-    /* ── Left column ──────────────────────────────────── */
-    .col-l {
-      width: 320px; flex-shrink: 0;
-      overflow-y: auto;
-      padding: 14px 10px 40px 14px;
-      border-right: 1px solid #e2e8f0;
-      background: #f8fafc;
-    }
-    .col-l-label {
-      font-size: 10px; font-weight: 700; letter-spacing: 0.15em;
-      color: #94a3b8; text-transform: uppercase; padding: 4px 4px 10px;
-    }
-    .card {
-      background: #fff; border: 2px solid transparent; border-radius: 11px;
-      padding: 11px 13px; text-align: left; cursor: pointer; width: 100%;
-      display: flex; flex-direction: column; gap: 5px; margin-bottom: 7px;
-      box-shadow: 0 1px 3px rgba(0,0,0,.05);
-      transition: border-color .15s, box-shadow .15s;
-    }
+    /* ── Left column ── */
+    .col-l { width: 320px; flex-shrink: 0; overflow-y: auto; padding: 14px 10px 40px 14px; border-right: 1px solid #e2e8f0; background: #f8fafc; }
+    .col-l-label { font-size: 10px; font-weight: 700; letter-spacing: 0.15em; color: #94a3b8; text-transform: uppercase; padding: 4px 4px 10px; }
+    .card { background: #fff; border: 2px solid transparent; border-radius: 11px; padding: 11px 13px; text-align: left; cursor: pointer; width: 100%; display: flex; flex-direction: column; gap: 5px; margin-bottom: 7px; box-shadow: 0 1px 3px rgba(0,0,0,.05); transition: border-color .15s, box-shadow .15s; }
     .card:hover { border-color: #c7d2fe; box-shadow: 0 2px 8px rgba(99,102,241,.1); }
     .card.on { border-color: #6366f1; background: #fafbff; box-shadow: 0 0 0 4px rgba(99,102,241,.08); }
     .card-row { display: flex; align-items: center; gap: 7px; }
-    .num {
-      width: 25px; height: 25px; border-radius: 6px;
-      background: #f1f5f9; color: #64748b;
-      font-size: 11px; font-weight: 700;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; transition: background .15s, color .15s;
-    }
+    .num { width: 25px; height: 25px; border-radius: 6px; background: #f1f5f9; color: #64748b; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background .15s, color .15s; }
     .card.on .num { background: #6366f1; color: #fff; }
     .cat { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px; }
     .card-title { font-size: 13px; font-weight: 700; color: #1e293b; line-height: 1.4; }
     .card.on .card-title { color: #4338ca; }
     .card-hook { font-size: 11px; color: #64748b; line-height: 1.5; }
-
-    /* Cards loading dim */
     #cards { transition: opacity .3s; }
     #cards.loading { opacity: 0.3; pointer-events: none; }
 
-    /* ── Right column ─────────────────────────────────── */
+    /* ── Right column ── */
     .col-r { flex: 1; overflow-y: auto; padding: 14px 18px 40px; }
-    .pv-wrap {
-      background: #fff; border-radius: 14px; border: 1.5px solid #e2e8f0;
-      box-shadow: 0 2px 8px rgba(0,0,0,.05);
-      display: flex; flex-direction: column;
-      min-height: calc(100% - 8px); overflow: hidden;
-    }
-    .empty {
-      flex: 1; display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 10px; color: #94a3b8; font-size: 14px;
-      line-height: 1.9; text-align: center; padding: 60px 40px;
-    }
+    .pv-wrap { background: #fff; border-radius: 14px; border: 1.5px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0,0,0,.05); display: flex; flex-direction: column; min-height: calc(100% - 8px); overflow: hidden; }
+    .empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; color: #94a3b8; font-size: 14px; line-height: 1.9; text-align: center; padding: 60px 40px; }
     .empty-icon { font-size: 28px; color: #cbd5e1; }
     .pv-hd { padding: 18px 22px 12px; border-bottom: 1px solid #f1f5f9; }
     .pv-title { font-size: 18px; font-weight: 700; color: #1e293b; margin-bottom: 4px; }
     .pv-hook  { font-size: 13px; color: #6366f1; font-weight: 500; }
-    .tabs {
-      display: flex; padding: 0 22px;
-      background: #fafbff; border-bottom: 1px solid #f1f5f9;
-    }
-    .tab {
-      padding: 10px 18px; font-size: 13px; font-weight: 600;
-      color: #94a3b8; background: none; border: none;
-      border-bottom: 2.5px solid transparent;
-      cursor: pointer; margin-bottom: -1px;
-      transition: color .15s, border-color .15s;
-    }
+    .tabs { display: flex; padding: 0 22px; background: #fafbff; border-bottom: 1px solid #f1f5f9; }
+    .tab { padding: 10px 18px; font-size: 13px; font-weight: 600; color: #94a3b8; background: none; border: none; border-bottom: 2.5px solid transparent; cursor: pointer; margin-bottom: -1px; transition: color .15s, border-color .15s; }
     .tab:hover { color: #6366f1; }
     .tab.on { color: #6366f1; border-bottom-color: #6366f1; }
-    .txt-block {
-      flex: 1; display: flex; flex-direction: column;
-      padding: 18px 22px 20px; gap: 14px;
-    }
-    .txt-body {
-      flex: 1; background: #f8fafc;
-      border-left: 3px solid #6366f1; border-radius: 0 10px 10px 0;
-      padding: 14px 16px; font-size: 14px; line-height: 1.9;
-      color: #334155; word-break: break-all; min-height: 100px;
-      white-space: pre-wrap; /* 追加: 改行を反映 */
-    }
+    .txt-block { flex: 1; display: flex; flex-direction: column; padding: 18px 22px 20px; gap: 14px; }
+    .txt-body { flex: 1; background: #f8fafc; border-left: 3px solid #6366f1; border-radius: 0 10px 10px 0; padding: 14px 16px; font-size: 14px; line-height: 1.9; color: #334155; word-break: break-all; min-height: 100px; white-space: pre-wrap; }
     .txt-ft { display: flex; align-items: center; justify-content: space-between; }
     .char-cnt { font-size: 12px; color: #94a3b8; }
-    .copy-btn {
-      background: #6366f1; color: #fff; border: none; border-radius: 8px;
-      padding: 8px 20px; font-size: 13px; font-weight: 600; cursor: pointer;
-      transition: background .2s; white-space: nowrap;
-    }
+    .copy-btn { background: #6366f1; color: #fff; border: none; border-radius: 8px; padding: 8px 20px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background .2s; white-space: nowrap; }
     .copy-btn:hover { background: #4f46e5; }
     .copy-btn.done  { background: #16a34a; }
+
+    /* ── Settings button ── */
+    .settings-btn { flex-shrink: 0; background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.7); border: 1.5px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 10px 14px; font-size: 15px; cursor: pointer; transition: background .2s, color .2s; display: inline-flex; align-items: center; gap: 5px; }
+    .settings-btn:hover { background: rgba(255,255,255,0.14); color: #fff; }
+    .settings-btn.unconfigured { border-color: rgba(251,191,36,0.6); color: #fbbf24; }
+
+    /* ── Modal ── */
+    .modal-overlay { display: none; position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.55); backdrop-filter: blur(3px); align-items: center; justify-content: center; }
+    .modal-overlay.open { display: flex; }
+    .modal { background: #fff; border-radius: 16px; width: 460px; max-width: 94vw; box-shadow: 0 20px 60px rgba(0,0,0,0.25); overflow: hidden; }
+    .modal-hd { background: linear-gradient(135deg, #0f172a, #1e293b); color: #fff; padding: 20px 24px 16px; }
+    .modal-hd-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+    .modal-hd-sub   { font-size: 12px; color: #64748b; }
+    .modal-body { padding: 22px 24px; display: flex; flex-direction: column; gap: 16px; }
+    .field label { display: block; font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 5px; letter-spacing: 0.05em; }
+    .field-row { display: flex; gap: 8px; align-items: center; }
+    .field input { flex: 1; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 9px 12px; font-size: 13px; color: #1e293b; background: #f8fafc; font-family: monospace; outline: none; transition: border-color .15s; }
+    .field input:focus { border-color: #6366f1; background: #fff; }
+    .field input.ok { border-color: #22c55e; }
+    .dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; background: #e2e8f0; transition: background .3s; }
+    .dot.set   { background: #22c55e; }
+    .dot.unset { background: #f59e0b; }
+    .field-hint { font-size: 11px; color: #94a3b8; margin-top: 4px; }
+    .modal-ft { padding: 0 24px 22px; display: flex; gap: 10px; justify-content: flex-end; }
+    .btn-cancel { background: #f1f5f9; color: #64748b; border: none; border-radius: 8px; padding: 9px 18px; font-size: 13px; font-weight: 600; cursor: pointer; }
+    .btn-cancel:hover { background: #e2e8f0; }
+    .btn-save { background: #6366f1; color: #fff; border: none; border-radius: 8px; padding: 9px 22px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background .2s; }
+    .btn-save:hover:not(:disabled) { background: #4f46e5; }
+    .btn-save:disabled { opacity: 0.6; cursor: not-allowed; }
+    .modal-msg { font-size: 12px; padding: 0 24px 16px; margin-top: -8px; min-height: 18px; }
+    .modal-msg.ok  { color: #16a34a; }
+    .modal-msg.err { color: #dc2626; }
 
     /* Scrollbar */
     .col-l::-webkit-scrollbar, .col-r::-webkit-scrollbar { width: 4px; }
     .col-l::-webkit-scrollbar-track, .col-r::-webkit-scrollbar-track { background: transparent; }
     .col-l::-webkit-scrollbar-thumb, .col-r::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 4px; }
 
-    /* ── Settings button ──────────────────────────────── */
-    .settings-btn {
-      flex-shrink: 0;
-      background: rgba(255,255,255,0.07);
-      color: rgba(255,255,255,0.7);
-      border: 1.5px solid rgba(255,255,255,0.12);
-      border-radius: 10px;
-      padding: 10px 14px;
-      font-size: 15px;
-      cursor: pointer;
-      transition: background .2s, color .2s;
-      display: inline-flex; align-items: center; gap: 5px;
+    /* ── Event UI ─────────────────────────────────────── */
+    .ev-section { padding: 18px 22px; }
+    .ev-section + .ev-section { border-top: 1px solid #f1f5f9; }
+    .ev-section-title { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: #6366f1; text-transform: uppercase; margin-bottom: 10px; }
+    .ev-fetch-btn {
+      background: #0f172a; color: #fff; border: none; border-radius: 8px;
+      padding: 10px 20px; font-size: 13px; font-weight: 600; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 7px; transition: background .2s;
     }
-    .settings-btn:hover { background: rgba(255,255,255,0.14); color: #fff; }
-    .settings-btn.unconfigured { border-color: rgba(251,191,36,0.6); color: #fbbf24; }
+    .ev-fetch-btn:hover:not(:disabled) { background: #1e293b; }
+    .ev-fetch-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .ev-fetch-btn .spinner { border-color: rgba(255,255,255,0.3); border-top-color: #fff; }
 
-    /* ── Modal overlay ────────────────────────────────── */
-    .modal-overlay {
-      display: none; position: fixed; inset: 0; z-index: 100;
-      background: rgba(0,0,0,0.55); backdrop-filter: blur(3px);
-      align-items: center; justify-content: center;
+    /* Event candidate cards */
+    .ev-list { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+    .ev-card {
+      border: 2px solid #e2e8f0; border-radius: 10px; padding: 12px 14px;
+      cursor: pointer; background: #fff; text-align: left; width: 100%;
+      transition: border-color .15s, box-shadow .15s;
     }
-    .modal-overlay.open { display: flex; }
-    .modal {
-      background: #fff; border-radius: 16px; width: 460px; max-width: 94vw;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-      overflow: hidden;
-    }
-    .modal-hd {
-      background: linear-gradient(135deg, #0f172a, #1e293b);
-      color: #fff; padding: 20px 24px 16px;
-    }
-    .modal-hd-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
-    .modal-hd-sub   { font-size: 12px; color: #64748b; }
-    .modal-body { padding: 22px 24px; display: flex; flex-direction: column; gap: 16px; }
-    .field label {
-      display: block; font-size: 12px; font-weight: 600;
-      color: #475569; margin-bottom: 5px; letter-spacing: 0.05em;
-    }
-    .field-row { display: flex; gap: 8px; align-items: center; }
-    .field input {
-      flex: 1; border: 1.5px solid #e2e8f0; border-radius: 8px;
-      padding: 9px 12px; font-size: 13px; color: #1e293b; background: #f8fafc;
-      font-family: monospace; outline: none; transition: border-color .15s;
-    }
-    .field input:focus { border-color: #6366f1; background: #fff; }
-    .field input.ok { border-color: #22c55e; }
-    .dot {
-      width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0;
-      background: #e2e8f0; transition: background .3s;
-    }
-    .dot.set   { background: #22c55e; }
-    .dot.unset { background: #f59e0b; }
-    .field-hint { font-size: 11px; color: #94a3b8; margin-top: 4px; }
-    .modal-ft {
-      padding: 0 24px 22px; display: flex; gap: 10px; justify-content: flex-end;
-    }
-    .btn-cancel {
-      background: #f1f5f9; color: #64748b; border: none; border-radius: 8px;
-      padding: 9px 18px; font-size: 13px; font-weight: 600; cursor: pointer;
-    }
-    .btn-cancel:hover { background: #e2e8f0; }
-    .btn-save {
+    .ev-card:hover { border-color: #c7d2fe; box-shadow: 0 2px 6px rgba(99,102,241,.1); }
+    .ev-card.selected { border-color: #6366f1; background: #fafbff; box-shadow: 0 0 0 3px rgba(99,102,241,.1); }
+    .ev-card-date { font-size: 11px; color: #94a3b8; margin-bottom: 4px; }
+    .ev-card-text { font-size: 13px; color: #334155; line-height: 1.6; }
+
+    /* Generate button */
+    .ev-gen-btn {
       background: #6366f1; color: #fff; border: none; border-radius: 8px;
-      padding: 9px 22px; font-size: 13px; font-weight: 600; cursor: pointer;
-      transition: background .2s;
+      padding: 12px 24px; font-size: 14px; font-weight: 700; cursor: pointer;
+      width: 100%; transition: background .2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
     }
-    .btn-save:hover:not(:disabled) { background: #4f46e5; }
-    .btn-save:disabled { opacity: 0.6; cursor: not-allowed; }
-    .modal-msg {
-      font-size: 12px; padding: 0 24px 16px; margin-top: -8px;
-      min-height: 18px;
+    .ev-gen-btn:hover:not(:disabled) { background: #4f46e5; }
+    .ev-gen-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Output blocks */
+    .out-block { background: #f8fafc; border-radius: 10px; border: 1px solid #e2e8f0; overflow: hidden; }
+    .out-block-hd {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 14px; background: #fff; border-bottom: 1px solid #e2e8f0;
     }
-    .modal-msg.ok  { color: #16a34a; }
-    .modal-msg.err { color: #dc2626; }
+    .out-block-title { font-size: 12px; font-weight: 700; color: #475569; }
+    .out-body { padding: 14px 16px; font-size: 13px; line-height: 1.9; color: #334155; white-space: pre-wrap; word-break: break-all; }
+    .out-char { font-size: 11px; color: #94a3b8; padding: 0 14px 10px; text-align: right; }
   </style>
 </head>
 <body>
@@ -275,6 +197,7 @@
   </div>
 </header>
 
+<!-- Settings Modal -->
 <div class="modal-overlay" id="modal-overlay" onclick="overlayClick(event)">
   <div class="modal">
     <div class="modal-hd">
@@ -311,84 +234,130 @@
   <div class="col-l">
     <div class="col-l-label">Instagram 定番企画</div>
     <div id="cards-fixed"></div>
-    
     <div class="col-l-label" style="margin-top: 20px;">特選 10 切り口</div>
     <div id="cards"></div>
   </div>
-  
+
   <div class="col-r">
+    <!-- Standard preview -->
     <div class="pv-wrap" id="pv"></div>
 
-    <div class="pv-wrap" id="insta-member-ui" style="display: none; flex-direction: column; padding: 22px;">
-      <div style="border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 20px;">
+    <!-- 社員紹介 UI -->
+    <div class="pv-wrap" id="insta-member-ui" style="display:none; flex-direction:column; padding:22px;">
+      <div style="border-bottom:1px solid #f1f5f9; padding-bottom:12px; margin-bottom:20px;">
         <div class="pv-title">Instagram 社員紹介 生成ツール</div>
         <div class="pv-hook">Googleフォームと連携して画像合成プロンプトを作成します</div>
       </div>
-
-      <div style="background: #f8fafc; padding: 18px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 20px;">
-        <h4 style="margin-top: 0; font-size: 13px; color: #333; margin-bottom: 10px;">📩 メンバーに自己紹介フォームを送信</h4>
-        <div style="display: flex; gap: 10px;">
-          <input type="email" id="target-email" placeholder="name@principle-c.com" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 6px; outline: none;">
-          <button id="send-form-btn" style="background: #007bff; color: white; border: none; border-radius: 6px; padding: 0 20px; font-weight: bold; cursor: pointer;">送信する</button>
+      <div style="background:#f8fafc; padding:18px; border-radius:10px; border:1px solid #e2e8f0; margin-bottom:20px;">
+        <h4 style="margin-top:0; font-size:13px; color:#333; margin-bottom:10px;">📩 メンバーに自己紹介フォームを送信</h4>
+        <div style="display:flex; gap:10px;">
+          <input type="email" id="target-email" placeholder="name@principle-c.com" style="flex:1; padding:10px; border:1px solid #ccc; border-radius:6px; outline:none;">
+          <button id="send-form-btn" style="background:#007bff; color:white; border:none; border-radius:6px; padding:0 20px; font-weight:bold; cursor:pointer;">送信する</button>
         </div>
       </div>
-
-      <div style="margin-bottom: 20px;">
-        <h4 style="margin-top: 0; font-size: 13px; color: #333; margin-bottom: 10px;">👤 紹介するメンバーを選択</h4>
-        <select id="member-select" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; outline: none;">
+      <div style="margin-bottom:20px;">
+        <h4 style="margin-top:0; font-size:13px; color:#333; margin-bottom:10px;">👤 紹介するメンバーを選択</h4>
+        <select id="member-select" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; font-size:14px; outline:none;">
           <option value="">データを読み込み中...</option>
         </select>
       </div>
+      <div id="member-photo-container" style="display:none; text-align:center; margin-bottom:20px; background:#fafbff; border:1px dashed #c7d2fe; padding:15px; border-radius:10px;">
+        <p style="margin:0 0 10px 0; font-size:12px; font-weight:bold; color:#6366f1;">👇 ChatGPTに添付する本人の写真（右クリックで保存してください）</p>
+        <img id="member-photo-preview" src="" alt="メンバーの写真" style="max-width:250px; max-height:250px; border-radius:8px; object-fit:cover; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
+      </div>
+      <button id="btn-generate-insta" style="background:#6366f1; color:white; border:none; padding:12px; border-radius:8px; cursor:pointer; font-size:14px; font-weight:bold; transition:background .2s;">🪄 キャプションとプロンプトを生成</button>
+      <div id="member-output" style="display:none; margin-top:16px; display:none; flex-direction:column; gap:12px;">
+        <div class="out-block">
+          <div class="out-block-hd">
+            <span class="out-block-title">📝 Instagram キャプション</span>
+            <button class="copy-btn" onclick="copyOut('member-caption-body', this)">📋 コピー</button>
+          </div>
+          <div class="out-body" id="member-caption-body"></div>
+          <div class="out-char" id="member-caption-cnt"></div>
+        </div>
+        <div class="out-block">
+          <div class="out-block-hd">
+            <span class="out-block-title">🖼 ChatGPT 画像生成プロンプト</span>
+            <button class="copy-btn" onclick="copyOut('member-prompt-body', this)">📋 コピー</button>
+          </div>
+          <div class="out-body" id="member-prompt-body"></div>
+        </div>
+      </div>
+    </div>
 
-      <div id="member-photo-container" style="display: none; text-align: center; margin-bottom: 20px; background: #fafbff; border: 1px dashed #c7d2fe; padding: 15px; border-radius: 10px;">
-        <p style="margin: 0 0 10px 0; font-size: 12px; font-weight: bold; color: #6366f1;">👇 ChatGPTに添付する本人の写真（右クリックで保存してください）</p>
-        <img id="member-photo-preview" src="" alt="メンバーの写真" style="max-width: 250px; max-height: 250px; border-radius: 8px; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+    <!-- 社内イベント UI -->
+    <div class="pv-wrap" id="insta-event-ui" style="display:none; flex-direction:column;">
+      <div class="ev-section">
+        <div class="pv-title">Instagram 社内イベント 生成ツール</div>
+        <div class="pv-hook" style="margin-top:4px;">Slack「26卒メンバー」チャンネルの #社内イベント 投稿から候補を取得</div>
       </div>
 
-      <button id="btn-generate-insta" style="background: #6366f1; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: bold; transition: background .2s;">🪄 キャプションとプロンプトを生成</button>
+      <!-- Step 1: Fetch from Slack -->
+      <div class="ev-section">
+        <div class="ev-section-title">STEP 1 — Slack から候補を取得</div>
+        <button class="ev-fetch-btn" id="ev-fetch-btn" onclick="fetchSlackEvents()">
+          <span>📥 Slackから候補を取得</span>
+        </button>
+        <div id="ev-list" class="ev-list"></div>
+      </div>
 
-      <textarea id="insta-output-area" style="display: none; width: 100%; height: 350px; margin-top: 15px; padding: 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: monospace; font-size: 13px; line-height: 1.6; resize: vertical; background: #f8fafc;"></textarea>
+      <!-- Step 2: Generate -->
+      <div class="ev-section">
+        <div class="ev-section-title">STEP 2 — 選択して生成</div>
+        <button class="ev-gen-btn" id="ev-gen-btn" onclick="generateEventContent()" disabled>
+          🪄 キャプションとプロンプトを生成
+        </button>
+      </div>
+
+      <!-- Output -->
+      <div id="ev-output" style="display:none; flex-direction:column; gap:0;">
+        <div class="ev-section" style="display:flex; flex-direction:column; gap:12px;">
+          <div class="ev-section-title">生成結果</div>
+          <div class="out-block">
+            <div class="out-block-hd">
+              <span class="out-block-title">📝 Instagram キャプション</span>
+              <button class="copy-btn" onclick="copyOut('ev-caption-body', this)">📋 コピー</button>
+            </div>
+            <div class="out-body" id="ev-caption-body"></div>
+            <div class="out-char" id="ev-caption-cnt"></div>
+          </div>
+          <div class="out-block">
+            <div class="out-block-hd">
+              <span class="out-block-title">🖼 ChatGPT 画像生成プロンプト</span>
+              <button class="copy-btn" onclick="copyOut('ev-prompt-body', this)">📋 コピー</button>
+            </div>
+            <div class="out-body" id="ev-prompt-body"></div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
-// ── GAS Web App URL ───────────────────────────────────────────────
-const GAS_URL = "https://script.google.com/macros/s/AKfycbzsDwlIKl1FlEi9B5BI-w_ku44STMkddCwB3WGFTUliQK8GhvRSFO98uN_RfZ34CBj1cA/exec"; 
+// ── Config ────────────────────────────────────────────────────────
+const GAS_URL  = "https://script.google.com/macros/s/AKfycbzsDwlIKl1FlEi9B5BI-w_ku44STMkddCwB3WGFTUliQK8GhvRSFO98uN_RfZ34CBj1cA/exec";
+const API_BASE = "http://127.0.0.1:3939";
 
-// ── Fixed Data (Instagram 定番企画) ───────────────────────────────
+// ── Fixed Data ────────────────────────────────────────────────────
 var FIXED_DATA = [
-  {
-    "id": "insta_member",
-    "title": "社員紹介 (Instagram)",
-    "hook": "スプシ連携でプロフィール画像と投稿文を自動生成",
-    "category": "働く人"
-  },
-  {
-    "id": "insta_event",
-    "title": "社内イベント (Instagram)",
-    "hook": "ChatGPTで活気あるイベント画像を生成",
-    "category": "カルチャー",
-    "sns_draft": "【ChatGPT用 画像生成プロンプト】\n■ サイズ：1080×1080px（正方形）\n■ 内容：IT企業の活気ある社内イベントの様子。カジュアルなオフィススペースで、複数の社員が笑顔で談笑したり乾杯している様子。\n■ スタイル：写真のようにリアルで高画質、明るくポジティブで風通しの良さが伝わる印象。",
-    "content_long": "【Instagram用 キャプション文】\n先日、社内で〇〇イベントを開催しました！🎉\n\n部署の垣根を超えてメンバーが交流し、大盛況でした！\nこうした社内文化も私たちの魅力の一つです。\n\n「こんな環境で働いてみたい！」と思った方は、ぜひプロフィールのリンクから採用情報をチェックしてください✨\n\n#社内イベント #社内交流 #プリンシプル #採用 #一緒に働く仲間募集中"
-  }
+  { id: "insta_member", title: "社員紹介 (Instagram)", hook: "スプシ連携でプロフィール画像と投稿文を自動生成", category: "働く人" },
+  { id: "insta_event",  title: "社内イベント (Instagram)", hook: "Slackの#社内イベント投稿から候補を取得して自動生成", category: "カルチャー" }
 ];
 
-// ── Initial sample data ────────
+// ── Sample AI data ────────────────────────────────────────────────
 var DATA = {
-  "last_updated": null,
-  "slack_status": { "company_messages": 0, "competitor_messages": 0 },
-  "items": [
+  last_updated: null,
+  slack_status: { company_messages: 0, competitor_messages: 0 },
+  items: [
     {
-      "id": 1, "title": "入社3ヶ月で初登壇", "hook": "若手が安心して挑戦できる文化を証明する等身大エピソード", "category": "成長",
-      "sns_draft": "入社3ヶ月、まだ右も左もわからない時期に社内勉強会で初登壇しました。先輩たちの温かいフィードバックに背中を押され、「失敗を恐れず挑戦できる」環境を実感した日。成長したいなら、プリンシプルへ。\n#プリンシプル #新卒採用 #成長できる会社 #マーケティング",
-      "content_long": "入社してわずか3ヶ月。まだ右も左もわからない時期に、上司から「次の社内勉強会で発表してみない？」と声をかけていただきました。\n\n緊張しながらGA4の分析手法を発表すると、先輩社員から鋭い質問と温かいフィードバックが飛び交いました。「失敗を責めるのではなく、どうすれば伝わるかを一緒に考えてくれる」雰囲気——それがプリンシプルの文化です。\n\nトップダウンで指示を待つのではなく、一人ひとりが自分のペースで成長できる環境。チャレンジする人を、会社全体で応援する姿勢が根付いています。\n\n#プリンシプル #新卒採用 #成長できる会社 #マーケティング #就活"
+      id: 1, title: "入社3ヶ月で初登壇", hook: "若手が安心して挑戦できる文化を証明する等身大エピソード", category: "成長",
+      sns_draft: "入社3ヶ月、まだ右も左もわからない時期に社内勉強会で初登壇しました。先輩たちの温かいフィードバックに背中を押され、「失敗を恐れず挑戦できる」環境を実感した日。成長したいなら、プリンシプルへ。\n#プリンシプル #新卒採用 #成長できる会社 #マーケティング",
+      content_long: "入社してわずか3ヶ月。まだ右も左もわからない時期に、上司から「次の社内勉強会で発表してみない？」と声をかけていただきました。\n\n緊張しながらGA4の分析手法を発表すると、先輩社員から鋭い質問と温かいフィードバックが飛び交いました。「失敗を責めるのではなく、どうすれば伝わるかを一緒に考えてくれる」雰囲気——それがプリンシプルの文化です。\n\nトップダウンで指示を待つのではなく、一人ひとりが自分のペースで成長できる環境。チャレンジする人を、会社全体で応援する姿勢が根付いています。\n\n#プリンシプル #新卒採用 #成長できる会社 #マーケティング #就活"
     }
-    // ... ※ここでは軽量化のためサンプルは1つにしています（更新ボタンで実データが取れます）
   ]
 };
 
-// ── Category colors ───────────────────────────────────────────────
 var CAT = {
   '成長':       { bg: '#e0f2fe', fg: '#0369a1' },
   '技術':       { bg: '#ede9fe', fg: '#6d28d9' },
@@ -398,21 +367,41 @@ var CAT = {
   'ビジョン':   { bg: '#fff7ed', fg: '#c2410c' }
 };
 
-var sel = null;
-var tab = 'short';
-var isLoading = false;
-let memberList = []; // スプレッドシートからの取得データ
+var sel        = null;
+var tab        = 'short';
+var isLoading  = false;
+var memberList = [];
+var eventList  = [];       // Slackから取得したイベント
+var selEvent   = null;     // 選択中イベントのts
 
 function cc(c)  { return CAT[c] || { bg: '#f1f5f9', fg: '#475569' }; }
-function e(s)   { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function pad(n) { return typeof n === 'number' ? ('0' + n).slice(-2) : '✨'; }
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function pad(n) { return typeof n === 'number' ? ('0'+n).slice(-2) : '✨'; }
+
+// ── Copy helper ───────────────────────────────────────────────────
+function copyOut(elId, btn) {
+  var text = document.getElementById(elId).textContent;
+  var done = function() {
+    var orig = btn.textContent;
+    btn.textContent = 'コピー完了 ✓';
+    btn.classList.add('done');
+    setTimeout(function() { btn.textContent = orig; btn.classList.remove('done'); }, 2000);
+  };
+  if (navigator.clipboard) { navigator.clipboard.writeText(text).then(done); }
+  else {
+    var ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+    done();
+  }
+}
 
 // ── Render ────────────────────────────────────────────────────────
 function renderStatus() {
   var el = document.getElementById('hd-row');
   if (DATA.last_updated) {
     el.innerHTML =
-      '<span class="badge-live"> 実データに更新済み: ' + e(DATA.last_updated) + '</span>' +
+      '<span class="badge-live"> 実データに更新済み: ' + esc(DATA.last_updated) + '</span>' +
       '<span class="hd-meta">自社 ' + DATA.slack_status.company_messages + '件 ／ 参照 ' + DATA.slack_status.competitor_messages + '件</span>';
   } else {
     el.innerHTML =
@@ -422,83 +411,82 @@ function renderStatus() {
 }
 
 function renderCards() {
-  // 固定コンテンツの描画
   var fixedEl = document.getElementById('cards-fixed');
   fixedEl.innerHTML = FIXED_DATA.map(function(it) {
     var on = sel === it.id;
     var c  = cc(it.category);
     return (
-      '<button class="card' + (on ? ' on' : '') + '" data-id="' + it.id + '" onclick="pick(\'' + it.id + '\')">' +
+      '<button class="card' + (on ? ' on' : '') + '" onclick="pick(\'' + it.id + '\')">' +
         '<div class="card-row">' +
-          '<span class="num">' + pad(it.id) + '</span>' +
-          '<span class="cat" style="background:' + c.bg + ';color:' + c.fg + '">' + e(it.category) + '</span>' +
+          '<span class="num">✨</span>' +
+          '<span class="cat" style="background:' + c.bg + ';color:' + c.fg + '">' + esc(it.category) + '</span>' +
         '</div>' +
-        '<div class="card-title">' + e(it.title) + '</div>' +
-        '<div class="card-hook">'  + e(it.hook)  + '</div>' +
+        '<div class="card-title">' + esc(it.title) + '</div>' +
+        '<div class="card-hook">'  + esc(it.hook)  + '</div>' +
       '</button>'
     );
   }).join('');
 
-  // AI生成コンテンツの描画
   var el = document.getElementById('cards');
   el.innerHTML = DATA.items.map(function(it) {
     var on = sel === it.id;
     var c  = cc(it.category);
     return (
-      '<button class="card' + (on ? ' on' : '') + '" data-id="' + it.id + '" onclick="pick(' + it.id + ')">' +
+      '<button class="card' + (on ? ' on' : '') + '" onclick="pick(' + it.id + ')">' +
         '<div class="card-row">' +
           '<span class="num">' + pad(it.id) + '</span>' +
-          '<span class="cat" style="background:' + c.bg + ';color:' + c.fg + '">' + e(it.category) + '</span>' +
+          '<span class="cat" style="background:' + c.bg + ';color:' + c.fg + '">' + esc(it.category) + '</span>' +
         '</div>' +
-        '<div class="card-title">' + e(it.title) + '</div>' +
-        '<div class="card-hook">'  + e(it.hook)  + '</div>' +
+        '<div class="card-title">' + esc(it.title) + '</div>' +
+        '<div class="card-hook">'  + esc(it.hook)  + '</div>' +
       '</button>'
     );
   }).join('');
 }
 
 function renderPreview() {
-  var el = document.getElementById('pv');
-  var instaUi = document.getElementById('insta-member-ui');
+  var pv        = document.getElementById('pv');
+  var memberUi  = document.getElementById('insta-member-ui');
+  var eventUi   = document.getElementById('insta-event-ui');
+
+  // hide all
+  pv.style.display       = 'none';
+  memberUi.style.display = 'none';
+  eventUi.style.display  = 'none';
 
   if (!sel) {
-    instaUi.style.display = 'none';
-    el.style.display = 'flex';
-    el.innerHTML =
-      '<div class="empty">' +
-        '<div class="empty-icon">←</div>' +
-        '<div>左のカードを選択すると</div>' +
-        '<div>コンテンツが表示されます</div>' +
-      '</div>';
+    pv.style.display = 'flex';
+    pv.innerHTML =
+      '<div class="empty"><div class="empty-icon">←</div>' +
+      '<div>左のカードを選択すると</div><div>コンテンツが表示されます</div></div>';
     return;
   }
 
-  // 「社員紹介」が選ばれた場合は専用UIを表示
   if (sel === 'insta_member') {
-    el.style.display = 'none';
-    instaUi.style.display = 'flex';
+    memberUi.style.display = 'flex';
     return;
   }
 
-  // それ以外は標準UIを表示
-  instaUi.style.display = 'none';
-  el.style.display = 'flex';
+  if (sel === 'insta_event') {
+    eventUi.style.display = 'flex';
+    return;
+  }
 
-  var it = DATA.items.find(function(i) { return i.id === sel; }) || FIXED_DATA.find(function(i) { return i.id === sel; });
+  // standard AI content
+  pv.style.display = 'flex';
+  var it  = DATA.items.find(function(i) { return i.id === sel; });
+  if (!it) return;
   var txt = tab === 'short' ? (it.sns_draft || '') : (it.content_long || '');
   var cnt = Array.from(txt).length;
 
-  el.innerHTML =
-    '<div class="pv-hd">' +
-      '<div class="pv-title">' + e(it.title) + '</div>' +
-      '<div class="pv-hook">'  + e(it.hook)  + '</div>' +
-    '</div>' +
+  pv.innerHTML =
+    '<div class="pv-hd"><div class="pv-title">' + esc(it.title) + '</div><div class="pv-hook">' + esc(it.hook) + '</div></div>' +
     '<div class="tabs">' +
       '<button class="tab' + (tab === 'short' ? ' on' : '') + '" data-t="short" onclick="sw(this.dataset.t)">📸 スライド構成案</button>' +
       '<button class="tab' + (tab === 'long'  ? ' on' : '') + '" data-t="long"  onclick="sw(this.dataset.t)">💬 キャプション本文</button>' +
     '</div>' +
     '<div class="txt-block">' +
-      '<div class="txt-body">' + e(txt) + '</div>' +
+      '<div class="txt-body">' + esc(txt) + '</div>' +
       '<div class="txt-ft">' +
         '<span class="char-cnt">' + cnt + ' 文字</span>' +
         '<button class="copy-btn" id="cb" onclick="doCopy()">📋 コピー</button>' +
@@ -516,21 +504,16 @@ function pick(id) {
 function sw(t) { tab = t; renderPreview(); }
 
 function doCopy() {
-  var it = DATA.items.find(function(i) { return i.id === sel; }) || FIXED_DATA.find(function(i) { return i.id === sel; });
+  var it = DATA.items.find(function(i) { return i.id === sel; });
   if (!it) return;
   var txt = tab === 'short' ? it.sns_draft : it.content_long;
   var btn = document.getElementById('cb');
   var done = function() {
-    btn.textContent = 'コピー完了! ✓';
-    btn.classList.add('done');
-    setTimeout(function() {
-      btn.textContent = '📋 コピー';
-      btn.classList.remove('done');
-    }, 2000);
+    btn.textContent = 'コピー完了! ✓'; btn.classList.add('done');
+    setTimeout(function() { btn.textContent = '📋 コピー'; btn.classList.remove('done'); }, 2000);
   };
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(txt).then(done);
-  } else {
+  if (navigator.clipboard) { navigator.clipboard.writeText(txt).then(done); }
+  else {
     var ta = document.createElement('textarea');
     ta.value = txt; document.body.appendChild(ta); ta.select();
     document.execCommand('copy'); document.body.removeChild(ta);
@@ -538,113 +521,198 @@ function doCopy() {
   }
 }
 
-// ── Instagram Member Generation Logic ─────────────────────────────
+// ── 社員紹介 ─────────────────────────────────────────────────────
 async function fetchMemberData() {
   try {
-    const response = await fetch(GAS_URL);
-    memberList = await response.json();
-    const selectElement = document.getElementById("member-select");
-    selectElement.innerHTML = '<option value="">-- メンバーを選択 --</option>';
-    
-    memberList.forEach((member, index) => {
-        const option = document.createElement("option");
-        option.value = index;
-        option.textContent = member["名前"] || `メンバー ${index + 1}`; 
-        selectElement.appendChild(option);
+    var res = await fetch(GAS_URL);
+    memberList = await res.json();
+    var sel = document.getElementById('member-select');
+    sel.innerHTML = '<option value="">-- メンバーを選択 --</option>';
+    memberList.forEach(function(m, i) {
+      var o = document.createElement('option');
+      o.value = i; o.textContent = m['名前'] || ('メンバー ' + (i+1));
+      sel.appendChild(o);
     });
-  } catch (error) {
-    document.getElementById("member-select").innerHTML = '<option value="">データの取得に失敗しました</option>';
+  } catch(e) {
+    document.getElementById('member-select').innerHTML = '<option value="">データの取得に失敗しました</option>';
   }
 }
 
-// フォーム送信機能
 document.getElementById('send-form-btn').addEventListener('click', async function() {
-  const emailInput = document.getElementById('target-email');
-  const email = emailInput.value.trim();
-  if (!email || !email.endsWith('@principle-c.com')) {
-      alert('「@principle-c.com」のメールアドレスを入力してください。');
-      return;
-  }
-  const btn = this;
-  btn.disabled = true;
-  btn.textContent = '送信中...';
+  var emailEl = document.getElementById('target-email');
+  var email   = emailEl.value.trim();
+  if (!email || !email.endsWith('@principle-c.com')) { alert('「@principle-c.com」のメールアドレスを入力してください。'); return; }
+  this.disabled = true; this.textContent = '送信中...';
   try {
-      const response = await fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ email: email }) });
-      const result = await response.json();
-      if (result.status === "success") {
-          alert('GoogleフォームのURLをメンバーに送信しました！');
-          emailInput.value = '';
-      } else {
-          alert('送信に失敗しました: ' + result.message);
-      }
-  } catch (error) {
-      alert('通信エラーが発生しました。');
-  } finally {
-      btn.disabled = false;
-      btn.textContent = '送信する';
-  }
+    var res = await fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ email: email }) });
+    var r   = await res.json();
+    if (r.status === 'success') { alert('GoogleフォームのURLをメンバーに送信しました！'); emailEl.value = ''; }
+    else alert('送信に失敗しました: ' + r.message);
+  } catch(e) { alert('通信エラーが発生しました。'); }
+  finally { this.disabled = false; this.textContent = '送信する'; }
 });
 
-// プルダウン選択時の写真表示
 document.getElementById('member-select').addEventListener('change', function() {
-  const index = this.value;
-  const container = document.getElementById('member-photo-container');
-  const img = document.getElementById('member-photo-preview');
-  if (index !== "" && memberList[index]) {
-　  const photoUrl = memberList[index]["自分の写真"] || memberList[index]["写真"];
-      if (photoUrl) {
-          img.src = photoUrl;
-          container.style.display = 'block';
-          return;
-      }
+  var idx = this.value;
+  var container = document.getElementById('member-photo-container');
+  var img       = document.getElementById('member-photo-preview');
+  if (idx !== '' && memberList[idx]) {
+    var url = memberList[idx]['自分の写真'] || memberList[idx]['写真'];
+    if (url) { img.src = url; container.style.display = 'block'; return; }
   }
   container.style.display = 'none';
 });
 
-// プロンプト生成機能
 document.getElementById('btn-generate-insta').addEventListener('click', function() {
-  const index = document.getElementById('member-select').value;
-  if (index === "") {
-      alert("紹介するメンバーを選択してください。");
-      return;
-  }
-  const member = memberList[index];
-  const name = member["名前"] || "";
-  const nickname = member["ニックネーム"] || "";
-  const hometown = member["出身（都道府県）"] || member["出身"] || "";
-  const mbti = member["MBTI"] || "";
-  const hobby = member["趣味"] || "";
-  const axis = member["就活軸"] || "";
-  const photoCaption = member["写真のキャプション"] || "歓迎会でのひとコマ✨";
+  var idx = document.getElementById('member-select').value;
+  if (idx === '') { alert('紹介するメンバーを選択してください。'); return; }
+  var m            = memberList[idx];
+  var name         = m['名前'] || '';
+  var nickname     = m['ニックネーム'] || '';
+  var hometown     = m['出身（都道府県）'] || m['出身'] || '';
+  var mbti         = m['MBTI'] || '';
+  var hobby        = m['趣味'] || '';
+  var axis         = m['就活軸'] || '';
+  var photoCaption = m['写真のキャプション'] || '歓迎会でのひとコマ✨';
 
-  const captionText = `【Instagram用 キャプション文】\n＼ ✨ 新卒メンバー紹介コーナー ✨ ／\n\n本日は、私たちのチームに新しく加わった素敵なメンバーをご紹介します！\n今回登場してくれるのは【 ${name} 】さんです！👏\n\n---------------------------------------\nニックネーム：${nickname}\n出身：${hometown}\nMBTI：${mbti}\n趣味：${hobby}\n就活軸：${axis}\n---------------------------------------\n\n私たちの会社の「人」や「カルチャー」の魅力が少しでも伝わったら嬉しいです！\n「このメンバーと一緒に働いてみたい！」と思った方は、ぜひプロフィールのリンクから採用特設サイトをご覧ください！🚀\n\n#社員紹介 #メンバー紹介 #新卒採用 #採用マーケティング #ベンチャー企業 #転職活動 #一緒に働く仲間募集中`;
+  var caption =
+    '【Instagram用 キャプション文】\n' +
+    '＼ ✨ 新卒メンバー紹介コーナー ✨ ／\n\n' +
+    '本日は、私たちのチームに新しく加わった素敵なメンバーをご紹介します！\n' +
+    '今回登場してくれるのは【 ' + name + ' 】さんです！👏\n\n' +
+    '---------------------------------------\n' +
+    'ニックネーム：' + nickname + '\n' +
+    '出身：' + hometown + '\n' +
+    'MBTI：' + mbti + '\n' +
+    '趣味：' + hobby + '\n' +
+    '就活軸：' + axis + '\n' +
+    '---------------------------------------\n\n' +
+    '私たちの会社の「人」や「カルチャー」の魅力が少しでも伝わったら嬉しいです！\n' +
+    '「このメンバーと一緒に働いてみたい！」と思った方は、ぜひプロフィールのリンクから採用特設サイトをご覧ください！🚀\n\n' +
+    '#社員紹介 #メンバー紹介 #新卒採用 #採用マーケティング #ベンチャー企業 #転職活動 #一緒に働く仲間募集中';
 
-  const imagePromptText = `【ChatGPT用 画像合成プロンプト】\n【3枚目を生成してください】\n\n■ サイズ：1080×1350px（縦長）、1枚単独で出力\n\n■ レイアウト：\n・背景：これまでと同じミントグリーン〜ライトターコイズのグラデーション\n・左上：「新卒インタビュー」（小テキスト・ティール色）\n・その下：「プロフィール」（大見出し・ティール色・太字）\n・右上：グレーのドット装飾\n\n・中央上：白い角丸カードを3列で横並び\n  [ニックネーム]  [出身]    [MBTI]\n  ${nickname}         ${hometown}    ${mbti}\n\n・中央左：白い角丸カード（縦長）\n  [趣味]\n  ${hobby}\n\n・中央左下：白い角丸カード（縦長）\n  [就活軸]\n  ${axis}\n\n・中央右：[添付した本人の写真]（白いポラロイド風フレームに収め、フレームの下部に小さく「${photoCaption}」というテキストを配置する）\n\n上記のレイアウト通りに、文字の配置やバランス、色合いをこれまでのトンマナと完全に一致させて、美しくクオリティの高いInstagram投稿用画像を生成してください。`;
+  var prompt =
+    '【ChatGPT用 画像合成プロンプト】\n【3枚目を生成してください】\n\n' +
+    '■ サイズ：1080×1350px（縦長）、1枚単独で出力\n\n' +
+    '■ レイアウト：\n' +
+    '・背景：これまでと同じミントグリーン〜ライトターコイズのグラデーション\n' +
+    '・左上：「新卒インタビュー」（小テキスト・ティール色）\n' +
+    '・その下：「プロフィール」（大見出し・ティール色・太字）\n' +
+    '・右上：グレーのドット装飾\n\n' +
+    '・中央上：白い角丸カードを3列で横並び\n' +
+    '  [ニックネーム]  [出身]    [MBTI]\n' +
+    '  ' + nickname + '         ' + hometown + '    ' + mbti + '\n\n' +
+    '・中央左：白い角丸カード（縦長）\n  [趣味]\n  ' + hobby + '\n\n' +
+    '・中央左下：白い角丸カード（縦長）\n  [就活軸]\n  ' + axis + '\n\n' +
+    '・中央右：[添付した本人の写真]（白いポラロイド風フレームに収め、フレームの下部に小さく「' + photoCaption + '」というテキストを配置する）\n\n' +
+    '上記のレイアウト通りに、文字の配置やバランス、色合いをこれまでのトンマナと完全に一致させて、美しくクオリティの高いInstagram投稿用画像を生成してください。';
 
-  const outputArea = document.getElementById('insta-output-area');
-  outputArea.value = captionText + "\n\n============================================\n\n" + imagePromptText;
-  outputArea.style.display = 'block';
+  document.getElementById('member-caption-body').textContent = caption;
+  document.getElementById('member-caption-cnt').textContent  = Array.from(caption).length + ' 文字';
+  document.getElementById('member-prompt-body').textContent  = prompt;
+  var out = document.getElementById('member-output');
+  out.style.display = 'flex';
 });
+
+// ── 社内イベント ──────────────────────────────────────────────────
+async function fetchSlackEvents() {
+  var btn = document.getElementById('ev-fetch-btn');
+  var listEl = document.getElementById('ev-list');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span><span>取得中...</span>';
+  listEl.innerHTML = '';
+  selEvent = null;
+  document.getElementById('ev-gen-btn').disabled = true;
+  document.getElementById('ev-output').style.display = 'none';
+
+  try {
+    var res  = await fetch(API_BASE + '/api/slack-events');
+    var data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'エラーが発生しました');
+
+    eventList = data.events || [];
+    if (eventList.length === 0) {
+      listEl.innerHTML = '<div style="color:#94a3b8;font-size:13px;padding:12px 0;">#社内イベント タグ付きのメッセージが見つかりませんでした。</div>';
+    } else {
+      listEl.innerHTML = eventList.map(function(ev, i) {
+        return (
+          '<button class="ev-card" data-i="' + i + '" onclick="selectEvent(' + i + ')">' +
+            '<div class="ev-card-date">📅 ' + esc(ev.date) + '</div>' +
+            '<div class="ev-card-text">' + esc(ev.preview) + '</div>' +
+          '</button>'
+        );
+      }).join('');
+    }
+  } catch(err) {
+    listEl.innerHTML =
+      '<div style="color:#dc2626;font-size:13px;padding:12px 0;">❌ ' + esc(err.message) + '</div>';
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<span>📥 Slackから候補を取得</span>';
+  }
+}
+
+function selectEvent(i) {
+  selEvent = i;
+  document.querySelectorAll('.ev-card').forEach(function(c, idx) {
+    c.classList.toggle('selected', idx === i);
+  });
+  document.getElementById('ev-gen-btn').disabled = false;
+}
+
+function generateEventContent() {
+  if (selEvent === null || !eventList[selEvent]) return;
+  var ev   = eventList[selEvent];
+  var text = ev.text;
+
+  // イベント名を先頭30文字から推定
+  var eventName = text.replace(/#\S+/g, '').trim().slice(0, 30);
+  if (eventName.length === 30) eventName += '…';
+
+  var caption =
+    '【Instagram用 キャプション文】\n' +
+    '先日、社内でイベントを開催しました！🎉\n\n' +
+    text.replace(/#社内イベント/g, '').trim() + '\n\n' +
+    'こうした社内文化も私たちの魅力の一つです。\n' +
+    '部署の垣根を超えてメンバーが交流し、とても活気のある時間になりました！\n\n' +
+    '「こんな環境で働いてみたい！」と思った方は、ぜひプロフィールのリンクから採用情報をチェックしてください✨\n\n' +
+    '#社内イベント #社内交流 #プリンシプル #採用 #一緒に働く仲間募集中 #新卒採用 #ベンチャー企業';
+
+  var imageDesc = text.replace(/#\S+/g, '').replace(/\s+/g, ' ').trim().slice(0, 100);
+
+  var prompt =
+    '【ChatGPT用 画像生成プロンプト】\n\n' +
+    '■ サイズ：1080×1080px（正方形）\n' +
+    '■ 内容：IT企業の活気ある社内イベントの様子。' + imageDesc + '\n' +
+    '　カジュアルなオフィススペースで、複数の社員が笑顔で談笑したり交流している様子。\n' +
+    '■ スタイル：写真のようにリアルで高画質、明るくポジティブで風通しの良さが伝わる印象。\n' +
+    '■ 色調：明るく清潔感があり、エネルギッシュな雰囲気。白・ライトブルー系のトーン。\n' +
+    '■ 人物：複数の若い社会人（20〜30代）、多様性があり笑顔、オフィスカジュアルな服装。\n' +
+    '■ 構図：グループショット、活気あるシーン、前景にボケを入れてリアルな写真風に。\n' +
+    '■ NG：文字・ロゴ・テキストは一切入れないこと。';
+
+  document.getElementById('ev-caption-body').textContent = caption;
+  document.getElementById('ev-caption-cnt').textContent  = Array.from(caption).length + ' 文字';
+  document.getElementById('ev-prompt-body').textContent  = prompt;
+  var out = document.getElementById('ev-output');
+  out.style.display = 'flex';
+  out.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
 
 // ── Credentials / Settings ────────────────────────────────────────
 var credsOk = false;
 
 async function checkCreds() {
   try {
-    var res  = await fetch('http://127.0.0.1:5000/api/credentials-status');
+    var res  = await fetch(API_BASE + '/api/credentials-status');
     var data = await res.json();
-    credsOk = data.slack_token_set && data.gemini_key_set;
-    var btn = document.getElementById('settings-btn');
-    if (credsOk) {
-      btn.classList.remove('unconfigured');
-      btn.title = '認証情報 設定済み';
-    } else {
-      btn.classList.add('unconfigured');
-      btn.title = '認証情報 未設定 — クリックして設定';
-    }
+    credsOk  = data.slack_token_set && data.gemini_key_set;
+    var btn  = document.getElementById('settings-btn');
+    if (credsOk) { btn.classList.remove('unconfigured'); btn.title = '認証情報 設定済み'; }
+    else         { btn.classList.add('unconfigured');    btn.title = '認証情報 未設定 — クリックして設定'; }
     document.getElementById('dot-slack').className  = 'dot ' + (data.slack_token_set ? 'set' : 'unset');
     document.getElementById('dot-gemini').className = 'dot ' + (data.gemini_key_set  ? 'set' : 'unset');
-  } catch(e) { /* Flask未起動でも握り潰す */ }
+  } catch(e) {}
 }
 
 function openSettings() {
@@ -653,49 +721,36 @@ function openSettings() {
   document.getElementById('modal-overlay').classList.add('open');
   checkCreds();
 }
-
-function closeSettings() {
-  document.getElementById('modal-overlay').classList.remove('open');
-}
-
-function overlayClick(e) {
-  if (e.target === document.getElementById('modal-overlay')) closeSettings();
-}
+function closeSettings()   { document.getElementById('modal-overlay').classList.remove('open'); }
+function overlayClick(ev)  { if (ev.target === document.getElementById('modal-overlay')) closeSettings(); }
 
 async function saveCredentials() {
-  var slack  = document.getElementById('inp-slack').value.trim();
-  var gemini = document.getElementById('inp-gemini').value.trim();
-  var msgEl  = document.getElementById('modal-msg');
+  var slack   = document.getElementById('inp-slack').value.trim();
+  var gemini  = document.getElementById('inp-gemini').value.trim();
+  var msgEl   = document.getElementById('modal-msg');
   var saveBtn = document.getElementById('btn-save');
 
   if (!slack)  { msgEl.textContent = 'SLACK_BOT_TOKEN を入力してください'; msgEl.className = 'modal-msg err'; return; }
   if (!gemini) { msgEl.textContent = 'GEMINI_API_KEY を入力してください';  msgEl.className = 'modal-msg err'; return; }
 
-  saveBtn.disabled = true;
-  saveBtn.textContent = '保存中...';
-  msgEl.textContent = '';
-
+  saveBtn.disabled = true; saveBtn.textContent = '保存中...'; msgEl.textContent = '';
   try {
-    var res  = await fetch('http://127.0.0.1:5000/api/set-credentials', {
+    var res  = await fetch(API_BASE + '/api/set-credentials', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ slack_token: slack, gemini_key: gemini })
     });
     var data = await res.json();
     if (!res.ok) throw new Error(data.error || '保存に失敗しました');
-
-    msgEl.textContent = '✅ 保存しました！ボタンで更新できます';
-    msgEl.className   = 'modal-msg ok';
+    msgEl.textContent = '✅ 保存しました！'; msgEl.className = 'modal-msg ok';
     document.getElementById('inp-slack').classList.add('ok');
     document.getElementById('inp-gemini').classList.add('ok');
     await checkCreds();
     setTimeout(closeSettings, 1400);
   } catch(err) {
-    msgEl.textContent = '❌ ' + err.message;
-    msgEl.className   = 'modal-msg err';
+    msgEl.textContent = '❌ ' + err.message; msgEl.className = 'modal-msg err';
   } finally {
-    saveBtn.disabled = false;
-    saveBtn.textContent = '保存して接続';
+    saveBtn.disabled = false; saveBtn.textContent = '保存して接続';
   }
 }
 
@@ -704,70 +759,46 @@ function setBtn(state, text) {
   var btn = document.getElementById('update-btn');
   btn.className = 'update-btn' + (state ? ' ' + state : '');
   btn.disabled  = (state === 'loading');
-  if (state === 'loading') {
-    btn.innerHTML = '<span class="spinner"></span>' + text;
-  } else {
-    btn.innerHTML = text;
-  }
+  btn.innerHTML = (state === 'loading') ? '<span class="spinner"></span>' + text : text;
 }
 
 async function doUpdate() {
   if (isLoading) return;
   if (!credsOk) { openSettings(); return; }
-  isLoading = true;
-  sel = null;
-  tab = 'short';
+  isLoading = true; sel = null; tab = 'short';
 
   var cardsEl = document.getElementById('cards');
   var pvEl    = document.getElementById('pv');
-  var instaUi = document.getElementById('insta-member-ui');
-
   setBtn('loading', ' Slackから取得・分析中（約20秒）...');
   cardsEl.classList.add('loading');
-  instaUi.style.display = 'none';
+  renderPreview();
   pvEl.style.display = 'flex';
   pvEl.innerHTML =
-    '<div class="empty">' +
-      '<div class="empty-icon">⏳</div>' +
-      '<div>Slack データ取得中...</div>' +
-      '<div style="font-size:12px;margin-top:6px;color:#64748b">Gemini で切り口を生成しています</div>' +
-    '</div>';
+    '<div class="empty"><div class="empty-icon">⏳</div>' +
+    '<div>Slack データ取得中...</div>' +
+    '<div style="font-size:12px;margin-top:6px;color:#64748b">Gemini で切り口を生成しています</div></div>';
 
   try {
     var res  = await fetch('http://127.0.0.1:5000/api/update');
     var data = await res.json();
     if (!res.ok) throw new Error(data.error || 'サーバーエラー');
-
     DATA = data;
-    renderStatus();
-    cardsEl.classList.remove('loading');
-    renderCards();
-    renderPreview();
-
+    renderStatus(); cardsEl.classList.remove('loading'); renderCards(); renderPreview();
     setBtn('success', '✅ 更新完了!');
-    setTimeout(function() {
-      setBtn('', '🔄 最新データに更新');
-      isLoading = false;
-    }, 2500);
-
+    setTimeout(function() { setBtn('', '🔄 最新データに更新'); isLoading = false; }, 2500);
   } catch(err) {
     cardsEl.classList.remove('loading');
+    pvEl.style.display = 'flex';
     pvEl.innerHTML =
-      '<div class="empty">' +
-        '<div class="empty-icon">❌</div>' +
-        '<div>エラーが発生しました</div>' +
-        '<div style="font-size:12px;color:#ef4444;margin-top:6px;max-width:300px;line-height:1.6">' + err.message + '</div>' +
-      '</div>';
+      '<div class="empty"><div class="empty-icon">❌</div><div>エラーが発生しました</div>' +
+      '<div style="font-size:12px;color:#ef4444;margin-top:6px;max-width:300px;line-height:1.6">' + esc(err.message) + '</div></div>';
     setBtn('err', '❌ 再試行する');
-    setTimeout(function() {
-      setBtn('', '🔄 最新データに更新');
-      isLoading = false;
-    }, 5000);
+    setTimeout(function() { setBtn('', '🔄 最新データに更新'); isLoading = false; }, 5000);
   }
 }
 
 // ── Init ──────────────────────────────────────────────────────────
-fetchMemberData(); // GAS連携データの取得
+fetchMemberData();
 renderStatus();
 renderCards();
 renderPreview();
@@ -775,4 +806,3 @@ checkCreds();
 </script>
 </body>
 </html>
-
