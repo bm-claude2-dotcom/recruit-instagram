@@ -198,6 +198,48 @@ def api_set_credentials():
     print("✅ 認証情報を .env に保存しました")
     return jsonify({"ok": True})
 
+@app.route('/api/slack-events', methods=['GET'])
+def get_slack_events():
+    try:
+        # 1. 認証情報が設定されているか確認
+        slack_token = os.environ.get("SLACK_BOT_TOKEN") 
+        if not slack_token:
+            return jsonify({"error": "SLACK_BOT_TOKEN が未設定です"}), 400
+        
+        slack = WebClient(token=slack_token)
+        
+        # 2. すでにある OWN_CHANNEL_ID ("C0B2AF0FG91"：26卒メンバー) からメッセージを取得
+        # ※ 過去ログを多めに取得するため、ここでは直接 conversations_history を呼び出します
+        history = slack.conversations_history(channel=OWN_CHANNEL_ID, limit=100)
+        messages = history.get("messages", [])
+        
+        events_data = []
+        
+        # 3. 「#社内イベント」が含まれる投稿をフィルタリング
+        for msg in messages:
+            text = msg.get("text", "")
+            # ボットの投稿を除外し、#社内イベント が入っているものだけを抽出
+            if "#社内イベント" in text and not msg.get("bot_id"):
+                photo_url = None
+                
+                # 画像（ファイル）が添付されているかチェック
+                if "files" in msg and len(msg["files"]) > 0:
+                    first_file = msg["files"][0]
+                    # Slack上の画像のURL
+                    photo_url = first_file.get("url_private_download") or first_file.get("url_private")
+                
+                events_data.append({
+                    "text": text,
+                    "photo": photo_url
+                })
+                
+        return jsonify(events_data)
+
+    except SlackApiError as e:
+        return jsonify({"error": f"Slack APIエラー: {e.response['error']}"}), 500
+    except Exception as e:
+        return jsonify({"error": f"予期せぬエラー: {str(e)}"}), 500
+
 
 @app.route("/api/update")
 def api_update():
