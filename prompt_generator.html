@@ -165,7 +165,7 @@
       border-left: 3px solid #6366f1; border-radius: 0 10px 10px 0;
       padding: 14px 16px; font-size: 14px; line-height: 1.9;
       color: #334155; word-break: break-all; min-height: 100px;
-      white-space: pre-wrap; /* 追加: 改行を反映 */
+      white-space: pre-wrap;
     }
     .txt-ft { display: flex; align-items: center; justify-content: space-between; }
     .char-cnt { font-size: 12px; color: #94a3b8; }
@@ -176,6 +176,19 @@
     }
     .copy-btn:hover { background: #4f46e5; }
     .copy-btn.done  { background: #16a34a; }
+
+    /* 各種生成結果エリア専用 */
+    .output-container {
+      margin-top: 15px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;
+    }
+    .output-header {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;
+    }
+    .output-label { font-size: 12px; font-weight: bold; color: #475569; }
+    .output-area {
+      width: 100%; height: 160px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px;
+      font-family: monospace; font-size: 13px; line-height: 1.5; resize: vertical; background: #fff;
+    }
 
     /* Scrollbar */
     .col-l::-webkit-scrollbar, .col-r::-webkit-scrollbar { width: 4px; }
@@ -260,7 +273,6 @@
   </style>
 </head>
 <body>
-
 <header class="hd">
   <div class="hd-inner">
     <div class="hd-left">
@@ -311,7 +323,6 @@
   <div class="col-l">
     <div class="col-l-label">Instagram 定番企画</div>
     <div id="cards-fixed"></div>
-    
     <div class="col-l-label" style="margin-top: 20px;">特選 10 切り口</div>
     <div id="cards"></div>
   </div>
@@ -324,7 +335,6 @@
         <div class="pv-title">Instagram 社員紹介 生成ツール</div>
         <div class="pv-hook">Googleフォームと連携して画像合成プロンプトを作成します</div>
       </div>
-
       <div style="background: #f8fafc; padding: 18px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 20px;">
         <h4 style="margin-top: 0; font-size: 13px; color: #333; margin-bottom: 10px;">📩 メンバーに自己紹介フォームを送信</h4>
         <div style="display: flex; gap: 10px;">
@@ -332,446 +342,335 @@
           <button id="send-form-btn" style="background: #007bff; color: white; border: none; border-radius: 6px; padding: 0 20px; font-weight: bold; cursor: pointer;">送信する</button>
         </div>
       </div>
-
       <div style="margin-bottom: 20px;">
         <h4 style="margin-top: 0; font-size: 13px; color: #333; margin-bottom: 10px;">👤 紹介するメンバーを選択</h4>
         <select id="member-select" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; outline: none;">
           <option value="">データを読み込み中...</option>
         </select>
       </div>
-
       <div id="member-photo-container" style="display: none; text-align: center; margin-bottom: 20px; background: #fafbff; border: 1px dashed #c7d2fe; padding: 15px; border-radius: 10px;">
         <p style="margin: 0 0 10px 0; font-size: 12px; font-weight: bold; color: #6366f1;">👇 ChatGPTに添付する本人の写真（右クリックで保存してください）</p>
         <img id="member-photo-preview" src="" alt="メンバーの写真" style="max-width: 250px; max-height: 250px; border-radius: 8px; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
       </div>
-
       <button id="btn-generate-insta" style="background: #6366f1; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: bold; transition: background .2s;">🪄 キャプションとプロンプトを生成</button>
 
-      <textarea id="insta-output-area" style="display: none; width: 100%; height: 350px; margin-top: 15px; padding: 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: monospace; font-size: 13px; line-height: 1.6; resize: vertical; background: #f8fafc;"></textarea>
+      <div id="member-output-container" style="display:none; margin-top: 15px;">
+        <div class="output-container">
+          <div class="output-header">
+            <span class="output-label">💬 Instagram用 キャプション文</span>
+            <button class="copy-btn" onclick="copyTextDirect('member-caption-area', this)">📋 コピー</button>
+          </div>
+          <textarea id="member-caption-area" class="output-area" readonly></textarea>
+        </div>
+        <div class="output-container">
+          <div class="output-header">
+            <span class="output-label">🤖 ChatGPT用 画像合成プロンプト</span>
+            <button class="copy-btn" onclick="copyTextDirect('member-prompt-area', this)">📋 コピー</button>
+          </div>
+          <textarea id="member-prompt-area" class="output-area" readonly></textarea>
+        </div>
+      </div>
     </div>
+
+    <div class="pv-wrap" id="insta-event-ui" style="display: none; flex-direction: column; padding: 22px;">
+      <div style="border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 20px;">
+        <div class="pv-title">Instagram 社内イベント 生成ツール</div>
+        <div class="pv-hook">Slackの「26卒メンバー」チャンネルの「#社内イベント」から候補を抽出します</div>
+      </div>
+      <div style="margin-bottom: 20px;">
+        <button id="btn-fetch-events" style="background: #10b981; color: white; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: bold; margin-bottom: 12px;">🔄 Slackからイベント候補を取得</button>
+        <h4 style="margin-top: 0; font-size: 13px; color: #333; margin-bottom: 10px;">🎈 イベント候補を選択</h4>
+        <select id="event-select" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; outline: none;">
+          <option value="">-- 先に候補を取得してください --</option>
+        </select>
+      </div>
+      <div id="event-photo-container" style="display: none; text-align: center; margin-bottom: 20px; background: #fafbff; border: 1px dashed #10b981; padding: 15px; border-radius: 10px;">
+        <p style="margin: 0 0 10px 0; font-size: 12px; font-weight: bold; color: #10b981;">👇 Slackに添付されていた写真（参考・イメージ生成用）</p>
+        <img id="event-photo-preview" src="" alt="イベントの写真" style="max-width: 250px; max-height: 250px; border-radius: 8px; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+      </div>
+      <button id="btn-generate-event" style="background: #6366f1; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: bold; transition: background .2s;">🪄 キャプションとプロンプトを自動ブラッシュアップ</button>
+
+      <div id="event-output-container" style="display:none; margin-top: 15px;">
+        <div class="output-container">
+          <div class="output-header">
+            <span class="output-label">💬 Instagram用 キャプション文 (Slack原稿をいい感じに修正)</span>
+            <button class="copy-btn" onclick="copyTextDirect('event-caption-area', this)">📋 コピー</button>
+          </div>
+          <textarea id="event-caption-area" class="output-area" readonly></textarea>
+        </div>
+        <div class="output-container">
+          <div class="output-header">
+            <span class="output-label">🤖 ChatGPT用 画像生成プロンプト</span>
+            <button class="copy-btn" onclick="copyTextDirect('event-prompt-area', this)">📋 コピー</button>
+          </div>
+          <textarea id="event-prompt-area" class="output-area" readonly></textarea>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
 <script>
-// ── GAS Web App URL ───────────────────────────────────────────────
 const GAS_URL = "https://script.google.com/macros/s/AKfycbzsDwlIKl1FlEi9B5BI-w_ku44STMkddCwB3WGFTUliQK8GhvRSFO98uN_RfZ34CBj1cA/exec"; 
 
-// ── Fixed Data (Instagram 定番企画) ───────────────────────────────
 var FIXED_DATA = [
-  {
-    "id": "insta_member",
-    "title": "社員紹介 (Instagram)",
-    "hook": "スプシ連携でプロフィール画像と投稿文を自動生成",
-    "category": "働く人"
-  },
-  {
-    "id": "insta_event",
-    "title": "社内イベント (Instagram)",
-    "hook": "ChatGPTで活気あるイベント画像を生成",
-    "category": "カルチャー",
-    "sns_draft": "【ChatGPT用 画像生成プロンプト】\n■ サイズ：1080×1080px（正方形）\n■ 内容：IT企業の活気ある社内イベントの様子。カジュアルなオフィススペースで、複数の社員が笑顔で談笑したり乾杯している様子。\n■ スタイル：写真のようにリアルで高画質、明るくポジティブで風通しの良さが伝わる印象。",
-    "content_long": "【Instagram用 キャプション文】\n先日、社内で〇〇イベントを開催しました！🎉\n\n部署の垣根を超えてメンバーが交流し、大盛況でした！\nこうした社内文化も私たちの魅力の一つです。\n\n「こんな環境で働いてみたい！」と思った方は、ぜひプロフィールのリンクから採用情報をチェックしてください✨\n\n#社内イベント #社内交流 #プリンシプル #採用 #一緒に働く仲間募集中"
-  }
+  { "id": "insta_member", "title": "社員紹介 (Instagram)", "hook": "スプシ連携でプロフィール画像と投稿文を自動生成", "category": "働く人" },
+  { "id": "insta_event", "title": "社内イベント (Instagram)", "hook": "Slack連携でイベント情報を取得し、投稿文と画像プロンプトを生成", "category": "カルチャー" }
 ];
 
-// ── Initial sample data ────────
 var DATA = {
   "last_updated": null,
   "slack_status": { "company_messages": 0, "competitor_messages": 0 },
   "items": [
     {
       "id": 1, "title": "入社3ヶ月で初登壇", "hook": "若手が安心して挑戦できる文化を証明する等身大エピソード", "category": "成長",
-      "sns_draft": "入社3ヶ月、まだ右も左もわからない時期に社内勉強会で初登壇しました。先輩たちの温かいフィードバックに背中を押され、「失敗を恐れず挑戦できる」環境を実感した日。成長したいなら、プリンシプルへ。\n#プリンシプル #新卒採用 #成長できる会社 #マーケティング",
-      "content_long": "入社してわずか3ヶ月。まだ右も左もわからない時期に、上司から「次の社内勉強会で発表してみない？」と声をかけていただきました。\n\n緊張しながらGA4の分析手法を発表すると、先輩社員から鋭い質問と温かいフィードバックが飛び交いました。「失敗を責めるのではなく、どうすれば伝わるかを一緒に考えてくれる」雰囲気——それがプリンシプルの文化です。\n\nトップダウンで指示を待つのではなく、一人ひとりが自分のペースで成長できる環境。チャレンジする人を、会社全体で応援する姿勢が根付いています。\n\n#プリンシプル #新卒採用 #成長できる会社 #マーケティング #就活"
+      "sns_draft": "入社3ヶ月、...", "content_long": "入社してわずか3ヶ月。..."
     }
-    // ... ※ここでは軽量化のためサンプルは1つにしています（更新ボタンで実データが取れます）
   ]
 };
 
-// ── Category colors ───────────────────────────────────────────────
-var CAT = {
-  '成長':       { bg: '#e0f2fe', fg: '#0369a1' },
-  '技術':       { bg: '#ede9fe', fg: '#6d28d9' },
-  'カルチャー': { bg: '#fef3c7', fg: '#92400e' },
-  'リアル':     { bg: '#fce7f3', fg: '#9d174d' },
-  '働く人':     { bg: '#dcfce7', fg: '#15803d' },
-  'ビジョン':   { bg: '#fff7ed', fg: '#c2410c' }
-};
-
-var sel = null;
-var tab = 'short';
-var isLoading = false;
-let memberList = []; // スプレッドシートからの取得データ
+var CAT = { '成長': { bg: '#e0f2fe', fg: '#0369a1' }, '技術': { bg: '#ede9fe', fg: '#6d28d9' }, 'カルチャー': { bg: '#fef3c7', fg: '#92400e' }, 'リアル': { bg: '#fce7f3', fg: '#9d174d' }, '働く人': { bg: '#dcfce7', fg: '#15803d' }, 'ビジョン': { bg: '#fff7ed', fg: '#c2410c' } };
+var sel = null; var tab = 'short'; var isLoading = false;
+let memberList = []; 
+let eventList = []; // 🔹 Slackから取得する社内イベント用配列
 
 function cc(c)  { return CAT[c] || { bg: '#f1f5f9', fg: '#475569' }; }
 function e(s)   { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function pad(n) { return typeof n === 'number' ? ('0' + n).slice(-2) : '✨'; }
 
-// ── Render ────────────────────────────────────────────────────────
 function renderStatus() {
   var el = document.getElementById('hd-row');
   if (DATA.last_updated) {
-    el.innerHTML =
-      '<span class="badge-live"> 実データに更新済み: ' + e(DATA.last_updated) + '</span>' +
-      '<span class="hd-meta">自社 ' + DATA.slack_status.company_messages + '件 ／ 参照 ' + DATA.slack_status.competitor_messages + '件</span>';
+    el.innerHTML = '<span class="badge-live"> 実データに更新済み: ' + e(DATA.last_updated) + '</span><span class="hd-meta">自社 ' + DATA.slack_status.company_messages + '件 ／ 参照 ' + DATA.slack_status.competitor_messages + '件</span>';
   } else {
-    el.innerHTML =
-      '<span class="badge-sample">○ サンプルデータ表示中</span>' +
-      '<span class="hd-meta">「🔄 最新データに更新」で実データを取得</span>';
+    el.innerHTML = '<span class="badge-sample">○ サンプルデータ表示中</span><span class="hd-meta">「🔄 最新データに更新」で実データを取得</span>';
   }
 }
 
 function renderCards() {
-  // 固定コンテンツの描画
   var fixedEl = document.getElementById('cards-fixed');
   fixedEl.innerHTML = FIXED_DATA.map(function(it) {
-    var on = sel === it.id;
-    var c  = cc(it.category);
-    return (
-      '<button class="card' + (on ? ' on' : '') + '" data-id="' + it.id + '" onclick="pick(\'' + it.id + '\')">' +
-        '<div class="card-row">' +
-          '<span class="num">' + pad(it.id) + '</span>' +
-          '<span class="cat" style="background:' + c.bg + ';color:' + c.fg + '">' + e(it.category) + '</span>' +
-        '</div>' +
-        '<div class="card-title">' + e(it.title) + '</div>' +
-        '<div class="card-hook">'  + e(it.hook)  + '</div>' +
-      '</button>'
-    );
+    var on = sel === it.id; var c  = cc(it.category);
+    return '<button class="card' + (on ? ' on' : '') + '" data-id="' + it.id + '" onclick="pick(\'' + it.id + '\')"><div class="card-row"><span class="num">' + pad(it.id) + '</span><span class="cat" style="background:' + c.bg + ';color:' + c.fg + '">' + e(it.category) + '</span></div><div class="card-title">' + e(it.title) + '</div><div class="card-hook">'  + e(it.hook)  + '</div></button>';
   }).join('');
 
-  // AI生成コンテンツの描画
   var el = document.getElementById('cards');
   el.innerHTML = DATA.items.map(function(it) {
-    var on = sel === it.id;
-    var c  = cc(it.category);
-    return (
-      '<button class="card' + (on ? ' on' : '') + '" data-id="' + it.id + '" onclick="pick(' + it.id + ')">' +
-        '<div class="card-row">' +
-          '<span class="num">' + pad(it.id) + '</span>' +
-          '<span class="cat" style="background:' + c.bg + ';color:' + c.fg + '">' + e(it.category) + '</span>' +
-        '</div>' +
-        '<div class="card-title">' + e(it.title) + '</div>' +
-        '<div class="card-hook">'  + e(it.hook)  + '</div>' +
-      '</button>'
-    );
+    var on = sel === it.id; var c  = cc(it.category);
+    return '<button class="card' + (on ? ' on' : '') + '" data-id="' + it.id + '" onclick="pick(' + it.id + ')"><div class="card-row"><span class="num">' + pad(it.id) + '</span><span class="cat" style="background:' + c.bg + ';color:' + c.fg + '">' + e(it.category) + '</span></div><div class="card-title">' + e(it.title) + '</div><div class="card-hook">'  + e(it.hook)  + '</div></button>';
   }).join('');
 }
 
 function renderPreview() {
   var el = document.getElementById('pv');
   var instaUi = document.getElementById('insta-member-ui');
+  var eventUi = document.getElementById('insta-event-ui');
 
   if (!sel) {
-    instaUi.style.display = 'none';
+    instaUi.style.display = 'none'; eventUi.style.display = 'none';
     el.style.display = 'flex';
-    el.innerHTML =
-      '<div class="empty">' +
-        '<div class="empty-icon">←</div>' +
-        '<div>左のカードを選択すると</div>' +
-        '<div>コンテンツが表示されます</div>' +
-      '</div>';
+    el.innerHTML = '<div class="empty"><div class="empty-icon">←</div><div>左のカードを選択すると</div><div>コンテンツが表示されます</div></div>';
     return;
   }
 
-  // 「社員紹介」が選ばれた場合は専用UIを表示
   if (sel === 'insta_member') {
-    el.style.display = 'none';
-    instaUi.style.display = 'flex';
-    return;
+    el.style.display = 'none'; eventUi.style.display = 'none';
+    instaUi.style.display = 'flex'; return;
+  }
+  
+  if (sel === 'insta_event') {
+    el.style.display = 'none'; instaUi.style.display = 'none';
+    eventUi.style.display = 'flex'; return;
   }
 
-  // それ以外は標準UIを表示
-  instaUi.style.display = 'none';
-  el.style.display = 'flex';
+  instaUi.style.display = 'none'; eventUi.style.display = 'none'; el.style.display = 'flex';
 
   var it = DATA.items.find(function(i) { return i.id === sel; }) || FIXED_DATA.find(function(i) { return i.id === sel; });
   var txt = tab === 'short' ? (it.sns_draft || '') : (it.content_long || '');
   var cnt = Array.from(txt).length;
 
-  el.innerHTML =
-    '<div class="pv-hd">' +
-      '<div class="pv-title">' + e(it.title) + '</div>' +
-      '<div class="pv-hook">'  + e(it.hook)  + '</div>' +
-    '</div>' +
-    '<div class="tabs">' +
-      '<button class="tab' + (tab === 'short' ? ' on' : '') + '" data-t="short" onclick="sw(this.dataset.t)">📸 スライド構成案</button>' +
-      '<button class="tab' + (tab === 'long'  ? ' on' : '') + '" data-t="long"  onclick="sw(this.dataset.t)">💬 キャプション本文</button>' +
-    '</div>' +
-    '<div class="txt-block">' +
-      '<div class="txt-body">' + e(txt) + '</div>' +
-      '<div class="txt-ft">' +
-        '<span class="char-cnt">' + cnt + ' 文字</span>' +
-        '<button class="copy-btn" id="cb" onclick="doCopy()">📋 コピー</button>' +
-      '</div>' +
-    '</div>';
+  el.innerHTML = '<div class="pv-hd"><div class="pv-title">' + e(it.title) + '</div><div class="pv-hook">' + e(it.hook) + '</div></div><div class="tabs"><button class="tab' + (tab === 'short' ? ' on' : '') + '" data-t="short" onclick="sw(this.dataset.t)">📸 スライド構成案</button><button class="tab' + (tab === 'long'  ? ' on' : '') + '" data-t="long"  onclick="sw(this.dataset.t)">💬 キャプション本文</button></div><div class="txt-block"><div class="txt-body">' + e(txt) + '</div><div class="txt-ft"><span class="char-cnt">' + cnt + ' 文字</span><button class="copy-btn" id="cb" onclick="doCopy()">📋 コピー</button></div></div>';
 }
 
-function pick(id) {
-  sel = (sel === id) ? null : id;
-  tab = 'short';
-  renderCards();
-  renderPreview();
-}
-
+function pick(id) { sel = (sel === id) ? null : id; tab = 'short'; renderCards(); renderPreview(); }
 function sw(t) { tab = t; renderPreview(); }
 
 function doCopy() {
   var it = DATA.items.find(function(i) { return i.id === sel; }) || FIXED_DATA.find(function(i) { return i.id === sel; });
   if (!it) return;
   var txt = tab === 'short' ? it.sns_draft : it.content_long;
-  var btn = document.getElementById('cb');
-  var done = function() {
-    btn.textContent = 'コピー完了! ✓';
-    btn.classList.add('done');
-    setTimeout(function() {
-      btn.textContent = '📋 コピー';
-      btn.classList.remove('done');
-    }, 2000);
-  };
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(txt).then(done);
-  } else {
-    var ta = document.createElement('textarea');
-    ta.value = txt; document.body.appendChild(ta); ta.select();
-    document.execCommand('copy'); document.body.removeChild(ta);
-    done();
-  }
+  navigator.clipboard.writeText(txt).then(() => {
+    var btn = document.getElementById('cb'); btn.textContent = 'コピー完了! ✓'; btn.classList.add('done');
+    setTimeout(() => { btn.textContent = '📋 コピー'; btn.classList.remove('done'); }, 2000);
+  });
 }
 
-// ── Instagram Member Generation Logic ─────────────────────────────
+// ── 💡 直接指定テキストエリアのコピペ用共通関数 ─────────────────
+function copyTextDirect(areaId, btnElement) {
+  var txt = document.getElementById(areaId).value;
+  if(!txt) return;
+  navigator.clipboard.writeText(txt).then(() => {
+    btnElement.textContent = 'コピー完了! ✓'; btnElement.classList.add('done');
+    setTimeout(() => { btnElement.textContent = '📋 コピー'; btnElement.classList.remove('done'); }, 2000);
+  });
+}
+
+// ── Instagram Member Logic ─────────────────────────────────────────
 async function fetchMemberData() {
   try {
-    const response = await fetch(GAS_URL);
-    memberList = await response.json();
+    const response = await fetch(GAS_URL); memberList = await response.json();
     const selectElement = document.getElementById("member-select");
     selectElement.innerHTML = '<option value="">-- メンバーを選択 --</option>';
-    
     memberList.forEach((member, index) => {
-        const option = document.createElement("option");
-        option.value = index;
-        option.textContent = member["名前"] || `メンバー ${index + 1}`; 
-        selectElement.appendChild(option);
+        const option = document.createElement("option"); option.value = index;
+        option.textContent = member["名前"] || `メンバー ${index + 1}`; selectElement.appendChild(option);
     });
-  } catch (error) {
-    document.getElementById("member-select").innerHTML = '<option value="">データの取得に失敗しました</option>';
-  }
+  } catch (error) { document.getElementById("member-select").innerHTML = '<option value="">データの取得に失敗しました</option>'; }
 }
 
-// フォーム送信機能
-document.getElementById('send-form-btn').addEventListener('click', async function() {
-  const emailInput = document.getElementById('target-email');
-  const email = emailInput.value.trim();
-  if (!email || !email.endsWith('@principle-c.com')) {
-      alert('「@principle-c.com」のメールアドレスを入力してください。');
-      return;
-  }
-  const btn = this;
-  btn.disabled = true;
-  btn.textContent = '送信中...';
-  try {
-      const response = await fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ email: email }) });
-      const result = await response.json();
-      if (result.status === "success") {
-          alert('GoogleフォームのURLをメンバーに送信しました！');
-          emailInput.value = '';
-      } else {
-          alert('送信に失敗しました: ' + result.message);
-      }
-  } catch (error) {
-      alert('通信エラーが発生しました。');
-  } finally {
-      btn.disabled = false;
-      btn.textContent = '送信する';
-  }
-});
-
-// プルダウン選択時の写真表示
 document.getElementById('member-select').addEventListener('change', function() {
-  const index = this.value;
-  const container = document.getElementById('member-photo-container');
+  const index = this.value; const container = document.getElementById('member-photo-container');
   const img = document.getElementById('member-photo-preview');
   if (index !== "" && memberList[index]) {
-　  const photoUrl = memberList[index]["自分の写真"] || memberList[index]["写真"];
-      if (photoUrl) {
-          img.src = photoUrl;
-          container.style.display = 'block';
-          return;
-      }
+      const photoUrl = memberList[index]["自分の写真"] || memberList[index]["写真"];
+      if (photoUrl) { img.src = photoUrl; container.style.display = 'block'; return; }
   }
   container.style.display = 'none';
 });
 
-// プロンプト生成機能
 document.getElementById('btn-generate-insta').addEventListener('click', function() {
   const index = document.getElementById('member-select').value;
-  if (index === "") {
-      alert("紹介するメンバーを選択してください。");
-      return;
-  }
+  if (index === "") { alert("紹介するメンバーを選択してください。"); return; }
   const member = memberList[index];
-  const name = member["名前"] || "";
-  const nickname = member["ニックネーム"] || "";
-  const hometown = member["出身（都道府県）"] || member["出身"] || "";
-  const mbti = member["MBTI"] || "";
-  const hobby = member["趣味"] || "";
-  const axis = member["就活軸"] || "";
-  const photoCaption = member["写真のキャプション"] || "歓迎会でのひとコマ✨";
+  const name = member["名前"] || ""; const nickname = member["ニックネーム"] || "";
+  const hometown = member["出身（都道府県）"] || member["出身"] || ""; const mbti = member["MBTI"] || "";
+  const hobby = member["趣味"] || ""; const axis = member["就活軸"] || ""; const photoCaption = member["写真のキャプション"] || "歓迎会でのひとコマ✨";
 
-  const captionText = `【Instagram用 キャプション文】\n＼ ✨ 新卒メンバー紹介コーナー ✨ ／\n\n本日は、私たちのチームに新しく加わった素敵なメンバーをご紹介します！\n今回登場してくれるのは【 ${name} 】さんです！👏\n\n---------------------------------------\nニックネーム：${nickname}\n出身：${hometown}\nMBTI：${mbti}\n趣味：${hobby}\n就活軸：${axis}\n---------------------------------------\n\n私たちの会社の「人」や「カルチャー」の魅力が少しでも伝わったら嬉しいです！\n「このメンバーと一緒に働いてみたい！」と思った方は、ぜひプロフィールのリンクから採用特設サイトをご覧ください！🚀\n\n#社員紹介 #メンバー紹介 #新卒採用 #採用マーケティング #ベンチャー企業 #転職活動 #一緒に働く仲間募集中`;
+  document.getElementById('member-caption-area').value = `【Instagram用 キャプション文】\n＼ ✨ 新卒メンバー紹介コーナー ✨ ／\n\n本日は、私たちのチームに新しく加わった素敵なメンバーをご紹介します！\n今回登場してくれるのは【 ${name} 】さんです！👏\n\n---------------------------------------\nニックネーム：${nickname}\n出身：${hometown}\nMBTI：${mbti}\n趣味：${hobby}\n就活軸：${axis}\n---------------------------------------\n\n私たちの会社の「人」や「カルチャー」の魅力が少しでも伝わったら嬉しいです！\n「このメンバーと一緒に働いてみたい！」と思った方は、ぜひプロフィールのリンクから採用特設サイトをご覧ください！🚀\n\n#社員紹介 #メンバー紹介 #新卒採用 #採用マーケティング #ベンチャー企業 #転職活動 #一緒に働く仲間募集中`;
+  document.getElementById('member-prompt-area').value = `【ChatGPT用 画像合成プロンプト】\n【3枚目を生成してください】\n\n■ サイズ：1080×1350px（縦長）、1枚単独で出力\n■ レイアウト：\n・背景：これまでと同じミントグリーン〜ライトターコイズのグラデーション\n・左上：「新卒インタビュー」（小テキスト・ティール色）\n・その下：「プロフィール」（大見出し・ティール色・太字）\n・右上：グレーのドット装飾\n・中央上：白い角丸カードを3列で横並び\n  [ニックネーム]  [出身]    [MBTI]\n  ${nickname}         ${hometown}    ${mbti}\n・中央左：白い角丸カード（縦長）\n  [趣味]\n  ${hobby}\n・中央左下：白い角丸カード（縦長）\n  [就活軸]\n  ${axis}\n・中央右：[添付した本人の写真]（白いポラロイド風フレームに収め、フレームの下部に小さく「${photoCaption}」というテキストを配置する）\n\n上記のレイアウト通りに、文字の配置やバランス、色合いをこれまでのトンマナと完全に一致させて、美しくクオリティの高いInstagram投稿用画像を生成してください。`;
+  document.getElementById('member-output-container').style.display = 'block';
+});
 
-  const imagePromptText = `【ChatGPT用 画像合成プロンプト】\n【3枚目を生成してください】\n\n■ サイズ：1080×1350px（縦長）、1枚単独で出力\n\n■ レイアウト：\n・背景：これまでと同じミントグリーン〜ライトターコイズのグラデーション\n・左上：「新卒インタビュー」（小テキスト・ティール色）\n・その下：「プロフィール」（大見出し・ティール色・太字）\n・右上：グレーのドット装飾\n\n・中央上：白い角丸カードを3列で横並び\n  [ニックネーム]  [出身]    [MBTI]\n  ${nickname}         ${hometown}    ${mbti}\n\n・中央左：白い角丸カード（縦長）\n  [趣味]\n  ${hobby}\n\n・中央左下：白い角丸カード（縦長）\n  [就活軸]\n  ${axis}\n\n・中央右：[添付した本人の写真]（白いポラロイド風フレームに収め、フレームの下部に小さく「${photoCaption}」というテキストを配置する）\n\n上記のレイアウト通りに、文字の配置やバランス、色合いをこれまでのトンマナと完全に一致させて、美しくクオリティの高いInstagram投稿用画像を生成してください。`;
+// ── 🔹 Instagram 社内イベント用ロジック ─────────────────────────────
+// 1. FlaskのAPIから「26卒メンバー」チャンネルの「#社内イベント」投稿群を一覧取得する想定
+document.getElementById('btn-fetch-events').addEventListener('click', async function() {
+  const btn = this; btn.disabled = true; btn.textContent = 'Slackから抽出中...';
+  try {
+    // Flask側に新規追加するエンドポイントを叩く想定
+    const response = await fetch('http://127.0.0.1:5000/api/slack-events');
+    if (!response.ok) throw new Error('サーバーエラー');
+    eventList = await response.json(); 
+    
+    // 【ダミー実装用バックアップ】もしFlask側が未実装なら一時的にダミーを入れます
+    if(!eventList || eventList.length === 0) {
+      eventList = [
+        { "text": "昨日、26卒メンバーみんなで歓迎お花見会をしました！🌸 #社内イベント めちゃくちゃ盛り上がりました！同期の絆が深まった気がします！", "photo": "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=500" },
+        { "text": "【26卒ボウリング大会レポ】昨晩の懇親イベント景品豪華で最高でした🎳✨ #社内イベント #懇親会", "photo": "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=500" }
+      ];
+    }
 
-  const outputArea = document.getElementById('insta-output-area');
-  outputArea.value = captionText + "\n\n============================================\n\n" + imagePromptText;
-  outputArea.style.display = 'block';
+    const selectElement = document.getElementById("event-select");
+    selectElement.innerHTML = '<option value="">-- イベント候補を選択してください --</option>';
+    eventList.forEach((ev, index) => {
+        const option = document.createElement("option"); option.value = index;
+        // 先頭30文字をタイトルとしてプルダウンに表示
+        option.textContent = ev.text.substring(0, 35) + (ev.text.length > 35 ? '...' : '');
+        selectElement.appendChild(option);
+    });
+    alert('Slackから「#社内イベント」付きの最新投稿を抽出しました！');
+  } catch (error) {
+    alert('Slackデータの取得に失敗しました。Flaskサーバーの疎通を確認してください。');
+  } finally { btn.disabled = false; btn.textContent = '🔄 Slackからイベント候補を取得'; }
+});
+
+// イベント候補選択時にSlackに添付されていた写真があればプレビュー
+document.getElementById('event-select').addEventListener('change', function() {
+  const index = this.value; const container = document.getElementById('event-photo-container');
+  const img = document.getElementById('event-photo-preview');
+  if (index !== "" && eventList[index]) {
+      const photoUrl = eventList[index]["photo"];
+      if (photoUrl) { img.src = photoUrl; container.style.display = 'block'; return; }
+  }
+  container.style.display = 'none';
+});
+
+// イベント用キャプション文 & 画像生成プロンプトの生成
+document.getElementById('btn-generate-event').addEventListener('click', function() {
+  const index = document.getElementById('event-select').value;
+  if (index === "") { alert("イベント候補を選択してください。"); return; }
+  
+  const rawText = eventList[index].text;
+  // ハッシュタグなどを除いた生のテキスト（適宜調整）
+  const cleanText = rawText.replace(/#\S+/g, '').trim();
+
+  // ① インスタ用キャプションの作成
+  const captionText = `【Instagram用 キャプション文】\n🎉 社内イベントレポート 🎉\n\nSlackの社内チャンネルから、活気あふれるイベントの様子をお届けします！\n\n👇 メンバーからのレポート内容はこちら✨\n---------------------------------------\n${cleanText}\n---------------------------------------\n\nプリンシプルでは、新卒・先輩関係なく、こうしたイベントを通じてフランクに交流できるカルチャーを大切にしています！🤗\n\n「この楽しそうな雰囲気を生で感じてみたい！」と思った方は、ぜひプロフィールのリンクから採用情報をチェックしてください！🚀\n\n#社内イベント #社内文化 #26卒 #プリンシプル #新卒採用 #カルチャー #一緒に働く仲間募集中 #アットホームな職場`;
+
+  // ② ChatGPTに画像生成させるためのプロンプト作成
+  const promptText = `【ChatGPT用 画像生成プロンプト】\n■ サイズ：1080×1080px（正方形）、1枚単独で出力\n\n■ シチュエーションベース（以下の社内イベントの内容を元にリアルな写真を生成してください）：\n「${cleanText}」\n\n■ 描写の具体的な指示：\n・シチュエーション：日本のIT企業のオフィス、またはカジュアルなイベント会場で行われている、非常に楽しそうな社内イベントの一コマ。\n・人物：20代〜30代の男女グループ（4〜5名程度）が笑顔で談笑し、楽しそうに交流している様子。カジュアルで清潔感のある服装（オフィスカジュアル）。\n・構図＆スタイル：スマートフォンのカメラで自然に撮ったような、生き生きとしたスナップ写真風。明るく自然な照明、清潔感のある現代的な背景。\n・トンマナ：プリンシプルの「風通しの良さ」「心理的安全性」「圧倒的な仲の良さ」が直感的に伝わる、ポジティブでエネルギッシュな雰囲気。文字は入れず、写真のみとして高精細に出力してください。`;
+
+  document.getElementById('event-caption-area').value = captionText;
+  document.getElementById('event-prompt-area').value = promptText;
+  document.getElementById('event-output-container').style.display = 'block';
 });
 
 // ── Credentials / Settings ────────────────────────────────────────
 var credsOk = false;
-
 async function checkCreds() {
   try {
-    var res  = await fetch('http://127.0.0.1:5000/api/credentials-status');
-    var data = await res.json();
-    credsOk = data.slack_token_set && data.gemini_key_set;
-    var btn = document.getElementById('settings-btn');
-    if (credsOk) {
-      btn.classList.remove('unconfigured');
-      btn.title = '認証情報 設定済み';
-    } else {
-      btn.classList.add('unconfigured');
-      btn.title = '認証情報 未設定 — クリックして設定';
-    }
+    var res  = await fetch('http://127.0.0.1:5000/api/credentials-status'); var data = await res.json();
+    credsOk = data.slack_token_set && data.gemini_key_set; var btn = document.getElementById('settings-btn');
+    if (credsOk) { btn.classList.remove('unconfigured'); btn.title = '認証情報 設定済み'; } 
+    else { btn.classList.add('unconfigured'); btn.title = '認証情報 未設定 — クリックして設定'; }
     document.getElementById('dot-slack').className  = 'dot ' + (data.slack_token_set ? 'set' : 'unset');
     document.getElementById('dot-gemini').className = 'dot ' + (data.gemini_key_set  ? 'set' : 'unset');
-  } catch(e) { /* Flask未起動でも握り潰す */ }
+  } catch(e) {}
 }
 
-function openSettings() {
-  document.getElementById('modal-msg').textContent = '';
-  document.getElementById('modal-msg').className   = 'modal-msg';
-  document.getElementById('modal-overlay').classList.add('open');
-  checkCreds();
-}
-
-function closeSettings() {
-  document.getElementById('modal-overlay').classList.remove('open');
-}
-
-function overlayClick(e) {
-  if (e.target === document.getElementById('modal-overlay')) closeSettings();
-}
+function openSettings() { document.getElementById('modal-msg').textContent = ''; document.getElementById('modal-overlay').classList.add('open'); checkCreds(); }
+function closeSettings() { document.getElementById('modal-overlay').classList.remove('open'); }
+function overlayClick(e) { if (e.target === document.getElementById('modal-overlay')) closeSettings(); }
 
 async function saveCredentials() {
-  var slack  = document.getElementById('inp-slack').value.trim();
-  var gemini = document.getElementById('inp-gemini').value.trim();
-  var msgEl  = document.getElementById('modal-msg');
-  var saveBtn = document.getElementById('btn-save');
-
-  if (!slack)  { msgEl.textContent = 'SLACK_BOT_TOKEN を入力してください'; msgEl.className = 'modal-msg err'; return; }
-  if (!gemini) { msgEl.textContent = 'GEMINI_API_KEY を入力してください';  msgEl.className = 'modal-msg err'; return; }
-
-  saveBtn.disabled = true;
-  saveBtn.textContent = '保存中...';
-  msgEl.textContent = '';
+  var slack  = document.getElementById('inp-slack').value.trim(); var gemini = document.getElementById('inp-gemini').value.trim();
+  var msgEl  = document.getElementById('modal-msg'); var saveBtn = document.getElementById('btn-save');
+  if (!slack)  { msgEl.textContent = 'SLACK_BOT_TOKEN を入力してください'; return; }
+  if (!gemini) { msgEl.textContent = 'GEMINI_API_KEY を入力してください'; return; }
+  saveBtn.disabled = true; saveBtn.textContent = '保存中...';
 
   try {
-    var res  = await fetch('http://127.0.0.1:5000/api/set-credentials', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ slack_token: slack, gemini_key: gemini })
-    });
-    var data = await res.json();
-    if (!res.ok) throw new Error(data.error || '保存に失敗しました');
-
-    msgEl.textContent = '✅ 保存しました！ボタンで更新できます';
-    msgEl.className   = 'modal-msg ok';
-    document.getElementById('inp-slack').classList.add('ok');
-    document.getElementById('inp-gemini').classList.add('ok');
-    await checkCreds();
-    setTimeout(closeSettings, 1400);
-  } catch(err) {
-    msgEl.textContent = '❌ ' + err.message;
-    msgEl.className   = 'modal-msg err';
-  } finally {
-    saveBtn.disabled = false;
-    saveBtn.textContent = '保存して接続';
-  }
+    var res  = await fetch('http://127.0.0.1:5000/api/set-credentials', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ slack_token: slack, gemini_key: gemini }) });
+    var data = await res.json(); if (!res.ok) throw new Error(data.error || '保存に失敗しました');
+    msgEl.textContent = '✅ 保存しました！'; await checkCreds(); setTimeout(closeSettings, 1400);
+  } catch(err) { msgEl.textContent = '❌ ' + err.message; } 
+  finally { saveBtn.disabled = false; saveBtn.textContent = '保存して接続'; }
 }
 
 // ── Update button ─────────────────────────────────────────────────
 function setBtn(state, text) {
-  var btn = document.getElementById('update-btn');
-  btn.className = 'update-btn' + (state ? ' ' + state : '');
-  btn.disabled  = (state === 'loading');
-  if (state === 'loading') {
-    btn.innerHTML = '<span class="spinner"></span>' + text;
-  } else {
-    btn.innerHTML = text;
-  }
+  var btn = document.getElementById('update-btn'); btn.className = 'update-btn' + (state ? ' ' + state : ''); btn.disabled  = (state === 'loading');
+  if (state === 'loading') { btn.innerHTML = '<span class="spinner"></span>' + text; } else { btn.innerHTML = text; }
 }
 
 async function doUpdate() {
-  if (isLoading) return;
-  if (!credsOk) { openSettings(); return; }
-  isLoading = true;
-  sel = null;
-  tab = 'short';
-
-  var cardsEl = document.getElementById('cards');
-  var pvEl    = document.getElementById('pv');
-  var instaUi = document.getElementById('insta-member-ui');
-
-  setBtn('loading', ' Slackから取得・分析中（約20秒）...');
-  cardsEl.classList.add('loading');
-  instaUi.style.display = 'none';
-  pvEl.style.display = 'flex';
-  pvEl.innerHTML =
-    '<div class="empty">' +
-      '<div class="empty-icon">⏳</div>' +
-      '<div>Slack データ取得中...</div>' +
-      '<div style="font-size:12px;margin-top:6px;color:#64748b">Gemini で切り口を生成しています</div>' +
-    '</div>';
+  if (isLoading) return; if (!credsOk) { openSettings(); return; }
+  isLoading = true; sel = null; tab = 'short';
+  var cardsEl = document.getElementById('cards'); var pvEl = document.getElementById('pv');
+  setBtn('loading', ' Slackから取得・分析中...');
 
   try {
-    var res  = await fetch('http://127.0.0.1:5000/api/update');
-    var data = await res.json();
+    var res  = await fetch('http://127.0.0.1:5000/api/update'); var data = await res.json();
     if (!res.ok) throw new Error(data.error || 'サーバーエラー');
-
-    DATA = data;
-    renderStatus();
-    cardsEl.classList.remove('loading');
-    renderCards();
-    renderPreview();
-
-    setBtn('success', '✅ 更新完了!');
-    setTimeout(function() {
-      setBtn('', '🔄 最新データに更新');
-      isLoading = false;
-    }, 2500);
-
+    DATA = data; renderStatus(); cardsEl.classList.remove('loading'); renderCards(); renderPreview();
+    setBtn('success', '✅ 更新完了!'); setTimeout(() => { setBtn('', '🔄 最新データに更新'); isLoading = false; }, 2500);
   } catch(err) {
-    cardsEl.classList.remove('loading');
-    pvEl.innerHTML =
-      '<div class="empty">' +
-        '<div class="empty-icon">❌</div>' +
-        '<div>エラーが発生しました</div>' +
-        '<div style="font-size:12px;color:#ef4444;margin-top:6px;max-width:300px;line-height:1.6">' + err.message + '</div>' +
-      '</div>';
-    setBtn('err', '❌ 再試行する');
-    setTimeout(function() {
-      setBtn('', '🔄 最新データに更新');
-      isLoading = false;
-    }, 5000);
+    setBtn('err', '❌ 再試行する'); setTimeout(() => { setBtn('', '🔄 最新データに更新'); isLoading = false; }, 5000);
   }
 }
 
 // ── Init ──────────────────────────────────────────────────────────
-fetchMemberData(); // GAS連携データの取得
-renderStatus();
-renderCards();
-renderPreview();
-checkCreds();
+fetchMemberData(); renderStatus(); renderCards(); renderPreview(); checkCreds();
 </script>
 </body>
 </html>
