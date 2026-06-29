@@ -529,7 +529,37 @@ async function fetchMemberData() {
     });
   } catch (error) { document.getElementById("member-select").innerHTML = '<option value="">データの取得に失敗しました</option>'; }
 }
-
+// ── ▼ ここから追加（消えていた送信機能を復活！） ▼ ──
+document.getElementById('send-form-btn').addEventListener('click', async function() {
+  const emailInput = document.getElementById('target-email');
+  const email = emailInput.value.trim();
+  
+  if (!email) {
+      alert('メールアドレスを入力してください。');
+      return;
+  }
+  
+  const btn = this;
+  btn.disabled = true;
+  btn.textContent = '送信中...';
+  
+  try {
+      const response = await fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ email: email }) });
+      const result = await response.json();
+      if (result.status === "success") {
+          alert('GoogleフォームのURLをメンバーに送信しました！');
+          emailInput.value = '';
+      } else {
+          alert('送信に失敗しました: ' + result.message);
+      }
+  } catch (error) {
+      alert('通信エラーが発生しました。');
+  } finally {
+      btn.disabled = false;
+      btn.textContent = '送信する';
+  }
+});
+// ── ▲ ここまで追加 ▲ ──
 document.getElementById('member-select').addEventListener('change', function() {
   const index = this.value; const container = document.getElementById('member-photo-container');
   const img = document.getElementById('member-photo-preview');
@@ -545,20 +575,123 @@ document.getElementById('btn-generate-insta').addEventListener('click', function
   if (index === "") { alert("紹介するメンバーを選択してください。"); return; }
   const member = memberList[index];
   
-  // ⚠️ スプシの列名マッピング（後で正確な列名に合わせます）
+  // 1. スプレッドシートのデータを取得（見出し名に注意してマッピング）
+  const fileNo = pad(Number(index) + 1); // 01, 02 などの形式にする
   const name = member["お名前（漢字）"] || member["名前"] || ""; 
-  const nickname = member["ニックネーム"] || "";
+  const kana = member["お名前（ふりがな）"] || "";
+  const nameFull = kana ? `${name}（${kana}）` : name;
+  const deptYear = member["所属部署 / 入社年"] || "";
+  const jobTitle = member["職種（現在の役職など）"] || member["職種"] || "";
   const hometown = member["出身地（都道府県など）"] || member["出身"] || ""; 
-  const mbti = member["MBTI"] || "";
+  const catchcopy = member["メインキャッチコピー"] || "";
   const hobby = member["趣味"] || ""; 
   const axis = member["私の就活軸"] || member["就活軸"] || ""; 
-  const photoCaption = member["写真のキャプション"] || "歓迎会でのひとコマ✨";
+  const interview1 = member["インタビュー回答1"] || "";
+  const interview2 = member["インタビュー回答2"] || "";
+  const tako1 = member["他己紹介1（初対面の印象＆今の印象）"] || member["他己紹介1"] || "";
+  const tako2 = member["他己紹介2（仕事中の『こっそり見た相手のすごいところ』）"] || member["他己紹介2"] || "";
+  const tako3 = member["他己紹介3（一緒に笑ったエピソード）"] || member["他己紹介3"] || "";
+  const tako4 = member["他己紹介4（相手を一言で表すと？）"] || member["他己紹介4"] || "";
+  const message = member["就活生へのメッセージ"] || "";
 
   // ① 共通化されたキャプション文
+<<<<<<< HEAD
   document.getElementById('member-caption-area').value = `【Instagram用 キャプション文】\n\ \ プリンシプルの新卒メンバー紹介 / /\n4月に入社したメンバーにお話を聞いてみました！\nその人の人柄や就活時代の悩みなどを紹介していただきました🎶\n\nプリンシプルに興味がある方も、就活に悩んでいる方も必見✨\nお役立ち情報を覗いてみましょう📝\n\n株式会社プリンシプルでは、新卒・中途採用を強化中！\nプロフィールのリンクからチェック＆ご応募お待ちしています\n\n#会社紹介 #社員インタビュー #27卒 #28卒 #新卒採用`;
+=======
+  document.getElementById('member-caption-area').value = `【Instagram用 キャプション文】\n＼ ＼ プリンシプルの新卒メンバー紹介 ／ ／\n4月に入社したメンバーにお話を聞いてみました！\nその人の人柄や就活時代の悩みなどを紹介していただきました🎶\n\nプリンシプルに興味がある方も、就活に悩んでいる方も必見✨\nお役立ち情報を覗いてみましょう📝\n\n株式会社プリンシプルでは、新卒・中途採用を強化中！\nプロフィールのリンクからチェック＆ご応募お待ちしています\n\n#会社紹介 #社員インタビュー #27卒 #28卒 #新卒採用`;
+>>>>>>> 568dba2d674b8e9325ab7739cf665f44ae12bb53
   
-  // ② 画像合成プロンプト（データ埋め込み）
-  document.getElementById('member-prompt-area').value = `【ChatGPT用 画像合成プロンプト】\n【3枚目を生成してください】\n\n■ サイズ：1080×1350px（縦長）、1枚単独で出力\n■ レイアウト：\n・背景：これまでと同じミントグリーン〜ライトターコイズのグラデーション\n・左上：「新卒インタビュー」（小テキスト・ティール色）\n・その下：「プロフィール」（大見出し・ティール色・太字）\n・右上：グレーのドット装飾\n・中央上：白い角丸カードを3列で横並び\n  [ニックネーム]  [出身]    [MBTI]\n  ${nickname}         ${hometown}    ${mbti}\n・中央左：白い角丸カード（縦長）\n  [趣味]\n  ${hobby}\n・中央左下：白い角丸カード（縦長）\n  [私の就活軸]\n  ${axis}\n・中央右：[添付した本人の写真]（白いポラロイド風フレームに収め、フレームの下部に小さく「${photoCaption}」というテキストを配置する）\n\n上記のレイアウト通りに、文字の配置やバランス、色合いをこれまでのトンマナと完全に一致させて、美しくクオリティの高いInstagram投稿用画像を生成してください。`;
+  // ② 新しい画像合成マスタープロンプト（データ埋め込み）
+  document.getElementById('member-prompt-area').value = `【新卒採用Instagramスライド・連続生成マスタープロンプト】
+
+あなたは「新卒採用向けInstagramアカウントの社員紹介シリーズ」の画像生成を担当する、プロの専任デザイナーです。
+以下の「スタイルガイド」と「各スライドの構成」を完全に記憶し、私が提供する「今回の社員データ」を元に、対話型で1枚ずつ画像を生成してください。
+
+━━━━━━━━━━━━━━━━━━━━━━
+■ 1. 画像生成のルール（最重要）
+━━━━━━━━━━━━━━━━━━━━━━
+* 一度にすべての画像を生成しないでください。ChatGPTの制限上、1回の回答につき【1枚だけ】画像を生成します。
+* 1枚画像を生成したら、「1枚目（表紙）を生成しました。問題なければ『次』と指示してください。修正したい場合は指示を書き込んでください」とユーザーの指示を待ってください。
+* ユーザーが「次」「OK」「進めて」などと入力したら、次のステップのスライドを生成してください。
+
+━━━━━━━━━━━━━━━━━━━━━━
+■ 2. 共通スタイルガイド（全スライド共通）
+━━━━━━━━━━━━━━━━━━━━━━
+* サイズ：1080×1350px（縦長・Instagram推奨）
+* 背景：ミントグリーン〜ライトターコイズの美しいグラデーション
+* アクセントカラー：ティール（#2ABFBF） → 見出し・強調テキストに使用
+* 装飾：グレーのドット散らし ＋ 白のひし形・三角シェイプを余白に散りばめる
+* フォント：モダンなサンセリフ体（日本語メイン ＋ 英語サブを併記）
+* デザイントーン：AI感（フラットすぎるデジタル感）を避け、角丸を少し大きく、影を控えめにした「手作り感・温かみのあるトーン」
+* レイアウト：余白を贅沢に広く取り、文字が詰まって見えない「おしゃれなマガジン風デザイン」
+* ロゴスペース：スライドの左下に配置用の空白（LOGO SPACE）を確保する
+
+━━━━━━━━━━━━━━━━━━━━━━
+■ 3. 各スライドの生成ステップと構成
+━━━━━━━━━━━━━━━━━━━━━━
+
+【ステップ1】1枚目：表紙スライド
+* 写真：添付された人物写真を使用。顔や雰囲気を変えず、そのまま「ひし形」のフレームに切り抜いて中央に配置。
+* テキスト：
+  * FILE番号：「FILE.${fileNo}」（左上に小さく）
+  * メインキャッチコピー：「${catchcopy}」（中央〜下部に目立つように）
+  * 社員の肩書き＋氏名（例：「${deptYear} ${nameFull}」）
+* 右下：「>>>」の矢印付き次ページ誘導ボタンを配置
+
+## （※2枚目は使い回し用のため生成スキップ）
+
+【ステップ2】3枚目：プロフィールスライド
+* 写真：添付された人物写真を使用。顔や雰囲気を変えず、そのまま「ポラロイド写真風（枠あり）」にして斜めに傾けて配置。
+* テキスト：
+  * 小見出し（左上）：「PROFILE」
+  * 大見出し（左上）：「${name}のプロフィール」
+  * プロフィール情報（3列カード、またはすっきりしたリスト形式）：
+    * 「${deptYear}」「${jobTitle}」「${hometown}」
+  * カード形式のコンテンツ：
+    * 「趣味」：${hobby}
+    * 「私の就活軸」：${axis}
+* 右下：「>>>」の矢印付き次ページ誘導ボタンを配置
+
+【ステップ3】4枚目：就活＆入社後インタビュー
+* 写真：【不要】（人物写真は絶対に配置しないでください。余白を広く取ること）
+* テキスト：
+  * 小見出し（左上）：「INTERVIEW」
+  * 大見出し（左上）：「就職活動と、入社後のリアル」
+  * 2つのQ&A（質問と回答のセット。カード形式またはスッキリした縦並び。フォントサイズは小さめ〜中サイズにして余白をたっぷり確保、行間を広く取る）：
+    * 質問1：「Q. 入社の決め手は？」 ＋ 回答1：「${interview1}」
+    * 質問2：「Q. 入社後のやりがいは？」 ＋ 回答2：「${interview2}」
+* 右下：「次は同期からの他己紹介！ >>>」
+
+【ステップ4】5枚目：同期からの他己紹介
+* 写真：【不要】（人物写真・イラストは一切不要です）
+* テキスト：
+  * 小見出し（左上）：「INTRODUCTION」
+  * 大見出し（左上）：「同期からの他己紹介」
+  * カード形式のコンテンツ：
+    * 項目1：「初対面の印象 ＆ 今の印象」 ＋ 内容1：「${tako1}」
+    * 項目2：「仕事中の『こっそり見た相手のすごいところ』」 ＋ 内容2：「${tako2}」
+    * 項目3：「一緒に笑ったエピソード」 ＋ 内容3：「${tako3}」
+    * 項目4：「相手を一言で表すと？」 ＋ 内容4：「${tako4}」
+* 右下：「最後に就活生へメッセージ！ >>>」
+
+【ステップ5】6枚目：就活生へのメッセージ
+* 写真：添付された人物写真を使用。顔や雰囲気を変えず、そのまま「正円（丸型）」のフレームに切り抜いて配置。
+* テキスト：
+  * 小見出し（左上）：「MESSAGE」
+  * 大見出し（左上）：「就活生へのメッセージ」
+  * メッセージ本文：「${message}」
+  * 署名：メッセージの最後に小さく「ーー ${name}」
+* 右下：「最後にお知らせ！ >>>」
+
+## （※7枚目は使い回し用のため生成スキップ）
+
+━━━━━━━━━━━━━━━━━━━━━━
+■ 4. 今回の社員データ
+━━━━━━━━━━━━━━━━━━━━━━
+上記に組み込んだデータの通りです。
+
+━━━━━━━━━━━━━━━━━━━━━━
+それでは、社員データを読み込み、まずは【ステップ1：1枚目（表紙スライド）】の画像を1枚だけ生成してください。`;
   
   document.getElementById('member-output-container').style.display = 'block';
 });
