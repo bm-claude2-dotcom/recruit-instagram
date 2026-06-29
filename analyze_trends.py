@@ -2,14 +2,17 @@
 """
 analyze_trends.py  ─ 採用コンテンツ 生成ノート  ローカル Web アプリ
 
+
   python analyze_trends.py
   → ブラウザが自動で http://localhost:5000 を開きます
   → 画面内の「🔄 最新データに更新」ボタンをクリックするだけで分析が走ります
+
 
 .env に設定してから実行:
     SLACK_BOT_TOKEN=xoxb-...
     GEMINI_API_KEY=...
 """
+
 
 import json
 import os
@@ -20,6 +23,7 @@ import webbrowser
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+
 # Windows cp932 環境で絵文字・日本語の print が落ちないようにする
 if sys.stdout and hasattr(sys.stdout, "reconfigure"):
     try:
@@ -28,11 +32,13 @@ if sys.stdout and hasattr(sys.stdout, "reconfigure"):
     except Exception:
         pass
 
+
 try:
     from dotenv import load_dotenv
     load_dotenv()
 except ImportError:
     pass
+
 
 from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
@@ -40,16 +46,19 @@ from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 from google import genai
 
+
 # ── Flask ─────────────────────────────────────────────────────────────────────
 BASE_DIR = Path(__file__).parent.resolve()
 app = Flask(__name__)
 CORS(app)
+
 
 # ── 設定 ──────────────────────────────────────────────────────────────────────
 OWN_CHANNEL_ID  = "C0B2AF0FG91"   # 26卒メンバーチャンネル
 COMP_CHANNEL_ID = "C0B9NMW0PC3"   # ClaudeCode コンテストチャンネル
 DAYS_BACK       = 7
 GEMINI_MODEL    = "gemini-2.5-flash"
+
 
 COMPANY_CTX = """\
 【株式会社プリンシプル（Principle Co.,Ltd.）】
@@ -61,19 +70,24 @@ COMPANY_CTX = """\
 ・採用ターゲット: 新卒・大学3-4年生。「誰と働くか」「成長できるか」「入社後のリアル」「ビジョンが叶うか」
 ・トンマナ: 誠実・等身大・データドリブン。煽らない・誇張しない。確証のない情報は [要確認: ◯◯] で明示。"""
 
+
 PROMPT_TEMPLATE = """\
 あなたは株式会社プリンシプルの採用マーケティング専門家です。
 以下のSlackデータを分析し、Instagram採用広報コンテンツ企画を【必ず10個】生成してください。
 各企画に「Instagramカルーセル投稿のスライド構成案」と「キャプション本文」を同時に生成してください。
 以下のJSONスキーマに厳密に従い、JSONのみ出力してください（説明文不要）。
 
+
 {company_ctx}
+
 
 ## 自社Slackメッセージ（{own_label}） - 直近{days_back}日間 {own_count}件
 {own_text}
 
+
 ## 参照Slackメッセージ（{comp_label}） - {comp_count}件
 {comp_text}
+
 
 ## 生成ルール
 - 10個の企画はすべて異なる切り口（成長/技術/カルチャー/リアル/働く人/ビジョンなど複数軸）
@@ -82,6 +96,7 @@ PROMPT_TEMPLATE = """\
 - content_long: Instagramキャプション本文（絵文字・改行を活用、ハッシュタグ5〜8個込み、250〜400文字）
 - 確証のない情報は [要確認: ◯◯] と明記
 - category は次の6つから選択: 成長 / 技術 / カルチャー / リアル / 働く人 / ビジョン
+
 
 ## 出力JSONスキーマ（items 10件必須）
 {{
@@ -104,6 +119,8 @@ PROMPT_TEMPLATE = """\
 }}"""
 
 
+
+
 # ── Slack ─────────────────────────────────────────────────────────────────────
 def fetch_messages(client: WebClient, channel_id: str) -> list:
     oldest   = str((datetime.now(timezone.utc) - timedelta(days=DAYS_BACK)).timestamp())
@@ -120,14 +137,28 @@ def fetch_messages(client: WebClient, channel_id: str) -> list:
                 break
             cursor = resp["response_metadata"]["next_cursor"]
             time.sleep(0.5)
+     # 💡 while True: の中にあるため、全体的にスペース4つ分（あるいはTab1回分）右にズラす必要があります
+
         except SlackApiError as ex:
-            print(f"  Slack API エラー ({channel_id}): {ex.response['error']}")
-            break
-    return [m for m in messages if m.get("text") and not m.get("bot_id")]
+            print(f"Slack API エラー ({channel_id}): {ex.response['error']}")
+            break  # 💡 whileループを抜けるための break
+
+    # 📌 while文を抜けた「外」でメッセージをフィルタリングします（whileの開始位置と縦ラインを揃える）
+    valid_messages = []
+    for m in messages:
+        # Bot以外の発言で、かつテキストかファイルが存在するものを抽出
+        if not m.get("bot_id") and (m.get("text") or m.get("files")):
+            valid_messages.append(m)
+            
+    return valid_messages  # 💡 def get_valid_messages(...): の中にいるのでこれで正常になります
+
+
 
 
 def msgs_to_text(msgs: list, max_n: int = 150) -> str:
     return "\n---\n".join(m["text"] for m in msgs[:max_n])
+
+
 
 
 # ── Gemini ────────────────────────────────────────────────────────────────────
@@ -144,6 +175,7 @@ def call_gemini(client, prompt: str) -> dict:
         print(f"  設定なしでフォールバック: {ex}")
         resp = client.models.generate_content(model=GEMINI_MODEL, contents=prompt)
 
+
     raw = resp.text.strip()
     if raw.startswith("```"):
         raw = raw.split("\n", 1)[1] if "\n" in raw else raw[3:]
@@ -151,10 +183,14 @@ def call_gemini(client, prompt: str) -> dict:
     return json.loads(raw)
 
 
+
+
 # ── Routes ────────────────────────────────────────────────────────────────────
 @app.route("/")
 def index():
     return send_from_directory(str(BASE_DIR), "prompt_generator.html")
+
+
 
 
 @app.route("/api/credentials-status")
@@ -165,16 +201,20 @@ def api_credentials_status():
     })
 
 
+
+
 @app.route("/api/set-credentials", methods=["POST"])
 def api_set_credentials():
     body        = request.get_json(silent=True) or {}
     slack_token = body.get("slack_token", "").strip()
     gemini_key  = body.get("gemini_key",  "").strip()
 
+
     if not slack_token:
         return jsonify({"error": "SLACK_BOT_TOKEN が空です"}), 400
     if not gemini_key:
         return jsonify({"error": "GEMINI_API_KEY が空です"}), 400
+
 
     env_path = BASE_DIR / ".env"
     lines = env_path.read_text(encoding="utf-8").splitlines() if env_path.exists() else []
@@ -190,18 +230,22 @@ def api_set_credentials():
     if not saw_gemini: new_lines.append(f"GEMINI_API_KEY={gemini_key}")
     env_path.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
 
+
     os.environ["SLACK_BOT_TOKEN"] = slack_token
     os.environ["GEMINI_API_KEY"]  = gemini_key
+
 
     print("✅ 認証情報を .env に保存しました")
     return jsonify({"ok": True})
 
 
-# 🔹 新設：社内イベント抽出用のエンドポイント
+
+
+# 🔹 新設：社内イベント抽出用のエンドポイント（画像自動変換対応版）
 @app.route('/api/slack-events', methods=['GET'])
 def get_slack_events():
     try:
-        slack_token = os.environ.get("SLACK_BOT_TOKEN") 
+        slack_token = os.environ.get("SLACK_BOT_TOKEN")
         if not slack_token:
             return jsonify({"error": "SLACK_BOT_TOKEN が未設定です"}), 400
         
@@ -209,19 +253,39 @@ def get_slack_events():
         history = slack.conversations_history(channel=OWN_CHANNEL_ID, limit=100)
         messages = history.get("messages", [])
         
+        # 💡 ─── ここから（255行目〜）が書き換わった処理です ───
         events_data = []
         for msg in messages:
             text = msg.get("text", "")
             if "#社内イベント" in text and not msg.get("bot_id"):
-                photo_url = None
+                photo_data = None  # URLの代わりにBase64のデータを格納する変数
+                
                 if "files" in msg and len(msg["files"]) > 0:
                     first_file = msg["files"][0]
+                    # 画像ダウンロード用の非公開URLを取得
                     photo_url = first_file.get("url_private_download") or first_file.get("url_private")
+                    
+                    if photo_url:
+                        # ─── 画像ダウンロード＆Base64変換処理 ───
+                        try:
+                            headers = {"Authorization": f"Bearer {slack_token}"}
+                            # タイムアウト付きで安全に画像をダウンロード
+                            response = requests.get(photo_url, headers=headers, timeout=10)
+                            
+                            if response.status_code == 200:
+                                encoded_image = base64.b64encode(response.content).decode("utf-8")
+                                content_type = response.headers.get("Content-Type", "image/png")
+                                # HTMLの<img>タグにそのまま渡せる形式に変換
+                                photo_data = f"data:{content_type};base64,{encoded_image}"
+                        except Exception as img_err:
+                            print(f"⚠️ 画像のBase64変換に失敗しました: {str(img_err)}")
+                        # ───────────────────────────────────
                 
                 events_data.append({
                     "text": text,
-                    "photo": photo_url
+                    "photo": photo_data  # 変換したBase64文字列、またはNoneが入る
                 })
+        # 💡 ─── ここまで ───
                 
         return jsonify(events_data)
 
@@ -229,6 +293,9 @@ def get_slack_events():
         return jsonify({"error": f"Slack APIエラー: {e.response['error']}"}), 500
     except Exception as e:
         return jsonify({"error": f"予期せぬエラー: {str(e)}"}), 500
+        return jsonify({"error": f"予期せぬエラー: {str(e)}"}), 500
+
+
 
 
 @app.route("/api/update")
@@ -236,10 +303,12 @@ def api_update():
     slack_token = os.environ.get("SLACK_BOT_TOKEN")
     gemini_key  = os.environ.get("GEMINI_API_KEY")
 
+
     if not slack_token:
         return jsonify({"error": "SLACK_BOT_TOKEN が未設定です（.env を確認）"}), 500
     if not gemini_key:
         return jsonify({"error": "GEMINI_API_KEY が未設定です（.env を確認）"}), 500
+
 
     try:
         print("[1/2] Slack からメッセージを取得中...")
@@ -247,6 +316,7 @@ def api_update():
         own_msgs = fetch_messages(slack, OWN_CHANNEL_ID)
         cmp_msgs = fetch_messages(slack, COMP_CHANNEL_ID)
         print(f"      自社: {len(own_msgs)}件 ／ 参照: {len(cmp_msgs)}件")
+
 
         print("[2/2] Gemini で 10選 × (ショート文 + 長文) を生成中...")
         gemini = genai.Client(api_key=gemini_key)
@@ -270,10 +340,14 @@ def api_update():
         print(f"✅ 完了: {n} 個の切り口を生成")
         return jsonify(data)
 
+
     except Exception as ex:
         import traceback
         traceback.print_exc()
         return jsonify({"error": str(ex)}), 500
+
+
+
 
 
 
@@ -282,8 +356,8 @@ if __name__ == "__main__":
     def _open():
         webbrowser.open("http://127.0.0.1:5000")
 
+
     threading.Timer(1.5, _open).start()
     print("🚀  http://127.0.0.1:5000  (Ctrl+C で停止)")
-    app.run(host="127.0.0.1", port=5000, debug=False, use_reloader=False) 
-    
-
+    app.run(host="127.0.0.1", port=5000, debug=False, use_reloader=False)
+   
