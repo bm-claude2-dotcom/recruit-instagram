@@ -176,7 +176,6 @@ def api_set_credentials():
     if not gemini_key:
         return jsonify({"error": "GEMINI_API_KEY が空です"}), 400
 
-    # .env ファイルに書き込み（既存のキーは上書き、それ以外は保持）
     env_path = BASE_DIR / ".env"
     lines = env_path.read_text(encoding="utf-8").splitlines() if env_path.exists() else []
     new_lines, saw_slack, saw_gemini = [], False, False
@@ -191,41 +190,32 @@ def api_set_credentials():
     if not saw_gemini: new_lines.append(f"GEMINI_API_KEY={gemini_key}")
     env_path.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
 
-    # 現在の Python プロセスにも即時反映
     os.environ["SLACK_BOT_TOKEN"] = slack_token
     os.environ["GEMINI_API_KEY"]  = gemini_key
 
     print("✅ 認証情報を .env に保存しました")
     return jsonify({"ok": True})
 
+
+# 🔹 新設：社内イベント抽出用のエンドポイント
 @app.route('/api/slack-events', methods=['GET'])
 def get_slack_events():
     try:
-        # 1. 認証情報が設定されているか確認
         slack_token = os.environ.get("SLACK_BOT_TOKEN") 
         if not slack_token:
             return jsonify({"error": "SLACK_BOT_TOKEN が未設定です"}), 400
         
         slack = WebClient(token=slack_token)
-        
-        # 2. すでにある OWN_CHANNEL_ID ("C0B2AF0FG91"：26卒メンバー) からメッセージを取得
-        # ※ 過去ログを多めに取得するため、ここでは直接 conversations_history を呼び出します
         history = slack.conversations_history(channel=OWN_CHANNEL_ID, limit=100)
         messages = history.get("messages", [])
         
         events_data = []
-        
-        # 3. 「#社内イベント」が含まれる投稿をフィルタリング
         for msg in messages:
             text = msg.get("text", "")
-            # ボットの投稿を除外し、#社内イベント が入っているものだけを抽出
             if "#社内イベント" in text and not msg.get("bot_id"):
                 photo_url = None
-                
-                # 画像（ファイル）が添付されているかチェック
                 if "files" in msg and len(msg["files"]) > 0:
                     first_file = msg["files"][0]
-                    # Slack上の画像のURL
                     photo_url = first_file.get("url_private_download") or first_file.get("url_private")
                 
                 events_data.append({
@@ -252,14 +242,12 @@ def api_update():
         return jsonify({"error": "GEMINI_API_KEY が未設定です（.env を確認）"}), 500
 
     try:
-        # 1. Slack 取得
         print("[1/2] Slack からメッセージを取得中...")
         slack    = WebClient(token=slack_token)
         own_msgs = fetch_messages(slack, OWN_CHANNEL_ID)
         cmp_msgs = fetch_messages(slack, COMP_CHANNEL_ID)
         print(f"      自社: {len(own_msgs)}件 ／ 参照: {len(cmp_msgs)}件")
 
-        # 2. Gemini 生成
         print("[2/2] Gemini で 10選 × (ショート文 + 長文) を生成中...")
         gemini = genai.Client(api_key=gemini_key)
         now    = datetime.now().strftime("%Y-%m-%d %H:%M")
@@ -288,6 +276,7 @@ def api_update():
         return jsonify({"error": str(ex)}), 500
 
 
+
 # ── Entry point ───────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     def _open():
@@ -295,4 +284,6 @@ if __name__ == "__main__":
 
     threading.Timer(1.5, _open).start()
     print("🚀  http://127.0.0.1:5000  (Ctrl+C で停止)")
-    app.run(host="127.0.0.1", port=5000, debug=False, use_reloader=False)    python analyze_trends.py
+    app.run(host="127.0.0.1", port=5000, debug=False, use_reloader=False) 
+    
+
