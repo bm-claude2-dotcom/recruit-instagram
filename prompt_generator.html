@@ -608,6 +608,7 @@ document.getElementById('btn-generate-insta').addEventListener('click', function
 
   // ① Instagram用キャプション
   document.getElementById('member-caption-area').value = `【Instagram用 キャプション文】\n＼ ＼ プリンシプルの新卒メンバー紹介 ／ ／\n4月に入社したメンバーにお話を聞いてみました！\nその人の人柄や就活時代の悩みなどを紹介していただきました🎶\n\nプリンシプルに興味がある方も、就活に悩んでいる方も必見✨\nお役立ち情報を覗いてみましょう📝\n\n株式会社プリンシプルでは、新卒・中途採用を強化中！\nプロフィールのリンクからチェック＆ご応募お待ちしています\n\n#会社紹介 #社員インタビュー #27卒 #28卒 #新卒採用`;
+
   
   // ② 画像合成プロンプト（抽出した変数をすべて埋め込み）
   document.getElementById('member-prompt-area').value = `【新卒採用Instagramスライド・連続生成マスタープロンプト】
@@ -710,7 +711,7 @@ document.getElementById('btn-fetch-events').addEventListener('click', async func
   const btn = this; btn.disabled = true; btn.textContent = 'Slackから抽出中...';
   try {
     // Flask側に新規追加するエンドポイントを叩く想定
-    const response = await fetch('http://127.0.0.1:5000/api/slack-events');
+    const response = await fetch('/api/slack-events');
     if (!response.ok) throw new Error('サーバーエラー');
     eventList = await response.json(); 
     
