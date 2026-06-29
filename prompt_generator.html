@@ -574,34 +574,43 @@ document.getElementById('btn-generate-insta').addEventListener('click', function
   const index = document.getElementById('member-select').value;
   if (index === "") { alert("紹介するメンバーを選択してください。"); return; }
   const member = memberList[index];
-  
-  // 1. スプレッドシートのデータを取得（見出し名に注意してマッピング）
-  const fileNo = pad(Number(index) + 1); // 01, 02 などの形式にする
-  const name = member["お名前（漢字）"] || member["名前"] || ""; 
-  const kana = member["お名前（ふりがな）"] || "";
-  const nameFull = kana ? `${name}（${kana}）` : name;
-  const deptYear = member["所属部署 / 入社年"] || "";
-  const jobTitle = member["職種（現在の役職など）"] || member["職種"] || "";
-  const hometown = member["出身地（都道府県など）"] || member["出身"] || ""; 
-  const catchcopy = member["メインキャッチコピー"] || "";
-  const hobby = member["趣味"] || ""; 
-  const axis = member["私の就活軸"] || member["就活軸"] || ""; 
-  const interview1 = member["インタビュー回答1"] || "";
-  const interview2 = member["インタビュー回答2"] || "";
-  const tako1 = member["他己紹介1（初対面の印象＆今の印象）"] || member["他己紹介1"] || "";
-  const tako2 = member["他己紹介2（仕事中の『こっそり見た相手のすごいところ』）"] || member["他己紹介2"] || "";
-  const tako3 = member["他己紹介3（一緒に笑ったエピソード）"] || member["他己紹介3"] || "";
-  const tako4 = member["他己紹介4（相手を一言で表すと？）"] || member["他己紹介4"] || "";
-  const message = member["就活生へのメッセージ"] || "";
 
-  // ① 共通化されたキャプション文
-<<<<<<< HEAD
-  document.getElementById('member-caption-area').value = `【Instagram用 キャプション文】\n\ \ プリンシプルの新卒メンバー紹介 / /\n4月に入社したメンバーにお話を聞いてみました！\nその人の人柄や就活時代の悩みなどを紹介していただきました🎶\n\nプリンシプルに興味がある方も、就活に悩んでいる方も必見✨\nお役立ち情報を覗いてみましょう📝\n\n株式会社プリンシプルでは、新卒・中途採用を強化中！\nプロフィールのリンクからチェック＆ご応募お待ちしています\n\n#会社紹介 #社員インタビュー #27卒 #28卒 #新卒採用`;
-=======
-  document.getElementById('member-caption-area').value = `【Instagram用 キャプション文】\n＼ ＼ プリンシプルの新卒メンバー紹介 ／ ／\n4月に入社したメンバーにお話を聞いてみました！\nその人の人柄や就活時代の悩みなどを紹介していただきました🎶\n\nプリンシプルに興味がある方も、就活に悩んでいる方も必見✨\nお役立ち情報を覗いてみましょう📝\n\n株式会社プリンシプルでは、新卒・中途採用を強化中！\nプロフィールのリンクからチェック＆ご応募お待ちしています\n\n#会社紹介 #社員インタビュー #27卒 #28卒 #新卒採用`;
->>>>>>> 568dba2d674b8e9325ab7739cf665f44ae12bb53
+  // 💡 補助関数：スプシの見出し（キー）を部分一致で探して値を取得する
+  const findVal = (keyPart) => {
+    const fullKey = Object.keys(member).find(k => k.includes(keyPart));
+    return fullKey ? member[fullKey] : "";
+  };
+
+  // 1. 各項目のデータをスプシから抽出
+  const fileNo = pad(Number(index) + 1);
+  const name = findVal("お名前（漢字）") || findVal("名前") || ""; 
+  const kana = findVal("お名前（ふりがな）") || "";
+  const nameFull = kana ? `${name}（${kana}）` : name;
+  const deptYear = findVal("所属部署") || "";
+  const jobTitle = findVal("職種") || "";
+  const hometown = findVal("出身地") || findVal("出身") || ""; 
+  const catchcopy = findVal("キャッチコピー") || "";
+  const hobby = findVal("趣味") || ""; 
+  const axis = findVal("就活軸") || ""; 
   
-  // ② 新しい画像合成マスタープロンプト（データ埋め込み）
+  // インタビュー回答
+  const interview1 = findVal("インタビュー回答1") || "";
+  const interview2 = findVal("インタビュー回答2") || "";
+  
+  // 他己紹介
+  const tako1 = findVal("他己紹介1") || "";
+  const tako2 = findVal("他己紹介2") || "";
+  const tako3 = findVal("他己紹介3") || "";
+  const tako4 = findVal("他己紹介4") || "";
+  
+  const message = findVal("就活生へのメッセージ") || "";
+  const photoCaption = findVal("キャプション") || "歓迎会でのひとコマ✨";
+
+  // ① Instagram用キャプション
+  document.getElementById('member-caption-area').value = `【Instagram用 キャプション文】\n＼ ＼ プリンシプルの新卒メンバー紹介 ／ ／\n4月に入社したメンバーにお話を聞いてみました！\nその人の人柄や就活時代の悩みなどを紹介していただきました🎶\n\nプリンシプルに興味がある方も、就活に悩んでいる方も必見✨\nお役立ち情報を覗いてみましょう📝\n\n株式会社プリンシプルでは、新卒・中途採用を強化中！\nプロフィールのリンクからチェック＆ご応募お待ちしています\n\n#会社紹介 #社員インタビュー #27卒 #28卒 #新卒採用`;
+
+  
+  // ② 画像合成プロンプト（抽出した変数をすべて埋め込み）
   document.getElementById('member-prompt-area').value = `【新卒採用Instagramスライド・連続生成マスタープロンプト】
 
 あなたは「新卒採用向けInstagramアカウントの社員紹介シリーズ」の画像生成を担当する、プロの専任デザイナーです。
@@ -657,7 +666,7 @@ document.getElementById('btn-generate-insta').addEventListener('click', function
 * テキスト：
   * 小見出し（左上）：「INTERVIEW」
   * 大見出し（左上）：「就職活動と、入社後のリアル」
-  * 2つのQ&A（質問と回答のセット。カード形式またはスッキリした縦並び。フォントサイズは小さめ〜中サイズにして余白をたっぷり確保、行間を広く取る）：
+  * 2つのQ&A（質問と回答のセット）：
     * 質問1：「Q. 入社の決め手は？」 ＋ 回答1：「${interview1}」
     * 質問2：「Q. 入社後のやりがいは？」 ＋ 回答2：「${interview2}」
 * 右下：「次は同期からの他己紹介！ >>>」
@@ -729,12 +738,27 @@ document.getElementById('btn-fetch-events').addEventListener('click', async func
 });
 
 // イベント候補選択時にSlackに添付されていた写真があればプレビュー
-document.getElementById('event-select').addEventListener('change', function() {
-  const index = this.value; const container = document.getElementById('event-photo-container');
-  const img = document.getElementById('event-photo-preview');
-  if (index !== "" && eventList[index]) {
-      const photoUrl = eventList[index]["photo"];
-      if (photoUrl) { img.src = photoUrl; container.style.display = 'block'; return; }
+document.getElementById('member-select').addEventListener('change', function() {
+  const index = this.value;
+  const container = document.getElementById('member-photo-container');
+  const img = document.getElementById('member-photo-preview');
+  
+  if (index !== "" && memberList[index]) {
+      const member = memberList[index];
+      // 「自分の写真」または「写真」を含む列を探す
+      const photoKey = Object.keys(member).find(k => k.includes("写真"));
+      let photoUrl = photoKey ? member[photoKey] : "";
+
+      if (photoUrl) {
+          // Googleドライブのリンクを直接表示用（uc?export=view）に変換
+          const fileId = photoUrl.match(/[-\w]{25,}(?!.*[-\w]{25,})/);
+          if (fileId) {
+              photoUrl = `https://drive.google.com/uc?export=view&id=${fileId[0]}`;
+          }
+          img.src = photoUrl;
+          container.style.display = 'block';
+          return;
+      }
   }
   container.style.display = 'none';
 });
