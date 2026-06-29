@@ -529,7 +529,37 @@ async function fetchMemberData() {
     });
   } catch (error) { document.getElementById("member-select").innerHTML = '<option value="">データの取得に失敗しました</option>'; }
 }
-
+// ── ▼ ここから追加（消えていた送信機能を復活！） ▼ ──
+document.getElementById('send-form-btn').addEventListener('click', async function() {
+  const emailInput = document.getElementById('target-email');
+  const email = emailInput.value.trim();
+  
+  if (!email) {
+      alert('メールアドレスを入力してください。');
+      return;
+  }
+  
+  const btn = this;
+  btn.disabled = true;
+  btn.textContent = '送信中...';
+  
+  try {
+      const response = await fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ email: email }) });
+      const result = await response.json();
+      if (result.status === "success") {
+          alert('GoogleフォームのURLをメンバーに送信しました！');
+          emailInput.value = '';
+      } else {
+          alert('送信に失敗しました: ' + result.message);
+      }
+  } catch (error) {
+      alert('通信エラーが発生しました。');
+  } finally {
+      btn.disabled = false;
+      btn.textContent = '送信する';
+  }
+});
+// ── ▲ ここまで追加 ▲ ──
 document.getElementById('member-select').addEventListener('change', function() {
   const index = this.value; const container = document.getElementById('member-photo-container');
   const img = document.getElementById('member-photo-preview');
