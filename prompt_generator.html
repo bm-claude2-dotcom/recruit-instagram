@@ -738,29 +738,22 @@ document.getElementById('btn-fetch-events').addEventListener('click', async func
 });
 
 // イベント候補選択時にSlackに添付されていた写真があればプレビュー
-document.getElementById('member-select').addEventListener('change', function() {
-  const index = this.value;
-  const container = document.getElementById('member-photo-container');
-  const img = document.getElementById('member-photo-preview');
-  
-  if (index !== "" && memberList[index]) {
-      const member = memberList[index];
-      // 「自分の写真」または「写真」を含む列を探す
-      const photoKey = Object.keys(member).find(k => k.includes("写真"));
-      let photoUrl = photoKey ? member[photoKey] : "";
+document.getElementById('event-select').addEventListener('change', function() {
+    const index = this.value;
+    const container = document.getElementById('event-photo-container');
+    const img = document.getElementById('event-photo-preview');
+   
+    if (index !== "" && eventList[index]) {
+        const photoData = eventList[index].photo;
 
-      if (photoUrl) {
-          // Googleドライブのリンクを直接表示用（uc?export=view）に変換
-          const fileId = photoUrl.match(/[-\w]{25,}(?!.*[-\w]{25,})/);
-          if (fileId) {
-              photoUrl = `https://lh3.googleusercontent.com/d/${fileId[0]}=w800`;
-          }
-          img.src = photoUrl;
-          container.style.display = 'block';
-          return;
-      }
-  }
-  container.style.display = 'none';
+        if (photoData) {
+            // Python側でBase64(Data URL)化されているのでそのままsrcに代入
+            img.src = photoData;
+            container.style.display = 'block';
+            return;
+        }
+    }
+    container.style.display = 'none';
 });
 
 // イベント用キャプション文 & 画像生成プロンプトの生成
