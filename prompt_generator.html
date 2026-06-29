@@ -753,7 +753,7 @@ document.getElementById('member-select').addEventListener('change', function() {
           // Googleドライブのリンクを直接表示用（uc?export=view）に変換
           const fileId = photoUrl.match(/[-\w]{25,}(?!.*[-\w]{25,})/);
           if (fileId) {
-              photoUrl = `https://drive.google.com/uc?export=view&id=${fileId[0]}`;
+              photoUrl = `https://lh3.googleusercontent.com/d/${fileId[0]}=w800`;
           }
           img.src = photoUrl;
           container.style.display = 'block';
