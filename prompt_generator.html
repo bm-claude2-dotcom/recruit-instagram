@@ -1,12 +1,24 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>採用コンテンツ 生成ノート | Instagram | PRINCIPLE</title>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
       background: #eef0f4;
@@ -23,35 +35,81 @@
       color: #fff;
       padding: 18px 24px 14px;
     }
+
     .hd-inner {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 16px;
     }
-    .hd-left { flex: 1; min-width: 0; }
-    .hd-brand { font-size: 10px; font-weight: 700; letter-spacing: 0.3em; color: #475569; margin-bottom: 4px; }
-    .hd-title { font-size: 21px; font-weight: 700; margin-bottom: 8px; }
-    .hd-row   { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+    .hd-left {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .hd-brand {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      color: #475569;
+      margin-bottom: 4px;
+    }
+
+    .hd-title {
+      font-size: 21px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .hd-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
     .badge-live {
-      display: inline-flex; align-items: center; gap: 5px;
-      background: #dcfce7; color: #15803d;
-      font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #dcfce7;
+      color: #15803d;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
     }
-    .badge-live::before { content: "●"; font-size: 7px; color: #22c55e; }
+
+    .badge-live::before {
+      content: "●";
+      font-size: 7px;
+      color: #22c55e;
+    }
+
     .badge-sample {
-      display: inline-flex; align-items: center; gap: 5px;
-      background: #fef9c3; color: #854d0e;
-      font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #fef9c3;
+      color: #854d0e;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
     }
-    .hd-meta { font-size: 12px; color: #64748b; }
+
+    .hd-meta {
+      font-size: 12px;
+      color: #64748b;
+    }
 
     /* ── Update button ────────────────────────────────── */
     .update-btn {
       flex-shrink: 0;
-      background: rgba(255,255,255,0.1);
+      background: rgba(255, 255, 255, 0.1);
       color: #fff;
-      border: 1.5px solid rgba(255,255,255,0.2);
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
       border-radius: 10px;
       padding: 10px 18px;
       font-size: 13px;
@@ -63,555 +121,923 @@
       gap: 7px;
       transition: background .2s, border-color .2s, transform .1s;
     }
+
     .update-btn:hover:not(:disabled) {
-      background: rgba(255,255,255,0.18);
-      border-color: rgba(255,255,255,0.35);
+      background: rgba(255, 255, 255, 0.18);
+      border-color: rgba(255, 255, 255, 0.35);
       transform: translateY(-1px);
     }
-    .update-btn:disabled { cursor: not-allowed; opacity: 0.85; }
-    .update-btn.loading { background: rgba(99,102,241,0.3);  border-color: rgba(99,102,241,0.55); }
-    .update-btn.success { background: rgba(22,163,74,0.3);   border-color: rgba(22,163,74,0.6);   }
-    .update-btn.err     { background: rgba(220,38,38,0.25);  border-color: rgba(220,38,38,0.5);   }
+
+    .update-btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.85;
+    }
+
+    .update-btn.loading {
+      background: rgba(99, 102, 241, 0.3);
+      border-color: rgba(99, 102, 241, 0.55);
+    }
+
+    .update-btn.success {
+      background: rgba(22, 163, 74, 0.3);
+      border-color: rgba(22, 163, 74, 0.6);
+    }
+
+    .update-btn.err {
+      background: rgba(220, 38, 38, 0.25);
+      border-color: rgba(220, 38, 38, 0.5);
+    }
 
     /* Spinner */
-    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
     .spinner {
-      width: 13px; height: 13px; flex-shrink: 0;
-      border: 2px solid rgba(255,255,255,0.3);
-      border-top-color: rgba(255,255,255,0.9);
+      width: 13px;
+      height: 13px;
+      flex-shrink: 0;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: rgba(255, 255, 255, 0.9);
       border-radius: 50%;
       animation: spin 0.7s linear infinite;
     }
 
     /* ── 2-column layout ──────────────────────────────── */
-    .layout { flex: 1; display: flex; overflow: hidden; min-height: 0; }
+    .layout {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      min-height: 0;
+    }
 
     /* ── Left column ──────────────────────────────────── */
     .col-l {
-      width: 320px; flex-shrink: 0;
+      width: 320px;
+      flex-shrink: 0;
       overflow-y: auto;
       padding: 14px 10px 40px 14px;
       border-right: 1px solid #e2e8f0;
       background: #f8fafc;
     }
+
     .col-l-label {
-      font-size: 10px; font-weight: 700; letter-spacing: 0.15em;
-      color: #94a3b8; text-transform: uppercase; padding: 4px 4px 10px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: #94a3b8;
+      text-transform: uppercase;
+      padding: 4px 4px 10px;
     }
+
     .card {
-      background: #fff; border: 2px solid transparent; border-radius: 11px;
-      padding: 11px 13px; text-align: left; cursor: pointer; width: 100%;
-      display: flex; flex-direction: column; gap: 5px; margin-bottom: 7px;
-      box-shadow: 0 1px 3px rgba(0,0,0,.05);
+      background: #fff;
+      border: 2px solid transparent;
+      border-radius: 11px;
+      padding: 11px 13px;
+      text-align: left;
+      cursor: pointer;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-bottom: 7px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, .05);
       transition: border-color .15s, box-shadow .15s;
     }
-    .card:hover { border-color: #c7d2fe; box-shadow: 0 2px 8px rgba(99,102,241,.1); }
-    .card.on { border-color: #6366f1; background: #fafbff; box-shadow: 0 0 0 4px rgba(99,102,241,.08); }
-    .card-row { display: flex; align-items: center; gap: 7px; }
-    .num {
-      width: 25px; height: 25px; border-radius: 6px;
-      background: #f1f5f9; color: #64748b;
-      font-size: 11px; font-weight: 700;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; transition: background .15s, color .15s;
+
+    .card:hover {
+      border-color: #c7d2fe;
+      box-shadow: 0 2px 8px rgba(99, 102, 241, .1);
     }
-    .card.on .num { background: #6366f1; color: #fff; }
-    .cat { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px; }
-    .card-title { font-size: 13px; font-weight: 700; color: #1e293b; line-height: 1.4; }
-    .card.on .card-title { color: #4338ca; }
-    .card-hook { font-size: 11px; color: #64748b; line-height: 1.5; }
+
+    .card.on {
+      border-color: #6366f1;
+      background: #fafbff;
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, .08);
+    }
+
+    .card-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .num {
+      width: 25px;
+      height: 25px;
+      border-radius: 6px;
+      background: #f1f5f9;
+      color: #64748b;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background .15s, color .15s;
+    }
+
+    .card.on .num {
+      background: #6366f1;
+      color: #fff;
+    }
+
+    .cat {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1e293b;
+      line-height: 1.4;
+    }
+
+    .card.on .card-title {
+      color: #4338ca;
+    }
+
+    .card-hook {
+      font-size: 11px;
+      color: #64748b;
+      line-height: 1.5;
+    }
 
     /* Cards loading dim */
-    #cards { transition: opacity .3s; }
-    #cards.loading { opacity: 0.3; pointer-events: none; }
+    #cards {
+      transition: opacity .3s;
+    }
+
+    #cards.loading {
+      opacity: 0.3;
+      pointer-events: none;
+    }
 
     /* ── Right column ─────────────────────────────────── */
-    .col-r { flex: 1; overflow-y: auto; padding: 14px 18px 40px; }
+    .col-r {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px 18px 40px;
+    }
+
     .pv-wrap {
-      background: #fff; border-radius: 14px; border: 1.5px solid #e2e8f0;
-      box-shadow: 0 2px 8px rgba(0,0,0,.05);
-      display: flex; flex-direction: column;
-      min-height: calc(100% - 8px); overflow: hidden;
+      background: #fff;
+      border-radius: 14px;
+      border: 1.5px solid #e2e8f0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, .05);
+      display: flex;
+      flex-direction: column;
+      min-height: calc(100% - 8px);
+      overflow: hidden;
     }
+
     .empty {
-      flex: 1; display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 10px; color: #94a3b8; font-size: 14px;
-      line-height: 1.9; text-align: center; padding: 60px 40px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: #94a3b8;
+      font-size: 14px;
+      line-height: 1.9;
+      text-align: center;
+      padding: 60px 40px;
     }
-    .empty-icon { font-size: 28px; color: #cbd5e1; }
-    .pv-hd { padding: 18px 22px 12px; border-bottom: 1px solid #f1f5f9; }
-    .pv-title { font-size: 18px; font-weight: 700; color: #1e293b; margin-bottom: 4px; }
-    .pv-hook  { font-size: 13px; color: #6366f1; font-weight: 500; }
+
+    .empty-icon {
+      font-size: 28px;
+      color: #cbd5e1;
+    }
+
+    .pv-hd {
+      padding: 18px 22px 12px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .pv-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 4px;
+    }
+
+    .pv-hook {
+      font-size: 13px;
+      color: #6366f1;
+      font-weight: 500;
+    }
+
     .tabs {
-      display: flex; padding: 0 22px;
-      background: #fafbff; border-bottom: 1px solid #f1f5f9;
+      display: flex;
+      padding: 0 22px;
+      background: #fafbff;
+      border-bottom: 1px solid #f1f5f9;
     }
+
     .tab {
-      padding: 10px 18px; font-size: 13px; font-weight: 600;
-      color: #94a3b8; background: none; border: none;
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #94a3b8;
+      background: none;
+      border: none;
       border-bottom: 2.5px solid transparent;
-      cursor: pointer; margin-bottom: -1px;
+      cursor: pointer;
+      margin-bottom: -1px;
       transition: color .15s, border-color .15s;
     }
-    .tab:hover { color: #6366f1; }
-    .tab.on { color: #6366f1; border-bottom-color: #6366f1; }
-    .txt-block {
-      flex: 1; display: flex; flex-direction: column;
-      padding: 18px 22px 20px; gap: 14px;
+
+    .tab:hover {
+      color: #6366f1;
     }
+
+    .tab.on {
+      color: #6366f1;
+      border-bottom-color: #6366f1;
+    }
+
+    .txt-block {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 18px 22px 20px;
+      gap: 14px;
+    }
+
     .txt-body {
-      flex: 1; background: #f8fafc;
-      border-left: 3px solid #6366f1; border-radius: 0 10px 10px 0;
-      padding: 14px 16px; font-size: 14px; line-height: 1.9;
-      color: #334155; word-break: break-all; min-height: 100px;
+      flex: 1;
+      background: #f8fafc;
+      border-left: 3px solid #6366f1;
+      border-radius: 0 10px 10px 0;
+      padding: 14px 16px;
+      font-size: 14px;
+      line-height: 1.9;
+      color: #334155;
+      word-break: break-all;
+      min-height: 100px;
       white-space: pre-wrap;
     }
-    .txt-ft { display: flex; align-items: center; justify-content: space-between; }
-    .char-cnt { font-size: 12px; color: #94a3b8; }
-    .copy-btn {
-      background: #6366f1; color: #fff; border: none; border-radius: 8px;
-      padding: 8px 20px; font-size: 13px; font-weight: 600; cursor: pointer;
-      transition: background .2s; white-space: nowrap;
+
+    .txt-ft {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
-    .copy-btn:hover { background: #4f46e5; }
-    .copy-btn.done  { background: #16a34a; }
+
+    .char-cnt {
+      font-size: 12px;
+      color: #94a3b8;
+    }
+
+    .copy-btn {
+      background: #6366f1;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s;
+      white-space: nowrap;
+    }
+
+    .copy-btn:hover {
+      background: #4f46e5;
+    }
+
+    .copy-btn.done {
+      background: #16a34a;
+    }
 
     /* 各種生成結果エリア専用 */
     .output-container {
-      margin-top: 15px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;
+      margin-top: 15px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 12px;
     }
+
     .output-header {
-      display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
     }
-    .output-label { font-size: 12px; font-weight: bold; color: #475569; }
+
+    .output-label {
+      font-size: 12px;
+      font-weight: bold;
+      color: #475569;
+    }
+
     .output-area {
-      width: 100%; height: 160px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px;
-      font-family: monospace; font-size: 13px; line-height: 1.5; resize: vertical; background: #fff;
+      width: 100%;
+      height: 160px;
+      padding: 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      resize: vertical;
+      background: #fff;
     }
 
     /* Scrollbar */
-    .col-l::-webkit-scrollbar, .col-r::-webkit-scrollbar { width: 4px; }
-    .col-l::-webkit-scrollbar-track, .col-r::-webkit-scrollbar-track { background: transparent; }
-    .col-l::-webkit-scrollbar-thumb, .col-r::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 4px; }
+    .col-l::-webkit-scrollbar,
+    .col-r::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .col-l::-webkit-scrollbar-track,
+    .col-r::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .col-l::-webkit-scrollbar-thumb,
+    .col-r::-webkit-scrollbar-thumb {
+      background: #e2e8f0;
+      border-radius: 4px;
+    }
 
     /* ── Settings button ──────────────────────────────── */
     .settings-btn {
       flex-shrink: 0;
-      background: rgba(255,255,255,0.07);
-      color: rgba(255,255,255,0.7);
-      border: 1.5px solid rgba(255,255,255,0.12);
+      background: rgba(255, 255, 255, 0.07);
+      color: rgba(255, 255, 255, 0.7);
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
       border-radius: 10px;
       padding: 10px 14px;
       font-size: 15px;
       cursor: pointer;
       transition: background .2s, color .2s;
-      display: inline-flex; align-items: center; gap: 5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
     }
-    .settings-btn:hover { background: rgba(255,255,255,0.14); color: #fff; }
-    .settings-btn.unconfigured { border-color: rgba(251,191,36,0.6); color: #fbbf24; }
+
+    .settings-btn:hover {
+      background: rgba(255, 255, 255, 0.14);
+      color: #fff;
+    }
+
+    .settings-btn.unconfigured {
+      border-color: rgba(251, 191, 36, 0.6);
+      color: #fbbf24;
+    }
 
     /* ── Modal overlay ────────────────────────────────── */
     .modal-overlay {
-      display: none; position: fixed; inset: 0; z-index: 100;
-      background: rgba(0,0,0,0.55); backdrop-filter: blur(3px);
-      align-items: center; justify-content: center;
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(3px);
+      align-items: center;
+      justify-content: center;
     }
-    .modal-overlay.open { display: flex; }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
     .modal {
-      background: #fff; border-radius: 16px; width: 460px; max-width: 94vw;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+      background: #fff;
+      border-radius: 16px;
+      width: 460px;
+      max-width: 94vw;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
       overflow: hidden;
     }
+
     .modal-hd {
       background: linear-gradient(135deg, #0f172a, #1e293b);
-      color: #fff; padding: 20px 24px 16px;
+      color: #fff;
+      padding: 20px 24px 16px;
     }
-    .modal-hd-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
-    .modal-hd-sub   { font-size: 12px; color: #64748b; }
-    .modal-body { padding: 22px 24px; display: flex; flex-direction: column; gap: 16px; }
+
+    .modal-hd-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .modal-hd-sub {
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    .modal-body {
+      padding: 22px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
     .field label {
-      display: block; font-size: 12px; font-weight: 600;
-      color: #475569; margin-bottom: 5px; letter-spacing: 0.05em;
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #475569;
+      margin-bottom: 5px;
+      letter-spacing: 0.05em;
     }
-    .field-row { display: flex; gap: 8px; align-items: center; }
+
+    .field-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
     .field input {
-      flex: 1; border: 1.5px solid #e2e8f0; border-radius: 8px;
-      padding: 9px 12px; font-size: 13px; color: #1e293b; background: #f8fafc;
-      font-family: monospace; outline: none; transition: border-color .15s;
+      flex: 1;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-size: 13px;
+      color: #1e293b;
+      background: #f8fafc;
+      font-family: monospace;
+      outline: none;
+      transition: border-color .15s;
     }
-    .field input:focus { border-color: #6366f1; background: #fff; }
-    .field input.ok { border-color: #22c55e; }
+
+    .field input:focus {
+      border-color: #6366f1;
+      background: #fff;
+    }
+
+    .field input.ok {
+      border-color: #22c55e;
+    }
+
     .dot {
-      width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0;
-      background: #e2e8f0; transition: background .3s;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      background: #e2e8f0;
+      transition: background .3s;
     }
-    .dot.set   { background: #22c55e; }
-    .dot.unset { background: #f59e0b; }
-    .field-hint { font-size: 11px; color: #94a3b8; margin-top: 4px; }
+
+    .dot.set {
+      background: #22c55e;
+    }
+
+    .dot.unset {
+      background: #f59e0b;
+    }
+
+    .field-hint {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+
     .modal-ft {
-      padding: 0 24px 22px; display: flex; gap: 10px; justify-content: flex-end;
+      padding: 0 24px 22px;
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
     }
+
     .btn-cancel {
-      background: #f1f5f9; color: #64748b; border: none; border-radius: 8px;
-      padding: 9px 18px; font-size: 13px; font-weight: 600; cursor: pointer;
+      background: #f1f5f9;
+      color: #64748b;
+      border: none;
+      border-radius: 8px;
+      padding: 9px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
     }
-    .btn-cancel:hover { background: #e2e8f0; }
+
+    .btn-cancel:hover {
+      background: #e2e8f0;
+    }
+
     .btn-save {
-      background: #6366f1; color: #fff; border: none; border-radius: 8px;
-      padding: 9px 22px; font-size: 13px; font-weight: 600; cursor: pointer;
+      background: #6366f1;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 9px 22px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
       transition: background .2s;
     }
-    .btn-save:hover:not(:disabled) { background: #4f46e5; }
-    .btn-save:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .btn-save:hover:not(:disabled) {
+      background: #4f46e5;
+    }
+
+    .btn-save:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
     .modal-msg {
-      font-size: 12px; padding: 0 24px 16px; margin-top: -8px;
+      font-size: 12px;
+      padding: 0 24px 16px;
+      margin-top: -8px;
       min-height: 18px;
     }
-    .modal-msg.ok  { color: #16a34a; }
-    .modal-msg.err { color: #dc2626; }
+
+    .modal-msg.ok {
+      color: #16a34a;
+    }
+
+    .modal-msg.err {
+      color: #dc2626;
+    }
   </style>
 </head>
+
 <body>
-<header class="hd">
-  <div class="hd-inner">
-    <div class="hd-left">
-      <div class="hd-brand">PRINCIPLE</div>
-      <div class="hd-title">採用コンテンツ 生成ノート<span style="font-size:13px;font-weight:500;opacity:.7;margin-left:10px">Instagram</span></div>
-      <div class="hd-row" id="hd-row"></div>
+  <header class="hd">
+    <div class="hd-inner">
+      <div class="hd-left">
+        <div class="hd-brand">PRINCIPLE</div>
+        <div class="hd-title">採用コンテンツ 生成ノート<span
+            style="font-size:13px;font-weight:500;opacity:.7;margin-left:10px">Instagram</span></div>
+        <div class="hd-row" id="hd-row"></div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-shrink:0">
+        <button class="settings-btn unconfigured" id="settings-btn" onclick="openSettings()">⚙️</button>
+        <button class="update-btn" id="update-btn" onclick="doUpdate()">🔄 最新データに更新</button>
+      </div>
     </div>
-    <div style="display:flex;gap:8px;align-items:center;flex-shrink:0">
-      <button class="settings-btn unconfigured" id="settings-btn" onclick="openSettings()">⚙️</button>
-      <button class="update-btn" id="update-btn" onclick="doUpdate()">🔄 最新データに更新</button>
+  </header>
+
+  <div class="modal-overlay" id="modal-overlay" onclick="overlayClick(event)">
+    <div class="modal">
+      <div class="modal-hd">
+        <div class="modal-hd-title">⚙️ API キー設定</div>
+        <div class="modal-hd-sub">入力した値は .env ファイルに保存されます</div>
+      </div>
+      <div class="modal-body">
+        <div class="field">
+          <label>SLACK BOT TOKEN</label>
+          <div class="field-row">
+            <input type="password" id="inp-slack" placeholder="xoxb-..." autocomplete="off">
+            <span class="dot" id="dot-slack"></span>
+          </div>
+          <div class="field-hint">Slack API の Bot User OAuth Token（xoxb- から始まる）</div>
+        </div>
+        <div class="field">
+          <label>GEMINI API KEY</label>
+          <div class="field-row">
+            <input type="password" id="inp-gemini" placeholder="AIza..." autocomplete="off">
+            <span class="dot" id="dot-gemini"></span>
+          </div>
+          <div class="field-hint">Google AI Studio で発行した API キー</div>
+        </div>
+      </div>
+      <div class="modal-msg" id="modal-msg"></div>
+      <div class="modal-ft">
+        <button class="btn-cancel" onclick="closeSettings()">キャンセル</button>
+        <button class="btn-save" id="btn-save" onclick="saveCredentials()">保存して接続</button>
+      </div>
     </div>
   </div>
-</header>
 
-<div class="modal-overlay" id="modal-overlay" onclick="overlayClick(event)">
-  <div class="modal">
-    <div class="modal-hd">
-      <div class="modal-hd-title">⚙️ API キー設定</div>
-      <div class="modal-hd-sub">入力した値は .env ファイルに保存されます</div>
+  <div class="layout">
+    <div class="col-l">
+      <div class="col-l-label">Instagram 定番企画</div>
+      <div id="cards-fixed"></div>
+      <div class="col-l-label" style="margin-top: 20px;">特選 10 切り口</div>
+      <div id="cards"></div>
     </div>
-    <div class="modal-body">
-      <div class="field">
-        <label>SLACK BOT TOKEN</label>
-        <div class="field-row">
-          <input type="password" id="inp-slack" placeholder="xoxb-..." autocomplete="off">
-          <span class="dot" id="dot-slack"></span>
+
+    <div class="col-r">
+      <div class="pv-wrap" id="pv"></div>
+
+      <div class="pv-wrap" id="insta-member-ui" style="display: none; flex-direction: column; padding: 22px;">
+        <div style="border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 20px;">
+          <div class="pv-title">Instagram 社員紹介 生成ツール</div>
+          <div class="pv-hook">Googleフォームと連携して画像合成プロンプトを作成します</div>
         </div>
-        <div class="field-hint">Slack API の Bot User OAuth Token（xoxb- から始まる）</div>
-      </div>
-      <div class="field">
-        <label>GEMINI API KEY</label>
-        <div class="field-row">
-          <input type="password" id="inp-gemini" placeholder="AIza..." autocomplete="off">
-          <span class="dot" id="dot-gemini"></span>
+        <div
+          style="background: #f8fafc; padding: 18px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 20px;">
+          <h4 style="margin-top: 0; font-size: 13px; color: #333; margin-bottom: 10px;">📩 メンバーに自己紹介フォームを送信</h4>
+          <div style="display: flex; gap: 10px;">
+            <input type="email" id="target-email" placeholder="name@principle-c.com"
+              style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 6px; outline: none;">
+            <button id="send-form-btn"
+              style="background: #007bff; color: white; border: none; border-radius: 6px; padding: 0 20px; font-weight: bold; cursor: pointer;">送信する</button>
+          </div>
         </div>
-        <div class="field-hint">Google AI Studio で発行した API キー</div>
+        <div style="margin-bottom: 20px;">
+          <h4 style="margin-top: 0; font-size: 13px; color: #333; margin-bottom: 10px;">👤 紹介するメンバーを選択</h4>
+          <select id="member-select"
+            style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; outline: none;">
+            <option value="">データを読み込み中...</option>
+          </select>
+        </div>
+        <div id="member-photo-container"
+          style="display: none; text-align: center; margin-bottom: 20px; background: #fafbff; border: 1px dashed #c7d2fe; padding: 15px; border-radius: 10px;">
+          <p style="margin: 0 0 10px 0; font-size: 12px; font-weight: bold; color: #6366f1;">👇
+            ChatGPTに添付する本人の写真（右クリックで保存してください）</p>
+          <img id="member-photo-preview" src="" alt="メンバーの写真"
+            style="max-width: 250px; max-height: 250px; border-radius: 8px; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+        </div>
+        <button id="btn-generate-insta"
+          style="background: #6366f1; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: bold; transition: background .2s;">🪄
+          キャプションとプロンプトを生成</button>
+
+        <div id="member-output-container" style="display:none; margin-top: 15px;">
+          <div class="output-container">
+            <div class="output-header">
+              <span class="output-label">💬 Instagram用 キャプション文</span>
+              <button class="copy-btn" onclick="copyTextDirect('member-caption-area', this)">📋 コピー</button>
+            </div>
+            <textarea id="member-caption-area" class="output-area" readonly></textarea>
+          </div>
+          <div class="output-container">
+            <div class="output-header">
+              <span class="output-label">🤖 ChatGPT用 画像合成プロンプト</span>
+              <button class="copy-btn" onclick="copyTextDirect('member-prompt-area', this)">📋 コピー</button>
+            </div>
+            <textarea id="member-prompt-area" class="output-area" readonly></textarea>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="modal-msg" id="modal-msg"></div>
-    <div class="modal-ft">
-      <button class="btn-cancel" onclick="closeSettings()">キャンセル</button>
-      <button class="btn-save" id="btn-save" onclick="saveCredentials()">保存して接続</button>
+
+      <div class="pv-wrap" id="insta-event-ui" style="display: none; flex-direction: column; padding: 22px;">
+        <div style="border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 20px;">
+          <div class="pv-title">Instagram 社内イベント 生成ツール</div>
+          <div class="pv-hook">Slackの「26卒メンバー」チャンネルの「#社内イベント」から候補を抽出します</div>
+        </div>
+        <div style="margin-bottom: 20px;">
+          <button id="btn-fetch-events"
+            style="background: #10b981; color: white; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: bold; margin-bottom: 12px;">🔄
+            Slackからイベント候補を取得</button>
+          <h4 style="margin-top: 0; font-size: 13px; color: #333; margin-bottom: 10px;">🎈 イベント候補を選択</h4>
+          <select id="event-select"
+            style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; outline: none;">
+            <option value="">-- 先に候補を取得してください --</option>
+          </select>
+        </div>
+        <div id="event-photo-container"
+          style="display: none; text-align: center; margin-bottom: 20px; background: #fafbff; border: 1px dashed #10b981; padding: 15px; border-radius: 10px;">
+          <p style="margin: 0 0 10px 0; font-size: 12px; font-weight: bold; color: #10b981;">👇
+            Slackに添付されていた写真（参考・イメージ生成用）</p>
+          <img id="event-photo-preview" src="" alt="イベントの写真"
+            style="max-width: 250px; max-height: 250px; border-radius: 8px; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+        </div>
+        <button id="btn-generate-event"
+          style="background: #6366f1; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: bold; transition: background .2s;">🪄
+          キャプションとプロンプトを自動ブラッシュアップ</button>
+
+        <div id="event-output-container" style="display:none; margin-top: 15px;">
+          <div class="output-container">
+            <div class="output-header">
+              <span class="output-label">💬 Instagram用 キャプション文 (Slack原稿をいい感じに修正)</span>
+              <button class="copy-btn" onclick="copyTextDirect('event-caption-area', this)">📋 コピー</button>
+            </div>
+            <textarea id="event-caption-area" class="output-area" readonly></textarea>
+          </div>
+          <div class="output-container">
+            <div class="output-header">
+              <span class="output-label">🤖 ChatGPT用 画像生成プロンプト</span>
+              <button class="copy-btn" onclick="copyTextDirect('event-prompt-area', this)">📋 コピー</button>
+            </div>
+            <textarea id="event-prompt-area" class="output-area" readonly></textarea>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
-</div>
 
-<div class="layout">
-  <div class="col-l">
-    <div class="col-l-label">Instagram 定番企画</div>
-    <div id="cards-fixed"></div>
-    <div class="col-l-label" style="margin-top: 20px;">特選 10 切り口</div>
-    <div id="cards"></div>
-  </div>
-  
-  <div class="col-r">
-    <div class="pv-wrap" id="pv"></div>
+  <script>
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbzsDwlIKl1FlEi9B5BI-w_ku44STMkddCwB3WGFTUliQK8GhvRSFO98uN_RfZ34CBj1cA/exec";
 
-    <div class="pv-wrap" id="insta-member-ui" style="display: none; flex-direction: column; padding: 22px;">
-      <div style="border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 20px;">
-        <div class="pv-title">Instagram 社員紹介 生成ツール</div>
-        <div class="pv-hook">Googleフォームと連携して画像合成プロンプトを作成します</div>
-      </div>
-      <div style="background: #f8fafc; padding: 18px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 20px;">
-        <h4 style="margin-top: 0; font-size: 13px; color: #333; margin-bottom: 10px;">📩 メンバーに自己紹介フォームを送信</h4>
-        <div style="display: flex; gap: 10px;">
-          <input type="email" id="target-email" placeholder="name@principle-c.com" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 6px; outline: none;">
-          <button id="send-form-btn" style="background: #007bff; color: white; border: none; border-radius: 6px; padding: 0 20px; font-weight: bold; cursor: pointer;">送信する</button>
-        </div>
-      </div>
-      <div style="margin-bottom: 20px;">
-        <h4 style="margin-top: 0; font-size: 13px; color: #333; margin-bottom: 10px;">👤 紹介するメンバーを選択</h4>
-        <select id="member-select" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; outline: none;">
-          <option value="">データを読み込み中...</option>
-        </select>
-      </div>
-      <div id="member-photo-container" style="display: none; text-align: center; margin-bottom: 20px; background: #fafbff; border: 1px dashed #c7d2fe; padding: 15px; border-radius: 10px;">
-        <p style="margin: 0 0 10px 0; font-size: 12px; font-weight: bold; color: #6366f1;">👇 ChatGPTに添付する本人の写真（右クリックで保存してください）</p>
-        <img id="member-photo-preview" src="" alt="メンバーの写真" style="max-width: 250px; max-height: 250px; border-radius: 8px; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-      </div>
-      <button id="btn-generate-insta" style="background: #6366f1; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: bold; transition: background .2s;">🪄 キャプションとプロンプトを生成</button>
+    var FIXED_DATA = [
+      { "id": "insta_member", "title": "社員紹介 (Instagram)", "hook": "スプシ連携でプロフィール画像と投稿文を自動生成", "category": "働く人" },
+      { "id": "insta_event", "title": "社内イベント (Instagram)", "hook": "Slack連携でイベント情報を取得し、投稿文と画像プロンプトを生成", "category": "カルチャー" }
+    ];
 
-      <div id="member-output-container" style="display:none; margin-top: 15px;">
-        <div class="output-container">
-          <div class="output-header">
-            <span class="output-label">💬 Instagram用 キャプション文</span>
-            <button class="copy-btn" onclick="copyTextDirect('member-caption-area', this)">📋 コピー</button>
-          </div>
-          <textarea id="member-caption-area" class="output-area" readonly></textarea>
-        </div>
-        <div class="output-container">
-          <div class="output-header">
-            <span class="output-label">🤖 ChatGPT用 画像合成プロンプト</span>
-            <button class="copy-btn" onclick="copyTextDirect('member-prompt-area', this)">📋 コピー</button>
-          </div>
-          <textarea id="member-prompt-area" class="output-area" readonly></textarea>
-        </div>
-      </div>
-    </div>
+    var DATA = {
+      "last_updated": null,
+      "slack_status": { "company_messages": 0, "competitor_messages": 0 },
+      "items": [
+        {
+          "id": 1, "title": "入社3ヶ月で初登壇", "hook": "若手が安心して挑戦できる文化を証明する等身大エピソード", "category": "成長",
+          "sns_draft": "入社3ヶ月、...", "content_long": "入社してわずか3ヶ月。..."
+        }
+      ]
+    };
 
-    <div class="pv-wrap" id="insta-event-ui" style="display: none; flex-direction: column; padding: 22px;">
-      <div style="border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 20px;">
-        <div class="pv-title">Instagram 社内イベント 生成ツール</div>
-        <div class="pv-hook">Slackの「26卒メンバー」チャンネルの「#社内イベント」から候補を抽出します</div>
-      </div>
-      <div style="margin-bottom: 20px;">
-        <button id="btn-fetch-events" style="background: #10b981; color: white; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: bold; margin-bottom: 12px;">🔄 Slackからイベント候補を取得</button>
-        <h4 style="margin-top: 0; font-size: 13px; color: #333; margin-bottom: 10px;">🎈 イベント候補を選択</h4>
-        <select id="event-select" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; outline: none;">
-          <option value="">-- 先に候補を取得してください --</option>
-        </select>
-      </div>
-      <div id="event-photo-container" style="display: none; text-align: center; margin-bottom: 20px; background: #fafbff; border: 1px dashed #10b981; padding: 15px; border-radius: 10px;">
-        <p style="margin: 0 0 10px 0; font-size: 12px; font-weight: bold; color: #10b981;">👇 Slackに添付されていた写真（参考・イメージ生成用）</p>
-        <img id="event-photo-preview" src="" alt="イベントの写真" style="max-width: 250px; max-height: 250px; border-radius: 8px; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-      </div>
-      <button id="btn-generate-event" style="background: #6366f1; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: bold; transition: background .2s;">🪄 キャプションとプロンプトを自動ブラッシュアップ</button>
+    var CAT = { '成長': { bg: '#e0f2fe', fg: '#0369a1' }, '技術': { bg: '#ede9fe', fg: '#6d28d9' }, 'カルチャー': { bg: '#fef3c7', fg: '#92400e' }, 'リアル': { bg: '#fce7f3', fg: '#9d174d' }, '働く人': { bg: '#dcfce7', fg: '#15803d' }, 'ビジョン': { bg: '#fff7ed', fg: '#c2410c' } };
+    var sel = null; var tab = 'short'; var isLoading = false;
+    let memberList = [];
+    let eventList = []; // 🔹 Slackから取得する社内イベント用配列
 
-      <div id="event-output-container" style="display:none; margin-top: 15px;">
-        <div class="output-container">
-          <div class="output-header">
-            <span class="output-label">💬 Instagram用 キャプション文 (Slack原稿をいい感じに修正)</span>
-            <button class="copy-btn" onclick="copyTextDirect('event-caption-area', this)">📋 コピー</button>
-          </div>
-          <textarea id="event-caption-area" class="output-area" readonly></textarea>
-        </div>
-        <div class="output-container">
-          <div class="output-header">
-            <span class="output-label">🤖 ChatGPT用 画像生成プロンプト</span>
-            <button class="copy-btn" onclick="copyTextDirect('event-prompt-area', this)">📋 コピー</button>
-          </div>
-          <textarea id="event-prompt-area" class="output-area" readonly></textarea>
-        </div>
-      </div>
-    </div>
+    function cc(c) { return CAT[c] || { bg: '#f1f5f9', fg: '#475569' }; }
+    function e(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+    function pad(n) { return typeof n === 'number' ? ('0' + n).slice(-2) : '✨'; }
 
-  </div>
-</div>
-
-<script>
-const GAS_URL = "https://script.google.com/macros/s/AKfycbzsDwlIKl1FlEi9B5BI-w_ku44STMkddCwB3WGFTUliQK8GhvRSFO98uN_RfZ34CBj1cA/exec"; 
-
-var FIXED_DATA = [
-  { "id": "insta_member", "title": "社員紹介 (Instagram)", "hook": "スプシ連携でプロフィール画像と投稿文を自動生成", "category": "働く人" },
-  { "id": "insta_event", "title": "社内イベント (Instagram)", "hook": "Slack連携でイベント情報を取得し、投稿文と画像プロンプトを生成", "category": "カルチャー" }
-];
-
-var DATA = {
-  "last_updated": null,
-  "slack_status": { "company_messages": 0, "competitor_messages": 0 },
-  "items": [
-    {
-      "id": 1, "title": "入社3ヶ月で初登壇", "hook": "若手が安心して挑戦できる文化を証明する等身大エピソード", "category": "成長",
-      "sns_draft": "入社3ヶ月、...", "content_long": "入社してわずか3ヶ月。..."
+    function renderStatus() {
+      var el = document.getElementById('hd-row');
+      if (DATA.last_updated) {
+        el.innerHTML = '<span class="badge-live"> 実データに更新済み: ' + e(DATA.last_updated) + '</span><span class="hd-meta">自社 ' + DATA.slack_status.company_messages + '件 ／ 参照 ' + DATA.slack_status.competitor_messages + '件</span>';
+      } else {
+        el.innerHTML = '<span class="badge-sample">○ サンプルデータ表示中</span><span class="hd-meta">「🔄 最新データに更新」で実データを取得</span>';
+      }
     }
-  ]
-};
 
-var CAT = { '成長': { bg: '#e0f2fe', fg: '#0369a1' }, '技術': { bg: '#ede9fe', fg: '#6d28d9' }, 'カルチャー': { bg: '#fef3c7', fg: '#92400e' }, 'リアル': { bg: '#fce7f3', fg: '#9d174d' }, '働く人': { bg: '#dcfce7', fg: '#15803d' }, 'ビジョン': { bg: '#fff7ed', fg: '#c2410c' } };
-var sel = null; var tab = 'short'; var isLoading = false;
-let memberList = []; 
-let eventList = []; // 🔹 Slackから取得する社内イベント用配列
+    function renderCards() {
+      var fixedEl = document.getElementById('cards-fixed');
+      fixedEl.innerHTML = FIXED_DATA.map(function (it) {
+        var on = sel === it.id; var c = cc(it.category);
+        return '<button class="card' + (on ? ' on' : '') + '" data-id="' + it.id + '" onclick="pick(\'' + it.id + '\')"><div class="card-row"><span class="num">' + pad(it.id) + '</span><span class="cat" style="background:' + c.bg + ';color:' + c.fg + '">' + e(it.category) + '</span></div><div class="card-title">' + e(it.title) + '</div><div class="card-hook">' + e(it.hook) + '</div></button>';
+      }).join('');
 
-function cc(c)  { return CAT[c] || { bg: '#f1f5f9', fg: '#475569' }; }
-function e(s)   { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function pad(n) { return typeof n === 'number' ? ('0' + n).slice(-2) : '✨'; }
+      var el = document.getElementById('cards');
+      el.innerHTML = DATA.items.map(function (it) {
+        var on = sel === it.id; var c = cc(it.category);
+        return '<button class="card' + (on ? ' on' : '') + '" data-id="' + it.id + '" onclick="pick(' + it.id + ')"><div class="card-row"><span class="num">' + pad(it.id) + '</span><span class="cat" style="background:' + c.bg + ';color:' + c.fg + '">' + e(it.category) + '</span></div><div class="card-title">' + e(it.title) + '</div><div class="card-hook">' + e(it.hook) + '</div></button>';
+      }).join('');
+    }
 
-function renderStatus() {
-  var el = document.getElementById('hd-row');
-  if (DATA.last_updated) {
-    el.innerHTML = '<span class="badge-live"> 実データに更新済み: ' + e(DATA.last_updated) + '</span><span class="hd-meta">自社 ' + DATA.slack_status.company_messages + '件 ／ 参照 ' + DATA.slack_status.competitor_messages + '件</span>';
-  } else {
-    el.innerHTML = '<span class="badge-sample">○ サンプルデータ表示中</span><span class="hd-meta">「🔄 最新データに更新」で実データを取得</span>';
-  }
-}
+    function renderPreview() {
+      var el = document.getElementById('pv');
+      var instaUi = document.getElementById('insta-member-ui');
+      var eventUi = document.getElementById('insta-event-ui');
 
-function renderCards() {
-  var fixedEl = document.getElementById('cards-fixed');
-  fixedEl.innerHTML = FIXED_DATA.map(function(it) {
-    var on = sel === it.id; var c  = cc(it.category);
-    return '<button class="card' + (on ? ' on' : '') + '" data-id="' + it.id + '" onclick="pick(\'' + it.id + '\')"><div class="card-row"><span class="num">' + pad(it.id) + '</span><span class="cat" style="background:' + c.bg + ';color:' + c.fg + '">' + e(it.category) + '</span></div><div class="card-title">' + e(it.title) + '</div><div class="card-hook">'  + e(it.hook)  + '</div></button>';
-  }).join('');
+      if (!sel) {
+        instaUi.style.display = 'none'; eventUi.style.display = 'none';
+        el.style.display = 'flex';
+        el.innerHTML = '<div class="empty"><div class="empty-icon">←</div><div>左のカードを選択すると</div><div>コンテンツが表示されます</div></div>';
+        return;
+      }
 
-  var el = document.getElementById('cards');
-  el.innerHTML = DATA.items.map(function(it) {
-    var on = sel === it.id; var c  = cc(it.category);
-    return '<button class="card' + (on ? ' on' : '') + '" data-id="' + it.id + '" onclick="pick(' + it.id + ')"><div class="card-row"><span class="num">' + pad(it.id) + '</span><span class="cat" style="background:' + c.bg + ';color:' + c.fg + '">' + e(it.category) + '</span></div><div class="card-title">' + e(it.title) + '</div><div class="card-hook">'  + e(it.hook)  + '</div></button>';
-  }).join('');
-}
+      if (sel === 'insta_member') {
+        el.style.display = 'none'; eventUi.style.display = 'none';
+        instaUi.style.display = 'flex'; return;
+      }
 
-function renderPreview() {
-  var el = document.getElementById('pv');
-  var instaUi = document.getElementById('insta-member-ui');
-  var eventUi = document.getElementById('insta-event-ui');
+      if (sel === 'insta_event') {
+        el.style.display = 'none'; instaUi.style.display = 'none';
+        eventUi.style.display = 'flex'; return;
+      }
 
-  if (!sel) {
-    instaUi.style.display = 'none'; eventUi.style.display = 'none';
-    el.style.display = 'flex';
-    el.innerHTML = '<div class="empty"><div class="empty-icon">←</div><div>左のカードを選択すると</div><div>コンテンツが表示されます</div></div>';
-    return;
-  }
+      instaUi.style.display = 'none'; eventUi.style.display = 'none'; el.style.display = 'flex';
 
-  if (sel === 'insta_member') {
-    el.style.display = 'none'; eventUi.style.display = 'none';
-    instaUi.style.display = 'flex'; return;
-  }
-  
-  if (sel === 'insta_event') {
-    el.style.display = 'none'; instaUi.style.display = 'none';
-    eventUi.style.display = 'flex'; return;
-  }
+      var it = DATA.items.find(function (i) { return i.id === sel; }) || FIXED_DATA.find(function (i) { return i.id === sel; });
+      var txt = tab === 'short' ? (it.sns_draft || '') : (it.content_long || '');
+      var cnt = Array.from(txt).length;
 
-  instaUi.style.display = 'none'; eventUi.style.display = 'none'; el.style.display = 'flex';
+      el.innerHTML = '<div class="pv-hd"><div class="pv-title">' + e(it.title) + '</div><div class="pv-hook">' + e(it.hook) + '</div></div><div class="tabs"><button class="tab' + (tab === 'short' ? ' on' : '') + '" data-t="short" onclick="sw(this.dataset.t)">📸 スライド構成案</button><button class="tab' + (tab === 'long' ? ' on' : '') + '" data-t="long"  onclick="sw(this.dataset.t)">💬 キャプション本文</button></div><div class="txt-block"><div class="txt-body">' + e(txt) + '</div><div class="txt-ft"><span class="char-cnt">' + cnt + ' 文字</span><button class="copy-btn" id="cb" onclick="doCopy()">📋 コピー</button></div></div>';
+    }
 
-  var it = DATA.items.find(function(i) { return i.id === sel; }) || FIXED_DATA.find(function(i) { return i.id === sel; });
-  var txt = tab === 'short' ? (it.sns_draft || '') : (it.content_long || '');
-  var cnt = Array.from(txt).length;
+    function pick(id) { sel = (sel === id) ? null : id; tab = 'short'; renderCards(); renderPreview(); }
+    function sw(t) { tab = t; renderPreview(); }
 
-  el.innerHTML = '<div class="pv-hd"><div class="pv-title">' + e(it.title) + '</div><div class="pv-hook">' + e(it.hook) + '</div></div><div class="tabs"><button class="tab' + (tab === 'short' ? ' on' : '') + '" data-t="short" onclick="sw(this.dataset.t)">📸 スライド構成案</button><button class="tab' + (tab === 'long'  ? ' on' : '') + '" data-t="long"  onclick="sw(this.dataset.t)">💬 キャプション本文</button></div><div class="txt-block"><div class="txt-body">' + e(txt) + '</div><div class="txt-ft"><span class="char-cnt">' + cnt + ' 文字</span><button class="copy-btn" id="cb" onclick="doCopy()">📋 コピー</button></div></div>';
-}
+    function doCopy() {
+      var it = DATA.items.find(function (i) { return i.id === sel; }) || FIXED_DATA.find(function (i) { return i.id === sel; });
+      if (!it) return;
+      var txt = tab === 'short' ? it.sns_draft : it.content_long;
+      navigator.clipboard.writeText(txt).then(() => {
+        var btn = document.getElementById('cb'); btn.textContent = 'コピー完了! ✓'; btn.classList.add('done');
+        setTimeout(() => { btn.textContent = '📋 コピー'; btn.classList.remove('done'); }, 2000);
+      });
+    }
 
-function pick(id) { sel = (sel === id) ? null : id; tab = 'short'; renderCards(); renderPreview(); }
-function sw(t) { tab = t; renderPreview(); }
+    // ── 💡 直接指定テキストエリアのコピペ用共通関数 ─────────────────
+    function copyTextDirect(areaId, btnElement) {
+      var txt = document.getElementById(areaId).value;
+      if (!txt) return;
+      navigator.clipboard.writeText(txt).then(() => {
+        btnElement.textContent = 'コピー完了! ✓'; btnElement.classList.add('done');
+        setTimeout(() => { btnElement.textContent = '📋 コピー'; btnElement.classList.remove('done'); }, 2000);
+      });
+    }
 
-function doCopy() {
-  var it = DATA.items.find(function(i) { return i.id === sel; }) || FIXED_DATA.find(function(i) { return i.id === sel; });
-  if (!it) return;
-  var txt = tab === 'short' ? it.sns_draft : it.content_long;
-  navigator.clipboard.writeText(txt).then(() => {
-    var btn = document.getElementById('cb'); btn.textContent = 'コピー完了! ✓'; btn.classList.add('done');
-    setTimeout(() => { btn.textContent = '📋 コピー'; btn.classList.remove('done'); }, 2000);
-  });
-}
+    // ── Instagram Member Logic ─────────────────────────────────────────
+    async function fetchMemberData() {
+      try {
+        const response = await fetch(GAS_URL); memberList = await response.json();
+        const selectElement = document.getElementById("member-select");
+        selectElement.innerHTML = '<option value="">-- メンバーを選択 --</option>';
+        memberList.forEach((member, index) => {
+          const option = document.createElement("option"); option.value = index;
+          option.textContent = member["お名前（漢字）"] || member["名前"] || `メンバー ${index + 1}`;
+          selectElement.appendChild(option);
+        });
+      } catch (error) { document.getElementById("member-select").innerHTML = '<option value="">データの取得に失敗しました</option>'; }
+    }
+    // ── ▼ ここから追加（消えていた送信機能を復活！） ▼ ──
+    document.getElementById('send-form-btn').addEventListener('click', async function () {
+      const emailInput = document.getElementById('target-email');
+      const email = emailInput.value.trim();
 
-// ── 💡 直接指定テキストエリアのコピペ用共通関数 ─────────────────
-function copyTextDirect(areaId, btnElement) {
-  var txt = document.getElementById(areaId).value;
-  if(!txt) return;
-  navigator.clipboard.writeText(txt).then(() => {
-    btnElement.textContent = 'コピー完了! ✓'; btnElement.classList.add('done');
-    setTimeout(() => { btnElement.textContent = '📋 コピー'; btnElement.classList.remove('done'); }, 2000);
-  });
-}
+      if (!email) {
+        alert('メールアドレスを入力してください。');
+        return;
+      }
 
-// ── Instagram Member Logic ─────────────────────────────────────────
-async function fetchMemberData() {
-  try {
-    const response = await fetch(GAS_URL); memberList = await response.json();
-    const selectElement = document.getElementById("member-select");
-    selectElement.innerHTML = '<option value="">-- メンバーを選択 --</option>';
-    memberList.forEach((member, index) => {
-        const option = document.createElement("option"); option.value = index;
-        option.textContent = member["お名前（漢字）"] || member["名前"] || `メンバー ${index + 1}`; 
-        selectElement.appendChild(option);
-    });
-  } catch (error) { document.getElementById("member-select").innerHTML = '<option value="">データの取得に失敗しました</option>'; }
-}
-// ── ▼ ここから追加（消えていた送信機能を復活！） ▼ ──
-document.getElementById('send-form-btn').addEventListener('click', async function() {
-  const emailInput = document.getElementById('target-email');
-  const email = emailInput.value.trim();
-  
-  if (!email) {
-      alert('メールアドレスを入力してください。');
-      return;
-  }
-  
-  const btn = this;
-  btn.disabled = true;
-  btn.textContent = '送信中...';
-  
-  try {
-      const response = await fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ email: email }) });
-      const result = await response.json();
-      if (result.status === "success") {
+      const btn = this;
+      btn.disabled = true;
+      btn.textContent = '送信中...';
+
+      try {
+        const response = await fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ email: email }) });
+        const result = await response.json();
+        if (result.status === "success") {
           alert('GoogleフォームのURLをメンバーに送信しました！');
           emailInput.value = '';
-      } else {
+        } else {
           alert('送信に失敗しました: ' + result.message);
+        }
+      } catch (error) {
+        alert('通信エラーが発生しました。');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '送信する';
       }
-  } catch (error) {
-      alert('通信エラーが発生しました。');
-  } finally {
-      btn.disabled = false;
-      btn.textContent = '送信する';
-  }
-});
-// ── ▲ ここまで追加 ▲ ──
-document.getElementById('member-select').addEventListener('change', function() {
-  const index = this.value; const container = document.getElementById('member-photo-container');
-  const img = document.getElementById('member-photo-preview');
-  if (index !== "" && memberList[index]) {
-      const photoUrl = memberList[index]["自分の写真"] || memberList[index]["写真"];
-      if (photoUrl) { img.src = photoUrl; container.style.display = 'block'; return; }
-  }
-  container.style.display = 'none';
-});
+    });
+    // ── ▲ ここまで追加 ▲ ──
+    document.getElementById('member-select').addEventListener('change', function () {
+      const index = this.value;
+      const container = document.getElementById('member-photo-container');
+      const img = document.getElementById('member-photo-preview');
 
-document.getElementById('btn-generate-insta').addEventListener('click', function() {
-  const index = document.getElementById('member-select').value;
-  if (index === "") { alert("紹介するメンバーを選択してください。"); return; }
-  const member = memberList[index];
+      if (index !== "" && memberList[index]) {
+        const member = memberList[index];
+        // 「写真」という文字が含まれる列を自動で探す
+        const photoKey = Object.keys(member).find(k => k.includes("写真"));
+        let photoUrl = photoKey ? member[photoKey] : "";
 
-  // 💡 補助関数：スプシの見出し（キー）を部分一致で探して値を取得する
-  const findVal = (keyPart) => {
-    const fullKey = Object.keys(member).find(k => k.includes(keyPart));
-    return fullKey ? member[fullKey] : "";
-  };
+        if (photoUrl) {
+          // GoogleドライブのリンクからファイルIDを抽出
+          const fileId = photoUrl.match(/[-\w]{25,}(?!.*[-\w]{25,})/);
+          if (fileId) {
+            // $のバグを修正し、最も安定する直リンクURLに自動変換する
+            photoUrl = `https://docs.google.com/uc?export=view&id=${fileId[0]}`;
+          }
+          img.src = photoUrl;
+          container.style.display = 'block';
+          return;
+        }
+      }
+      container.style.display = 'none';
+    });
 
-  // 1. 各項目のデータをスプシから抽出
-  const fileNo = pad(Number(index) + 1);
-  const name = findVal("お名前（漢字）") || findVal("名前") || ""; 
-  const kana = findVal("お名前（ふりがな）") || "";
-  const nameFull = kana ? `${name}（${kana}）` : name;
-  const deptYear = findVal("所属部署") || "";
-  const jobTitle = findVal("職種") || "";
-  const hometown = findVal("出身地") || findVal("出身") || ""; 
-  const catchcopy = findVal("キャッチコピー") || "";
-  const hobby = findVal("趣味") || ""; 
-  const axis = findVal("就活軸") || ""; 
-  
-  // インタビュー回答
-  const interview1 = findVal("インタビュー回答1") || "";
-  const interview2 = findVal("インタビュー回答2") || "";
-  
-  // 他己紹介
-  const tako1 = findVal("他己紹介1") || "";
-  const tako2 = findVal("他己紹介2") || "";
-  const tako3 = findVal("他己紹介3") || "";
-  const tako4 = findVal("他己紹介4") || "";
-  
-  const message = findVal("就活生へのメッセージ") || "";
-  const photoCaption = findVal("キャプション") || "歓迎会でのひとコマ✨";
+    document.getElementById('btn-generate-insta').addEventListener('click', function () {
+      const index = document.getElementById('member-select').value;
+      if (index === "") { alert("紹介するメンバーを選択してください。"); return; }
+      const member = memberList[index];
 
-  // ① Instagram用キャプション
-  document.getElementById('member-caption-area').value = `【Instagram用 キャプション文】\n＼ ＼ プリンシプルの新卒メンバー紹介 ／ ／\n4月に入社したメンバーにお話を聞いてみました！\nその人の人柄や就活時代の悩みなどを紹介していただきました🎶\n\nプリンシプルに興味がある方も、就活に悩んでいる方も必見✨\nお役立ち情報を覗いてみましょう📝\n\n株式会社プリンシプルでは、新卒・中途採用を強化中！\nプロフィールのリンクからチェック＆ご応募お待ちしています\n\n#会社紹介 #社員インタビュー #27卒 #28卒 #新卒採用`;
+      // 💡 補助関数：スプシの見出し（キー）を部分一致で探して値を取得する
+      const findVal = (keyPart) => {
+        const fullKey = Object.keys(member).find(k => k.includes(keyPart));
+        return fullKey ? member[fullKey] : "";
+      };
 
-  
-  // ② 画像合成プロンプト（抽出した変数をすべて埋め込み）
-  document.getElementById('member-prompt-area').value = `【新卒採用Instagramスライド・連続生成マスタープロンプト】
+      // 1. 各項目のデータをスプシから抽出
+      const fileNo = pad(Number(index) + 1);
+      const name = findVal("お名前（漢字）") || findVal("名前") || "";
+      const kana = findVal("お名前（ふりがな）") || "";
+      const nameFull = kana ? `${name}（${kana}）` : name;
+      const deptYear = findVal("所属部署") || "";
+      const jobTitle = findVal("職種") || "";
+      const hometown = findVal("出身地") || findVal("出身") || "";
+      const catchcopy = findVal("キャッチコピー") || "";
+      const hobby = findVal("趣味") || "";
+      const axis = findVal("就活軸") || "";
+
+      // インタビュー回答
+      const interview1 = findVal("インタビュー回答1") || "";
+      const interview2 = findVal("インタビュー回答2") || "";
+
+      // 他己紹介
+      const tako1 = findVal("他己紹介1") || "";
+      const tako2 = findVal("他己紹介2") || "";
+      const tako3 = findVal("他己紹介3") || "";
+      const tako4 = findVal("他己紹介4") || "";
+
+      const message = findVal("就活生へのメッセージ") || "";
+      const photoCaption = findVal("キャプション") || "歓迎会でのひとコマ✨";
+
+      // ① Instagram用キャプション
+      document.getElementById('member-caption-area').value = `【Instagram用 キャプション文】\n＼ ＼ プリンシプルの新卒メンバー紹介 ／ ／\n4月に入社したメンバーにお話を聞いてみました！\nその人の人柄や就活時代の悩みなどを紹介していただきました🎶\n\nプリンシプルに興味がある方も、就活に悩んでいる方も必見✨\nお役立ち情報を覗いてみましょう📝\n\n株式会社プリンシプルでは、新卒・中途採用を強化中！\nプロフィールのリンクからチェック＆ご応募お待ちしています\n\n#会社紹介 #社員インタビュー #27卒 #28卒 #新卒採用`;
+
+
+      // ② 画像合成プロンプト（抽出した変数をすべて埋め込み）
+      document.getElementById('member-prompt-area').value = `【新卒採用Instagramスライド・連続生成マスタープロンプト】
 
 あなたは「新卒採用向けInstagramアカウントの社員紹介シリーズ」の画像生成を担当する、プロの専任デザイナーです。
 以下の「スタイルガイド」と「各スライドの構成」を完全に記憶し、私が提供する「今回の社員データ」を元に、対話型で1枚ずつ画像を生成してください。
@@ -701,56 +1127,56 @@ document.getElementById('btn-generate-insta').addEventListener('click', function
 
 ━━━━━━━━━━━━━━━━━━━━━━
 それでは、社員データを読み込み、まずは【ステップ1：1枚目（表紙スライド）】の画像を1枚だけ生成してください。`;
-  
-  document.getElementById('member-output-container').style.display = 'block';
-});
 
-// ── 🔹 Instagram 社内イベント用ロジック ─────────────────────────────
-// 1. FlaskのAPIから「26卒メンバー」チャンネルの「#社内イベント」投稿群を一覧取得する想定
-document.getElementById('btn-fetch-events').addEventListener('click', async function() {
-  const btn = this; btn.disabled = true; btn.textContent = 'Slackから抽出中...';
-  try {
-    // Flask側に新規追加するエンドポイントを叩く想定
-    const response = await fetch('/api/slack-events');
-    if (!response.ok) throw new Error('サーバーエラー');
-    eventList = await response.json(); 
-    
-    // 【ダミー実装用バックアップ】もしFlask側が未実装なら一時的にダミーを入れます
-    if(!eventList || eventList.length === 0) {
-      eventList = [
-        { "text": "昨日、26卒メンバーみんなで歓迎お花見会をしました！🌸 #社内イベント めちゃくちゃ盛り上がりました！同期の絆が深まった気がします！", "photo": "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=500" },
-        { "text": "【26卒ボウリング大会レポ】昨晩の懇親イベント景品豪華で最高でした🎳✨ #社内イベント #懇親会", "photo": "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=500" }
-      ];
-    }
-
-    const selectElement = document.getElementById("event-select");
-    selectElement.innerHTML = '<option value="">-- イベント候補を選択してください --</option>';
-    eventList.forEach((ev, index) => {
-        const option = document.createElement("option"); option.value = index;
-        // 先頭30文字をタイトルとしてプルダウンに表示
-        option.textContent = ev.text.substring(0, 35) + (ev.text.length > 35 ? '...' : '');
-        selectElement.appendChild(option);
+      document.getElementById('member-output-container').style.display = 'block';
     });
-    alert('Slackから「#社内イベント」付きの最新投稿を抽出しました！');
-  } catch (error) {
-    alert('Slackデータの取得に失敗しました。Flaskサーバーの疎通を確認してください。');
-  } finally { btn.disabled = false; btn.textContent = '🔄 Slackからイベント候補を取得'; }
-});
 
-// イベント用キャプション文 & 画像生成プロンプトの生成
-document.getElementById('btn-generate-event').addEventListener('click', function() {
-  const index = document.getElementById('event-select').value;
-  if (index === "") { alert("イベント候補を選択してください。"); return; }
-  
-  const rawText = eventList[index].text;
-  // ハッシュタグなどを除いた生のテキスト
-  const cleanText = rawText.replace(/#\S+/g, '').trim();
+    // ── 🔹 Instagram 社内イベント用ロジック ─────────────────────────────
+    // 1. FlaskのAPIから「26卒メンバー」チャンネルの「#社内イベント」投稿群を一覧取得する想定
+    document.getElementById('btn-fetch-events').addEventListener('click', async function () {
+      const btn = this; btn.disabled = true; btn.textContent = 'Slackから抽出中...';
+      try {
+        // Flask側に新規追加するエンドポイントを叩く想定
+        const response = await fetch('/api/slack-events');
+        if (!response.ok) throw new Error('サーバーエラー');
+        eventList = await response.json();
 
-  // ① インスタ用キャプションの作成
-  const captionText = `【Instagram用 キャプション文】\n🎉 社内イベントレポート 🎉\n\nSlackの社内チャンネルから、活気あふれるイベントの様子をお届けします！\n\n👇 メンバーからのレポート内容はこちら✨\n---------------------------------------\n${cleanText}\n---------------------------------------\n\nプリンシプルでは、新卒・先輩関係なく、こうしたイベントを通じてフランクに交流できるカルチャーを大切にしています！🤗\n\n「この楽しそうな雰囲気を生で感じてみたい！」と思った方は、ぜひプロフィールのリンクから採用情報をチェックしてください！🚀\n\n#社内イベント #社内文化 #26卒 #プリンシプル #新卒採用 #カルチャー #一緒に働く仲間募集中 #アットホームな職場`;
+        // 【ダミー実装用バックアップ】もしFlask側が未実装なら一時的にダミーを入れます
+        if (!eventList || eventList.length === 0) {
+          eventList = [
+            { "text": "昨日、26卒メンバーみんなで歓迎お花見会をしました！🌸 #社内イベント めちゃくちゃ盛り上がりました！同期の絆が深まった気がします！", "photo": "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=500" },
+            { "text": "【26卒ボウリング大会レポ】昨晩の懇親イベント景品豪華で最高でした🎳✨ #社内イベント #懇親会", "photo": "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=500" }
+          ];
+        }
 
-  // ② ChatGPTに画像生成させるためのプロンプト作成（新しい指示に差し替え）
-  const promptText = `あなたは「会社の社内活動報告（イベント・部活動）Instagramアカウント」の画像生成およびテキストライティングを担当する、プロの専任デザイナー兼コピーライターです。
+        const selectElement = document.getElementById("event-select");
+        selectElement.innerHTML = '<option value="">-- イベント候補を選択してください --</option>';
+        eventList.forEach((ev, index) => {
+          const option = document.createElement("option"); option.value = index;
+          // 先頭30文字をタイトルとしてプルダウンに表示
+          option.textContent = ev.text.substring(0, 35) + (ev.text.length > 35 ? '...' : '');
+          selectElement.appendChild(option);
+        });
+        alert('Slackから「#社内イベント」付きの最新投稿を抽出しました！');
+      } catch (error) {
+        alert('Slackデータの取得に失敗しました。Flaskサーバーの疎通を確認してください。');
+      } finally { btn.disabled = false; btn.textContent = '🔄 Slackからイベント候補を取得'; }
+    });
+
+    // イベント用キャプション文 & 画像生成プロンプトの生成
+    document.getElementById('btn-generate-event').addEventListener('click', function () {
+      const index = document.getElementById('event-select').value;
+      if (index === "") { alert("イベント候補を選択してください。"); return; }
+
+      const rawText = eventList[index].text;
+      // ハッシュタグなどを除いた生のテキスト
+      const cleanText = rawText.replace(/#\S+/g, '').trim();
+
+      // ① インスタ用キャプションの作成
+      const captionText = `【Instagram用 キャプション文】\n🎉 社内イベントレポート 🎉\n\nSlackの社内チャンネルから、活気あふれるイベントの様子をお届けします！\n\n👇 メンバーからのレポート内容はこちら✨\n---------------------------------------\n${cleanText}\n---------------------------------------\n\nプリンシプルでは、新卒・先輩関係なく、こうしたイベントを通じてフランクに交流できるカルチャーを大切にしています！🤗\n\n「この楽しそうな雰囲気を生で感じてみたい！」と思った方は、ぜひプロフィールのリンクから採用情報をチェックしてください！🚀\n\n#社内イベント #社内文化 #26卒 #プリンシプル #新卒採用 #カルチャー #一緒に働く仲間募集中 #アットホームな職場`;
+
+      // ② ChatGPTに画像生成させるためのプロンプト作成（新しい指示に差し替え）
+      const promptText = `あなたは「会社の社内活動報告（イベント・部活動）Instagramアカウント」の画像生成およびテキストライティングを担当する、プロの専任デザイナー兼コピーライターです。
 以下の「スタイルガイド」と「3枚構成のステップ」を完全に記憶し、私が提供する「今回のミニマルな活動メモ」を元に、対話型で1枚ずつ画像を自動生成してください。
 
 ━━━━━━━━━━━━━━━━━━━━━━
@@ -847,68 +1273,68 @@ ${cleanText}
 ━━━━━━━━━━━━━━━━━━━━━━
 それでは、上記のデザイン・配色ガイド（ロゴスペースは完全削除）を厳守し、まずは【ステップ1：1枚目（表紙スライド）】の画像を1枚だけ生成してください。`;
 
-  document.getElementById('event-caption-area').value = captionText;
-  document.getElementById('event-prompt-area').value = promptText;
-  document.getElementById('event-output-container').style.display = 'block';
-});
+      document.getElementById('event-caption-area').value = captionText;
+      document.getElementById('event-prompt-area').value = promptText;
+      document.getElementById('event-output-container').style.display = 'block';
+    });
 
-// ── Credentials / Settings ────────────────────────────────────────
-var credsOk = false;
-async function checkCreds() {
-  try {
-    var res  = await fetch('http://127.0.0.1:5000/api/credentials-status'); var data = await res.json();
-    credsOk = data.slack_token_set && data.gemini_key_set; var btn = document.getElementById('settings-btn');
-    if (credsOk) { btn.classList.remove('unconfigured'); btn.title = '認証情報 設定済み'; } 
-    else { btn.classList.add('unconfigured'); btn.title = '認証情報 未設定 — クリックして設定'; }
-    document.getElementById('dot-slack').className  = 'dot ' + (data.slack_token_set ? 'set' : 'unset');
-    document.getElementById('dot-gemini').className = 'dot ' + (data.gemini_key_set  ? 'set' : 'unset');
-  } catch(e) {}
-}
+    // ── Credentials / Settings ────────────────────────────────────────
+    var credsOk = false;
+    async function checkCreds() {
+      try {
+        var res = await fetch('http://127.0.0.1:5000/api/credentials-status'); var data = await res.json();
+        credsOk = data.slack_token_set && data.gemini_key_set; var btn = document.getElementById('settings-btn');
+        if (credsOk) { btn.classList.remove('unconfigured'); btn.title = '認証情報 設定済み'; }
+        else { btn.classList.add('unconfigured'); btn.title = '認証情報 未設定 — クリックして設定'; }
+        document.getElementById('dot-slack').className = 'dot ' + (data.slack_token_set ? 'set' : 'unset');
+        document.getElementById('dot-gemini').className = 'dot ' + (data.gemini_key_set ? 'set' : 'unset');
+      } catch (e) { }
+    }
 
-function openSettings() { document.getElementById('modal-msg').textContent = ''; document.getElementById('modal-overlay').classList.add('open'); checkCreds(); }
-function closeSettings() { document.getElementById('modal-overlay').classList.remove('open'); }
-function overlayClick(e) { if (e.target === document.getElementById('modal-overlay')) closeSettings(); }
+    function openSettings() { document.getElementById('modal-msg').textContent = ''; document.getElementById('modal-overlay').classList.add('open'); checkCreds(); }
+    function closeSettings() { document.getElementById('modal-overlay').classList.remove('open'); }
+    function overlayClick(e) { if (e.target === document.getElementById('modal-overlay')) closeSettings(); }
 
-async function saveCredentials() {
-  var slack  = document.getElementById('inp-slack').value.trim(); var gemini = document.getElementById('inp-gemini').value.trim();
-  var msgEl  = document.getElementById('modal-msg'); var saveBtn = document.getElementById('btn-save');
-  if (!slack)  { msgEl.textContent = 'SLACK_BOT_TOKEN を入力してください'; return; }
-  if (!gemini) { msgEl.textContent = 'GEMINI_API_KEY を入力してください'; return; }
-  saveBtn.disabled = true; saveBtn.textContent = '保存中...';
+    async function saveCredentials() {
+      var slack = document.getElementById('inp-slack').value.trim(); var gemini = document.getElementById('inp-gemini').value.trim();
+      var msgEl = document.getElementById('modal-msg'); var saveBtn = document.getElementById('btn-save');
+      if (!slack) { msgEl.textContent = 'SLACK_BOT_TOKEN を入力してください'; return; }
+      if (!gemini) { msgEl.textContent = 'GEMINI_API_KEY を入力してください'; return; }
+      saveBtn.disabled = true; saveBtn.textContent = '保存中...';
 
-  try {
-    var res  = await fetch('http://127.0.0.1:5000/api/set-credentials', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ slack_token: slack, gemini_key: gemini }) });
-    var data = await res.json(); if (!res.ok) throw new Error(data.error || '保存に失敗しました');
-    msgEl.textContent = '✅ 保存しました！'; await checkCreds(); setTimeout(closeSettings, 1400);
-  } catch(err) { msgEl.textContent = '❌ ' + err.message; } 
-  finally { saveBtn.disabled = false; saveBtn.textContent = '保存して接続'; }
-}
+      try {
+        var res = await fetch('http://127.0.0.1:5000/api/set-credentials', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ slack_token: slack, gemini_key: gemini }) });
+        var data = await res.json(); if (!res.ok) throw new Error(data.error || '保存に失敗しました');
+        msgEl.textContent = '✅ 保存しました！'; await checkCreds(); setTimeout(closeSettings, 1400);
+      } catch (err) { msgEl.textContent = '❌ ' + err.message; }
+      finally { saveBtn.disabled = false; saveBtn.textContent = '保存して接続'; }
+    }
 
-// ── Update button ─────────────────────────────────────────────────
-function setBtn(state, text) {
-  var btn = document.getElementById('update-btn'); btn.className = 'update-btn' + (state ? ' ' + state : ''); btn.disabled  = (state === 'loading');
-  if (state === 'loading') { btn.innerHTML = '<span class="spinner"></span>' + text; } else { btn.innerHTML = text; }
-}
+    // ── Update button ─────────────────────────────────────────────────
+    function setBtn(state, text) {
+      var btn = document.getElementById('update-btn'); btn.className = 'update-btn' + (state ? ' ' + state : ''); btn.disabled = (state === 'loading');
+      if (state === 'loading') { btn.innerHTML = '<span class="spinner"></span>' + text; } else { btn.innerHTML = text; }
+    }
 
-async function doUpdate() {
-  if (isLoading) return; if (!credsOk) { openSettings(); return; }
-  isLoading = true; sel = null; tab = 'short';
-  var cardsEl = document.getElementById('cards'); var pvEl = document.getElementById('pv');
-  setBtn('loading', ' Slackから取得・分析中...');
+    async function doUpdate() {
+      if (isLoading) return; if (!credsOk) { openSettings(); return; }
+      isLoading = true; sel = null; tab = 'short';
+      var cardsEl = document.getElementById('cards'); var pvEl = document.getElementById('pv');
+      setBtn('loading', ' Slackから取得・分析中...');
 
-  try {
-    var res  = await fetch('http://127.0.0.1:5000/api/update'); var data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'サーバーエラー');
-    DATA = data; renderStatus(); cardsEl.classList.remove('loading'); renderCards(); renderPreview();
-    setBtn('success', '✅ 更新完了!'); setTimeout(() => { setBtn('', '🔄 最新データに更新'); isLoading = false; }, 2500);
-  } catch(err) {
-    setBtn('err', '❌ 再試行する'); setTimeout(() => { setBtn('', '🔄 最新データに更新'); isLoading = false; }, 5000);
-  }
-}
+      try {
+        var res = await fetch('http://127.0.0.1:5000/api/update'); var data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'サーバーエラー');
+        DATA = data; renderStatus(); cardsEl.classList.remove('loading'); renderCards(); renderPreview();
+        setBtn('success', '✅ 更新完了!'); setTimeout(() => { setBtn('', '🔄 最新データに更新'); isLoading = false; }, 2500);
+      } catch (err) {
+        setBtn('err', '❌ 再試行する'); setTimeout(() => { setBtn('', '🔄 最新データに更新'); isLoading = false; }, 5000);
+      }
+    }
 
-// ── Init ──────────────────────────────────────────────────────────
-fetchMemberData(); renderStatus(); renderCards(); renderPreview(); checkCreds();
-</script>
+    // ── Init ──────────────────────────────────────────────────────────
+    fetchMemberData(); renderStatus(); renderCards(); renderPreview(); checkCreds();
+  </script>
 </body>
-</html>
 
+</html>
