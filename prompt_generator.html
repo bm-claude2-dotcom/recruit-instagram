@@ -986,7 +986,7 @@
           const fileId = photoUrl.match(/[-\w]{25,}(?!.*[-\w]{25,})/);
           if (fileId) {
             // $のバグを修正し、最も安定する直リンクURLに自動変換する
-            photoUrl = `https://docs.google.com/uc?export=view&id=${fileId[0]}`;
+            photoUrl = `https://docs.google.com/thumbnail?sz=w800&id=${fileId[0]}`;
           }
           img.src = photoUrl;
           container.style.display = 'block';
